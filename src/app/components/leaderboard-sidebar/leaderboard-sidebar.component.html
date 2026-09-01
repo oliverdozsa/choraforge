@@ -1,0 +1,17 @@
+<aside class="leaderboard">
+  <h2 class="panel-title">Team Leaderboard</h2>
+  <ol class="rank-list">
+    <li
+      *ngFor="let member of rankedMembers(); let i = index"
+      class="rank-row"
+      [class.self]="member.userId === currentUserId()"
+    >
+      <span class="rank-icon">{{ rankSuffix(i + 1) }}</span>
+      <div class="rank-name-block">
+        <span class="rank-name">{{ member.name }}</span>
+        <span class="rank-level">Lv. {{ member.level }}</span>
+      </div>
+      <span class="rank-score">◈ {{ member.gold }}</span>
+    </li>
+  </ol>
+</aside>

@@ -1,0 +1,29 @@
+<div class="modal-backdrop" (click)="onBackdropClick()">
+  <div class="reward-overlay" (click)="$event.stopPropagation()">
+    <div class="chest">🎉</div>
+
+    <h2 class="quest-title">Quest Verified!</h2>
+    <p class="quest-name">{{ result.card.title }}</p>
+
+    <div class="reward-grid">
+      <div class="reward-pill xp">
+        <span class="reward-icon">✦</span>
+        <span class="reward-value">+{{ result.xpGained }} XP</span>
+      </div>
+      <div class="reward-pill gold">
+        <span class="reward-icon">◈</span>
+        <span class="reward-value">+{{ result.goldGained }} Gold</span>
+      </div>
+      <div class="reward-pill item" *ngIf="result.card.itemDrop">
+        <span class="reward-icon">🎁</span>
+        <span class="reward-value">{{ result.card.itemDrop }}</span>
+      </div>
+    </div>
+
+    <div class="level-up-banner" *ngIf="result.leveledUp">
+      Level Up! You reached Level {{ result.newLevel }} ⚡
+    </div>
+
+    <button class="close-btn" (click)="dismiss.emit()">Collect Rewards</button>
+  </div>
+</div>

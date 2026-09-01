@@ -1,0 +1,50 @@
+<article class="tcg-card" [ngClass]="rarityClass">
+  <div class="card-frame">
+    <header class="card-header">
+      <span class="rarity-badge">{{ card.rarity }}</span>
+      <span class="title">{{ card.title }}</span>
+    </header>
+
+    <div class="card-art" aria-hidden="true">
+      <div class="art-glow"></div>
+      <span class="status-pill" *ngIf="statusLabel">{{ statusLabel }}</span>
+    </div>
+
+    <p class="description">{{ card.description }}</p>
+
+    <div class="stats-row">
+      <div class="stat">
+        <span class="stat-label">Complexity</span>
+        <div class="pips">
+          <span
+            class="pip"
+            *ngFor="let pip of complexityPips"
+            [class.filled]="pip < card.complexity"
+          ></span>
+        </div>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Time</span>
+        <span class="stat-value">{{ card.estimatedMinutes }}m</span>
+      </div>
+    </div>
+
+    <div class="rewards-row">
+      <span class="badge xp-badge">✦ {{ card.xpReward }} XP</span>
+      <span class="badge gold-badge">◈ {{ card.goldReward }} Gold</span>
+      <span class="badge item-badge" *ngIf="card.itemDrop">🎁 {{ card.itemDrop }}</span>
+    </div>
+
+    <button
+      *ngIf="!readonlyCard"
+      class="cta-btn"
+      [class.claim]="card.status === 'AVAILABLE'"
+      [class.complete]="card.status === 'CLAIMED'"
+      [class.verify]="card.status === 'COMPLETED'"
+      [disabled]="card.status === 'VERIFIED'"
+      (click)="onAction()"
+    >
+      {{ ctaLabel }}
+    </button>
+  </div>
+</article>

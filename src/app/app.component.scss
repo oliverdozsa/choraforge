@@ -1,0 +1,49 @@
+.loading-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  background: #0b0d12;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 15% -10%, rgba(56, 189, 248, 0.08), transparent 40%),
+    radial-gradient(circle at 85% 0%, rgba(168, 85, 247, 0.08), transparent 40%),
+    #0b0d12;
+}
+
+.app-body {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.sidebar {
+  position: sticky;
+  top: 1.5rem;
+  align-self: start;
+}
+
+.main-content {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .app-body {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+  }
+}

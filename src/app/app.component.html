@@ -1,0 +1,18 @@
+@if (!isAuthenticated()) {
+  <app-login />
+} @else if (loading() && !hasTeam()) {
+  <div class="loading-shell">Loading your profile…</div>
+} @else if (!hasTeam()) {
+  <app-team-setup />
+} @else {
+  <div class="app-shell">
+    <app-dashboard-header />
+
+    <div class="app-body">
+      <app-leaderboard-sidebar class="sidebar" />
+      <main class="main-content">
+        <app-quest-board />
+      </main>
+    </div>
+  </div>
+}

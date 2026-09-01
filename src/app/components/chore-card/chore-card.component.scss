@@ -1,0 +1,281 @@
+:host {
+  display: block;
+}
+
+@keyframes holo-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes legendary-pulse {
+  0%, 100% { box-shadow: 0 0 12px 2px rgba(255, 200, 60, 0.55), 0 0 32px 4px rgba(255, 170, 0, 0.35); }
+  50% { box-shadow: 0 0 22px 6px rgba(255, 215, 100, 0.85), 0 0 48px 10px rgba(255, 170, 0, 0.55); }
+}
+
+.tcg-card {
+  --card-border: #4b5563;
+  --card-glow: rgba(75, 85, 99, 0.35);
+  --accent: #9ca3af;
+  --accent-soft: rgba(156, 163, 175, 0.15);
+
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(160deg, var(--card-border), #1f2430);
+  box-shadow: 0 0 10px 1px var(--card-glow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px) scale(1.015);
+  }
+
+  .card-frame {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    border-radius: 14px;
+    padding: 0.9rem 1rem 1.1rem;
+    background: radial-gradient(circle at top left, #1a1e29, #11141c 70%);
+    height: 100%;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+
+    .title {
+      font-weight: 700;
+      font-size: 1.02rem;
+      color: #f3f4f6;
+      line-height: 1.2;
+    }
+
+    .rarity-badge {
+      flex-shrink: 0;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+    }
+  }
+
+  .card-art {
+    position: relative;
+    height: 64px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent-soft), transparent 70%);
+    border: 1px dashed var(--accent);
+    overflow: hidden;
+
+    .art-glow {
+      position: absolute;
+      inset: -20%;
+      background: radial-gradient(circle, var(--card-glow), transparent 65%);
+      opacity: 0.8;
+    }
+
+    .status-pill {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      font-size: 0.58rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      color: #0b0d12;
+      background: var(--accent);
+    }
+  }
+
+  .description {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    line-height: 1.35;
+    min-height: 2.6em;
+    margin: 0;
+  }
+
+  .stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    color: #d1d5db;
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .stat-label {
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.6rem;
+      color: #6b7280;
+    }
+
+    .stat-value {
+      font-weight: 600;
+    }
+
+    .pips {
+      display: flex;
+      gap: 2px;
+    }
+
+    .pip {
+      width: 6px;
+      height: 10px;
+      border-radius: 2px;
+      background: #2a2f3a;
+
+      &.filled {
+        background: var(--accent);
+      }
+    }
+  }
+
+  .rewards-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+
+    .badge {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    .xp-badge {
+      color: #93c5fd;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+    }
+
+    .gold-badge {
+      color: #fde68a;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.35);
+    }
+
+    .item-badge {
+      color: #d8b4fe;
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+    }
+  }
+
+  .cta-btn {
+    margin-top: auto;
+    border: none;
+    border-radius: 10px;
+    padding: 0.55rem 0.8rem;
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: filter 0.15s ease, transform 0.1s ease;
+    color: #0b0d12;
+
+    &:active {
+      transform: scale(0.97);
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.5;
+      color: #9ca3af;
+      background: #2a2f3a;
+    }
+
+    &.claim {
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    }
+
+    &.complete {
+      background: linear-gradient(135deg, #34d399, #10b981);
+    }
+
+    &.verify {
+      background: linear-gradient(135deg, #fde68a, #fbbf24);
+    }
+
+    &:not(:disabled):hover {
+      filter: brightness(1.1);
+    }
+  }
+
+  // Rarity variants
+  &.rarity-common {
+    --card-border: #64748b;
+    --card-glow: rgba(100, 116, 139, 0.35);
+    --accent: #94a3b8;
+    --accent-soft: rgba(148, 163, 184, 0.14);
+  }
+
+  &.rarity-rare {
+    --card-border: #60a5fa;
+    --card-glow: rgba(96, 165, 250, 0.45);
+    --accent: #93c5fd;
+    --accent-soft: rgba(147, 197, 253, 0.15);
+    box-shadow: 0 0 14px 2px var(--card-glow);
+  }
+
+  &.rarity-epic {
+    --card-border: #a855f7;
+    --card-glow: rgba(168, 85, 247, 0.5);
+    --accent: #d8b4fe;
+    --accent-soft: rgba(216, 180, 254, 0.16);
+    box-shadow: 0 0 16px 3px var(--card-glow);
+  }
+
+  &.rarity-legendary {
+    --card-border: #fbbf24;
+    --card-glow: rgba(251, 191, 36, 0.6);
+    --accent: #fde68a;
+    --accent-soft: rgba(253, 230, 138, 0.18);
+    animation: legendary-pulse 2.4s ease-in-out infinite;
+
+    .card-frame {
+      background:
+        linear-gradient(160deg, #241c0d, #11141c 75%);
+    }
+
+    .card-art {
+      background: linear-gradient(
+        120deg,
+        rgba(251, 191, 36, 0.25),
+        rgba(255, 255, 255, 0.15),
+        rgba(251, 191, 36, 0.25),
+        rgba(216, 180, 254, 0.2)
+      );
+      background-size: 300% 300%;
+      animation: holo-shift 3.5s ease-in-out infinite;
+    }
+
+    .title {
+      background: linear-gradient(90deg, #fde68a, #fff, #fbbf24);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: holo-shift 3s linear infinite;
+    }
+
+    .cta-btn.claim {
+      background: linear-gradient(135deg, #fde68a, #fbbf24);
+    }
+  }
+}

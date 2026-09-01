@@ -1,0 +1,75 @@
+:host {
+  display: block;
+}
+
+.leaderboard {
+  background: linear-gradient(180deg, #171b26, #12141c);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 14px;
+  padding: 1rem;
+  height: fit-content;
+}
+
+.panel-title {
+  margin: 0 0 0.85rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.rank-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.rank-row {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.06);
+  font-size: 0.85rem;
+
+  .rank-icon {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .rank-name-block {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .rank-name {
+    color: #e5e7eb;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .rank-level {
+    font-size: 0.65rem;
+    color: #6b7280;
+  }
+
+  .rank-score {
+    color: #fde68a;
+    font-weight: 700;
+    font-size: 0.78rem;
+  }
+
+  &.self {
+    background: rgba(56, 189, 248, 0.14);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+  }
+}

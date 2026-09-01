@@ -1,0 +1,13 @@
+<div class="login-shell">
+  <div class="login-card">
+    <div class="crest">⚔️</div>
+    <h1 class="brand">Choragon</h1>
+    <p class="tagline">Turn chores into quests. Claim cards, earn XP, level up your team.</p>
+
+    <div class="button-host" #buttonHost></div>
+
+    @if (sdkError()) {
+      <p class="sdk-error">Couldn't load Google Sign-In. Check your connection and refresh.</p>
+    }
+  </div>
+</div>

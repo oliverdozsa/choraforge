@@ -1,0 +1,44 @@
+<div class="setup-shell">
+  <div class="setup-card">
+    <h1>Join the Adventure</h1>
+    <p class="subtitle">You're signed in, but not on a team yet. Create one or join an existing crew.</p>
+
+    <div class="tabs">
+      <button class="tab" [class.active]="mode() === 'create'" (click)="setMode('create')">Create Team</button>
+      <button class="tab" [class.active]="mode() === 'join'" (click)="setMode('join')">Join Team</button>
+    </div>
+
+    @if (mode() === 'create') {
+      <form class="form" (ngSubmit)="createTeam()">
+        <label>
+          Team Name
+          <input type="text" name="teamName" [(ngModel)]="teamName" placeholder="The Chore Crusaders" autocomplete="off" />
+        </label>
+        <button type="submit" class="submit-btn" [disabled]="submitting()">
+          {{ submitting() ? 'Creating…' : 'Create Team' }}
+        </button>
+      </form>
+    } @else {
+      <form class="form" (ngSubmit)="joinTeam()">
+        <label>
+          Team ID
+          <input type="text" name="joinTeamId" [(ngModel)]="joinTeamId" placeholder="Team UUID" autocomplete="off" />
+        </label>
+        <label>
+          Your Email
+          <input type="email" name="joinEmail" [(ngModel)]="joinEmail" placeholder="you@example.com" autocomplete="off" />
+        </label>
+        <button type="submit" class="submit-btn" [disabled]="submitting()">
+          {{ submitting() ? 'Joining…' : 'Join Team' }}
+        </button>
+      </form>
+    }
+
+    @if (formError()) {
+      <p class="error-msg">{{ formError() }}</p>
+    }
+    @if (error()) {
+      <p class="error-msg">{{ error() }}</p>
+    }
+  </div>
+</div>

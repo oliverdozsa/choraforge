@@ -1,0 +1,73 @@
+<p class="error-banner" *ngIf="error()">{{ error() }}</p>
+
+<section class="playmat">
+  <div class="board-section">
+    <div class="section-heading">
+      <h2>Available Quests</h2>
+      <span class="count-badge">{{ availableQuests().length }}</span>
+    </div>
+    <div class="card-grid" *ngIf="availableQuests().length; else emptyAvailable">
+      <app-chore-card
+        *ngFor="let card of availableQuests()"
+        [card]="card"
+        (claim)="claimCard($event)"
+        (complete)="completeCard($event)"
+        (verify)="verifyCard($event)"
+      />
+    </div>
+    <ng-template #emptyAvailable>
+      <p class="empty-state">No quests left on the board. Great work, team!</p>
+    </ng-template>
+  </div>
+
+  <div class="board-section hand-section">
+    <div class="section-heading">
+      <h2>My Active Hand</h2>
+      <span class="count-badge">{{ activeHand().length }}</span>
+    </div>
+    <div class="card-grid" *ngIf="activeHand().length; else emptyHand">
+      <app-chore-card
+        *ngFor="let card of activeHand()"
+        [card]="card"
+        (claim)="claimCard($event)"
+        (complete)="completeCard($event)"
+        (verify)="verifyCard($event)"
+      />
+    </div>
+    <ng-template #emptyHand>
+      <p class="empty-state">Claim a quest from the board to add it to your hand.</p>
+    </ng-template>
+  </div>
+
+  <div class="board-section verify-section" *ngIf="awaitingVerification().length">
+    <div class="section-heading">
+      <h2>Awaiting Verification</h2>
+      <span class="count-badge">{{ awaitingVerification().length }}</span>
+    </div>
+    <div class="card-grid">
+      <app-chore-card
+        *ngFor="let card of awaitingVerification()"
+        [card]="card"
+        (claim)="claimCard($event)"
+        (complete)="completeCard($event)"
+        (verify)="verifyCard($event)"
+      />
+    </div>
+  </div>
+
+  <div class="board-section activity-section" *ngIf="teamActivity().length">
+    <div class="section-heading">
+      <h2>Team Activity</h2>
+      <span class="count-badge">{{ teamActivity().length }}</span>
+    </div>
+    <div class="card-grid">
+      <app-chore-card *ngFor="let card of teamActivity()" [card]="card" [readonlyCard]="true" />
+    </div>
+  </div>
+</section>
+
+<app-completion-modal
+  *ngIf="activeReward() as result"
+  [result]="result"
+  (dismiss)="dismissReward()"
+/>

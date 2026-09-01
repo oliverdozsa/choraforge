@@ -1,0 +1,119 @@
+:host {
+  display: block;
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes chest-bounce {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 7, 12, 0.75);
+  backdrop-filter: blur(4px);
+}
+
+.reward-overlay {
+  animation: pop-in 0.25s ease-out;
+  width: min(360px, 90vw);
+  padding: 2rem 1.75rem 1.75rem;
+  border-radius: 20px;
+  text-align: center;
+  background: radial-gradient(circle at top, #1e2433, #0f1219 75%);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  box-shadow: 0 0 40px rgba(251, 191, 36, 0.25), 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.chest {
+  font-size: 3rem;
+  animation: chest-bounce 1.4s ease-in-out infinite;
+}
+
+.quest-title {
+  margin: 0.5rem 0 0.15rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #fde68a, #fbbf24);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.quest-name {
+  margin: 0 0 1.25rem;
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.reward-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.reward-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+
+  &.xp {
+    color: #93c5fd;
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+  }
+
+  &.gold {
+    color: #fde68a;
+    background: rgba(234, 179, 8, 0.15);
+    border: 1px solid rgba(234, 179, 8, 0.4);
+  }
+
+  &.item {
+    color: #d8b4fe;
+    background: rgba(168, 85, 247, 0.15);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+  }
+}
+
+.level-up-banner {
+  margin-bottom: 1.1rem;
+  padding: 0.5rem;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #0b0d12;
+  background: linear-gradient(135deg, #86efac, #22c55e);
+}
+
+.close-btn {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #0b0d12;
+  cursor: pointer;
+  background: linear-gradient(135deg, #fde68a, #fbbf24);
+  transition: filter 0.15s ease;
+
+  &:hover {
+    filter: brightness(1.08);
+  }
+}

@@ -1,0 +1,87 @@
+:host {
+  display: block;
+}
+
+.playmat {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.board-section {
+  border-radius: 16px;
+  padding: 1.25rem;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(56, 189, 248, 0.06), transparent 55%),
+    #12141c;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.hand-section {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(168, 85, 247, 0.08), transparent 55%),
+    #12141c;
+  border-color: rgba(168, 85, 247, 0.2);
+}
+
+.verify-section {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(251, 191, 36, 0.08), transparent 55%),
+    #12141c;
+  border-color: rgba(251, 191, 36, 0.2);
+}
+
+.activity-section {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(148, 163, 184, 0.06), transparent 55%),
+    #12141c;
+  border-color: rgba(148, 163, 184, 0.15);
+  opacity: 0.85;
+}
+
+.error-banner {
+  margin: 0 0 1rem;
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  font-size: 0.82rem;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: #f3f4f6;
+    letter-spacing: 0.01em;
+  }
+
+  .count-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #7dd3fc;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+  }
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1rem;
+}
+
+.empty-state {
+  color: #6b7280;
+  font-size: 0.85rem;
+  padding: 1.5rem 0;
+  text-align: center;
+}
