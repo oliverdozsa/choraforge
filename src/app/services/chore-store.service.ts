@@ -20,6 +20,8 @@ export interface RewardResult {
   newLevel: number;
 }
 
+const REWARD_POLL_INTERVAL_MS = 15000;
+
 function friendlyError(err: unknown): string {
   if (err && typeof err === 'object' && 'status' in err) {
     const status = (err as { status: number }).status;
@@ -42,6 +44,9 @@ export class ChoreStoreService {
   private readonly _templates = signal<ChoreCardTemplateResponse[]>([]);
   private readonly _loading = signal(false);
   private readonly _error = signal<string | null>(null);
+  private readonly _activeReward = signal<RewardResult | null>(null);
+
+  private pollHandle: ReturnType<typeof setInterval> | null = null;
 
   readonly currentUser = this._currentUser.asReadonly();
   readonly selectedTeamId = this._selectedTeamId.asReadonly();
@@ -49,6 +54,7 @@ export class ChoreStoreService {
   readonly templates = this._templates.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
+  readonly activeReward = this._activeReward.asReadonly();
 
   readonly teams = computed<TeamMembershipResponse[]>(() => this._currentUser()?.teams ?? []);
   readonly hasTeam = computed(() => this.teams().length > 0);
@@ -78,13 +84,22 @@ export class ChoreStoreService {
     this._cards().filter((c) => c.status === 'CLAIMED' && c.assignedUserId === this.currentUserId()),
   );
 
-  readonly awaitingVerification = computed(() =>
-    this._cards().filter((c) => c.status === 'COMPLETED' && c.assignedUserId === this.currentUserId()),
-  );
+  // Admins see every completed card on the team (they can verify anyone's); everyone else sees only their own.
+  readonly awaitingVerification = computed(() => {
+    const isAdmin = this.isTeamAdmin();
+    const userId = this.currentUserId();
+    return this._cards().filter(
+      (c) => c.status === 'COMPLETED' && (isAdmin || c.assignedUserId === userId),
+    );
+  });
 
-  readonly teamActivity = computed(() =>
-    this._cards().filter((c) => c.status !== 'AVAILABLE' && c.assignedUserId !== this.currentUserId()),
-  );
+  readonly teamActivity = computed(() => {
+    const userId = this.currentUserId();
+    const awaiting = new Set(this.awaitingVerification().map((c) => c.id));
+    return this._cards().filter(
+      (c) => c.status !== 'AVAILABLE' && c.assignedUserId !== userId && !awaiting.has(c.id),
+    );
+  });
 
   async bootstrap(): Promise<void> {
     this._loading.set(true);
@@ -105,6 +120,7 @@ export class ChoreStoreService {
   async selectTeam(teamId: string): Promise<void> {
     this._selectedTeamId.set(teamId);
     await this.refreshTeamData();
+    this.startRewardPolling();
   }
 
   async refreshTeamData(): Promise<void> {
@@ -162,12 +178,14 @@ export class ChoreStoreService {
   }
 
   logout(): void {
+    this.stopRewardPolling();
     this.auth.logout();
     this._currentUser.set(null);
     this._selectedTeamId.set(null);
     this._cards.set([]);
     this._leaderboard.set([]);
     this._templates.set([]);
+    this._activeReward.set(null);
   }
 
   async createCard(request: CreateChoreCardRequest): Promise<void> {
@@ -216,7 +234,10 @@ export class ChoreStoreService {
     }
   }
 
-  async verifyCard(cardId: string): Promise<RewardResult | null> {
+  // Only admins may call this (server-enforced). Verifying someone else's card refreshes
+  // team state but doesn't pop the reward modal here — the assignee's own client picks that
+  // up via polling once the backend marks the reward unacknowledged.
+  async verifyCard(cardId: string): Promise<void> {
     this._error.set(null);
     try {
       const result = await firstValueFrom(this.api.verifyCard(cardId));
@@ -226,16 +247,75 @@ export class ChoreStoreService {
         this.refreshMe(),
         teamId ? firstValueFrom(this.api.getLeaderboard(teamId)).then((lb) => this._leaderboard.set(lb)) : Promise.resolve(),
       ]);
-      return {
-        card: result.cardCompleted,
-        xpGained: result.xpGained,
-        goldGained: result.goldGained,
-        leveledUp: result.leveledUp,
-        newLevel: result.newLevel,
-      };
+      if (result.cardCompleted.assignedUserId === this.currentUserId()) {
+        this._activeReward.set({
+          card: result.cardCompleted,
+          xpGained: result.xpGained,
+          goldGained: result.goldGained,
+          leveledUp: result.leveledUp,
+          newLevel: result.newLevel,
+        });
+      }
     } catch (err) {
       this._error.set(friendlyError(err));
-      return null;
+    }
+  }
+
+  async dismissReward(): Promise<void> {
+    const reward = this._activeReward();
+    this._activeReward.set(null);
+    if (!reward) return;
+    try {
+      const updated = await firstValueFrom(this.api.acknowledgeReward(reward.card.id));
+      this.replaceCard(updated);
+    } catch {
+      // best-effort: if this fails the card may briefly re-surface on the next poll
+    }
+  }
+
+  private startRewardPolling(): void {
+    this.stopRewardPolling();
+    this.pollHandle = setInterval(() => this.checkPendingRewards(), REWARD_POLL_INTERVAL_MS);
+  }
+
+  private stopRewardPolling(): void {
+    if (this.pollHandle !== null) {
+      clearInterval(this.pollHandle);
+      this.pollHandle = null;
+    }
+  }
+
+  private async checkPendingRewards(): Promise<void> {
+    const teamId = this._selectedTeamId();
+    const userId = this.currentUserId();
+    if (!teamId || !userId || this._activeReward()) return;
+    try {
+      const cards = await firstValueFrom(this.api.getTeamCards(teamId));
+      this._cards.set(cards);
+      const pending = cards.find(
+        (c) => c.status === 'VERIFIED' && c.assignedUserId === userId && !c.rewardAcknowledgedAt,
+      );
+      if (!pending) return;
+
+      const levelBefore = this.currentMembership()?.level ?? 1;
+      await this.refreshMe();
+      const levelAfter = this.currentMembership()?.level ?? levelBefore;
+
+      this._activeReward.set({
+        card: pending,
+        xpGained: pending.xpReward,
+        goldGained: pending.goldReward,
+        leveledUp: levelAfter > levelBefore,
+        newLevel: levelAfter,
+      });
+
+      const teamIdNow = this._selectedTeamId();
+      if (teamIdNow) {
+        const lb = await firstValueFrom(this.api.getLeaderboard(teamIdNow));
+        this._leaderboard.set(lb);
+      }
+    } catch {
+      // silent: this is a background check, surfacing errors here would be noisy
     }
   }
 }

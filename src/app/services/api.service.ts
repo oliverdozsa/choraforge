@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
+  CardStatus,
   CardVerificationResponse,
   ChoreCardResponse,
   ChoreCardTemplateResponse,
@@ -14,6 +15,8 @@ import {
   TeamResponse,
   UserResponse,
 } from '../models/api.model';
+
+const ALL_CARD_STATUSES: CardStatus[] = ['AVAILABLE', 'CLAIMED', 'COMPLETED', 'VERIFIED'];
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -36,8 +39,10 @@ export class ApiService {
     return this.http.post<TeamResponse>(`${this.base}/team/${teamId}/join`, request);
   }
 
-  getTeamCards(teamId: string): Observable<ChoreCardResponse[]> {
-    return this.http.get<ChoreCardResponse[]>(`${this.base}/teams/${teamId}/cards`);
+  getTeamCards(teamId: string, statuses: CardStatus[] = ALL_CARD_STATUSES): Observable<ChoreCardResponse[]> {
+    return this.http.get<ChoreCardResponse[]>(`${this.base}/teams/${teamId}/cards`, {
+      params: { status: statuses.join(',') },
+    });
   }
 
   createCard(request: CreateChoreCardRequest): Observable<ChoreCardResponse> {
@@ -58,6 +63,10 @@ export class ApiService {
 
   verifyCard(cardId: string): Observable<CardVerificationResponse> {
     return this.http.post<CardVerificationResponse>(`${this.base}/cards/${cardId}/verify`, {});
+  }
+
+  acknowledgeReward(cardId: string): Observable<ChoreCardResponse> {
+    return this.http.post<ChoreCardResponse>(`${this.base}/cards/${cardId}/acknowledge-reward`, {});
   }
 
   getTeamCardTemplates(teamId: string): Observable<ChoreCardTemplateResponse[]> {

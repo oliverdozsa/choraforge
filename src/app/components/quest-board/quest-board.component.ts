@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ChoreCardComponent } from '../chore-card/chore-card.component';
 import { CompletionModalComponent } from '../completion-modal/completion-modal.component';
 import { CardDesignerComponent, CardDraft } from '../card-designer/card-designer.component';
-import { ChoreStoreService, RewardResult } from '../../services/chore-store.service';
+import { ChoreStoreService } from '../../services/chore-store.service';
 
 @Component({
   selector: 'app-quest-board',
@@ -24,8 +24,8 @@ export class QuestBoardComponent {
   readonly isTeamAdmin = this.store.isTeamAdmin;
   readonly templates = this.store.templates;
   readonly selectedTeamId = this.store.selectedTeamId;
+  readonly activeReward = this.store.activeReward;
 
-  readonly activeReward = signal<RewardResult | null>(null);
   readonly creatingCard = signal(false);
   readonly creatingCardSubmitting = signal(false);
 
@@ -37,15 +37,12 @@ export class QuestBoardComponent {
     this.store.completeCard(cardId);
   }
 
-  async verifyCard(cardId: string): Promise<void> {
-    const result = await this.store.verifyCard(cardId);
-    if (result) {
-      this.activeReward.set(result);
-    }
+  verifyCard(cardId: string): void {
+    this.store.verifyCard(cardId);
   }
 
   dismissReward(): void {
-    this.activeReward.set(null);
+    this.store.dismissReward();
   }
 
   startCreatingCard(): void {

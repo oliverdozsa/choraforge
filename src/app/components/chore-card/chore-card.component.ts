@@ -13,6 +13,7 @@ import { ChoreCardResponse } from '../../models/api.model';
 export class ChoreCardComponent {
   @Input({ required: true }) card!: ChoreCardResponse;
   @Input() readonlyCard = false;
+  @Input() canVerify = true;
   @Output() claim = new EventEmitter<string>();
   @Output() complete = new EventEmitter<string>();
   @Output() verify = new EventEmitter<string>();
@@ -38,6 +39,10 @@ export class ChoreCardComponent {
     }
   }
 
+  get showCta(): boolean {
+    return this.card.status !== 'COMPLETED' || this.canVerify;
+  }
+
   get statusLabel(): string {
     switch (this.card.status) {
       case 'CLAIMED':
@@ -56,7 +61,7 @@ export class ChoreCardComponent {
       this.claim.emit(this.card.id);
     } else if (this.card.status === 'CLAIMED') {
       this.complete.emit(this.card.id);
-    } else if (this.card.status === 'COMPLETED') {
+    } else if (this.card.status === 'COMPLETED' && this.canVerify) {
       this.verify.emit(this.card.id);
     }
   }

@@ -63,6 +63,7 @@
       <app-chore-card
         *ngFor="let card of awaitingVerification()"
         [card]="card"
+        [canVerify]="isTeamAdmin()"
         (claim)="claimCard($event)"
         (complete)="completeCard($event)"
         (verify)="verifyCard($event)"

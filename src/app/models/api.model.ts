@@ -22,6 +22,7 @@ export interface ChoreCardResponse {
   claimedAt?: string;
   completedAt?: string;
   verifiedAt?: string;
+  rewardAcknowledgedAt?: string;
 }
 
 export interface CardVerificationResponse {
