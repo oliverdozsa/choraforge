@@ -2,7 +2,14 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
-import { ChoreCardResponse, TeamMemberResponse, TeamMembershipResponse, UserResponse } from '../models/api.model';
+import {
+  ChoreCardResponse,
+  ChoreCardTemplateResponse,
+  CreateChoreCardTemplateRequest,
+  TeamMemberResponse,
+  TeamMembershipResponse,
+  UserResponse,
+} from '../models/api.model';
 
 export interface RewardResult {
   card: ChoreCardResponse;
@@ -31,12 +38,14 @@ export class ChoreStoreService {
   private readonly _selectedTeamId = signal<string | null>(null);
   private readonly _cards = signal<ChoreCardResponse[]>([]);
   private readonly _leaderboard = signal<TeamMemberResponse[]>([]);
+  private readonly _templates = signal<ChoreCardTemplateResponse[]>([]);
   private readonly _loading = signal(false);
   private readonly _error = signal<string | null>(null);
 
   readonly currentUser = this._currentUser.asReadonly();
   readonly selectedTeamId = this._selectedTeamId.asReadonly();
   readonly leaderboard = this._leaderboard.asReadonly();
+  readonly templates = this._templates.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
 
@@ -47,6 +56,11 @@ export class ChoreStoreService {
   readonly currentMembership = computed<TeamMembershipResponse | null>(() => {
     const teamId = this._selectedTeamId();
     return this.teams().find((t) => t.teamId === teamId) ?? null;
+  });
+
+  readonly isTeamAdmin = computed(() => {
+    const role = this.currentMembership()?.role;
+    return role === 'TEAM_ADMIN' || role === 'ADMIN';
   });
 
   readonly xpProgressPercent = computed(() => {
@@ -98,12 +112,14 @@ export class ChoreStoreService {
     this._loading.set(true);
     this._error.set(null);
     try {
-      const [cards, leaderboard] = await Promise.all([
+      const [cards, leaderboard, templates] = await Promise.all([
         firstValueFrom(this.api.getTeamCards(teamId)),
         firstValueFrom(this.api.getLeaderboard(teamId)),
+        firstValueFrom(this.api.getTeamCardTemplates(teamId)),
       ]);
       this._cards.set(cards);
       this._leaderboard.set(leaderboard);
+      this._templates.set(templates);
     } catch (err) {
       this._error.set(friendlyError(err));
     } finally {
@@ -150,6 +166,18 @@ export class ChoreStoreService {
     this._selectedTeamId.set(null);
     this._cards.set([]);
     this._leaderboard.set([]);
+    this._templates.set([]);
+  }
+
+  async createCardTemplate(request: CreateChoreCardTemplateRequest): Promise<void> {
+    this._error.set(null);
+    try {
+      const template = await firstValueFrom(this.api.createCardTemplate(request));
+      this._templates.update((templates) => [...templates, template]);
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      throw err;
+    }
   }
 
   private replaceCard(updated: ChoreCardResponse): void {

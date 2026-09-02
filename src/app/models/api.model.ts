@@ -87,3 +87,29 @@ export interface CreateChoreCardRequest {
   goldReward: number;
   itemDrop?: string;
 }
+
+export interface ChoreCardTemplateResponse {
+  id: string;
+  teamId: string;
+  title: string;
+  description?: string;
+  rarity: Rarity;
+  complexity: number;
+  estimatedMinutes: number;
+  xpReward: number;
+  goldReward: number;
+  itemDrop?: string;
+  createdAt: string;
+}
+
+export interface CreateChoreCardTemplateRequest {
+  teamId: string;
+  title: string;
+  description?: string;
+  rarity: Rarity;
+  complexity: number;
+  estimatedMinutes: number;
+  xpReward: number;
+  goldReward: number;
+  itemDrop?: string;
+}

@@ -5,6 +5,8 @@ import { environment } from '../../environments/environment';
 import {
   CardVerificationResponse,
   ChoreCardResponse,
+  ChoreCardTemplateResponse,
+  CreateChoreCardTemplateRequest,
   CreateTeamRequest,
   JoinTeamRequest,
   TeamMemberResponse,
@@ -51,5 +53,13 @@ export class ApiService {
 
   verifyCard(cardId: string): Observable<CardVerificationResponse> {
     return this.http.post<CardVerificationResponse>(`${this.base}/cards/${cardId}/verify`, {});
+  }
+
+  getTeamCardTemplates(teamId: string): Observable<ChoreCardTemplateResponse[]> {
+    return this.http.get<ChoreCardTemplateResponse[]>(`${this.base}/teams/${teamId}/card-templates`);
+  }
+
+  createCardTemplate(request: CreateChoreCardTemplateRequest): Observable<ChoreCardTemplateResponse> {
+    return this.http.post<ChoreCardTemplateResponse>(`${this.base}/card-templates`, request);
   }
 }

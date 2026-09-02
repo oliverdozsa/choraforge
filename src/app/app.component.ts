@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, untracked } from '@angular/core';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
 import { LeaderboardSidebarComponent } from './components/leaderboard-sidebar/leaderboard-sidebar.component';
 import { QuestBoardComponent } from './components/quest-board/quest-board.component';
 import { LoginComponent } from './components/login/login.component';
 import { TeamSetupComponent } from './components/team-setup/team-setup.component';
+import { CardTemplatesComponent } from './components/card-templates/card-templates.component';
 import { AuthService } from './services/auth.service';
 import { ChoreStoreService } from './services/chore-store.service';
 
@@ -16,6 +17,7 @@ import { ChoreStoreService } from './services/chore-store.service';
     QuestBoardComponent,
     LoginComponent,
     TeamSetupComponent,
+    CardTemplatesComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -32,7 +34,7 @@ export class AppComponent {
   constructor() {
     effect(() => {
       if (this.auth.isAuthenticated()) {
-        this.store.bootstrap();
+        untracked(() => this.store.bootstrap());
       }
     });
   }
