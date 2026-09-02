@@ -83,6 +83,8 @@
   }
 
   input {
+    min-width: 0;
+    width: 100%;
     background: #1f2430;
     border: 1px solid rgba(148, 163, 184, 0.25);
     border-radius: 10px;

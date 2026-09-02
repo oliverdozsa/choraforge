@@ -53,12 +53,18 @@
     font-weight: 700;
     color: #f3f4f6;
     font-size: 0.95rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .team-name {
     font-size: 0.72rem;
     color: #7dd3fc;
     letter-spacing: 0.02em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .team-select {
