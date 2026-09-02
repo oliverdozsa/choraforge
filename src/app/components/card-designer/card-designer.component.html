@@ -1,0 +1,68 @@
+<div class="designer">
+  <form class="designer-form" (ngSubmit)="onSubmit()">
+    <label *ngIf="templates.length">
+      Start from template <span class="optional">(optional)</span>
+      <select name="templateId" [(ngModel)]="selectedTemplateId" [ngModelOptions]="{standalone: true}" (ngModelChange)="onTemplateSelected()">
+        <option value="">— Blank card —</option>
+        <option *ngFor="let template of templates" [value]="template.id">{{ template.title }}</option>
+      </select>
+    </label>
+
+    <label>
+      Title
+      <input type="text" name="title" [(ngModel)]="title" required maxlength="80" />
+    </label>
+
+    <label>
+      Description
+      <textarea name="description" [(ngModel)]="description" rows="2" maxlength="200"></textarea>
+    </label>
+
+    <label>
+      Rarity
+      <select name="rarity" [(ngModel)]="rarity">
+        <option *ngFor="let r of rarities" [value]="r">{{ r }}</option>
+      </select>
+    </label>
+
+    <div class="field-row">
+      <label>
+        Complexity
+        <input type="number" name="complexity" [(ngModel)]="complexity" min="1" max="10" />
+      </label>
+      <label>
+        Minutes
+        <input type="number" name="estimatedMinutes" [(ngModel)]="estimatedMinutes" min="1" />
+      </label>
+    </div>
+
+    <div class="field-row">
+      <label>
+        XP Reward
+        <input type="number" name="xpReward" [(ngModel)]="xpReward" min="0" />
+      </label>
+      <label>
+        Gold Reward
+        <input type="number" name="goldReward" [(ngModel)]="goldReward" min="0" />
+      </label>
+    </div>
+
+    <label>
+      Item Drop <span class="optional">(optional)</span>
+      <input type="text" name="itemDrop" [(ngModel)]="itemDrop" maxlength="60" />
+    </label>
+
+    <p class="form-error" *ngIf="formError">{{ formError }}</p>
+
+    <div class="designer-actions">
+      <button type="button" class="cancel-btn" (click)="onCancel()" [disabled]="submitting">Cancel</button>
+      <button type="submit" class="save-btn" [disabled]="submitting">
+        {{ submitting ? 'Saving…' : submitLabel }}
+      </button>
+    </div>
+  </form>
+
+  <div class="designer-preview">
+    <app-chore-card [card]="previewCard" [readonlyCard]="true" />
+  </div>
+</div>

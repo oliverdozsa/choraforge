@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 import {
   ChoreCardResponse,
   ChoreCardTemplateResponse,
+  CreateChoreCardRequest,
   CreateChoreCardTemplateRequest,
   TeamMemberResponse,
   TeamMembershipResponse,
@@ -167,6 +168,17 @@ export class ChoreStoreService {
     this._cards.set([]);
     this._leaderboard.set([]);
     this._templates.set([]);
+  }
+
+  async createCard(request: CreateChoreCardRequest): Promise<void> {
+    this._error.set(null);
+    try {
+      const card = await firstValueFrom(this.api.createCard(request));
+      this._cards.update((cards) => [...cards, card]);
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      throw err;
+    }
   }
 
   async createCardTemplate(request: CreateChoreCardTemplateRequest): Promise<void> {

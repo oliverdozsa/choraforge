@@ -5,7 +5,22 @@
     <div class="section-heading">
       <h2>Available Quests</h2>
       <span class="count-badge">{{ availableQuests().length }}</span>
+      <button class="new-card-btn" *ngIf="isTeamAdmin() && !creatingCard()" (click)="startCreatingCard()">
+        + New Card
+      </button>
     </div>
+
+    <div class="designer-slot" *ngIf="creatingCard()">
+      <app-card-designer
+        submitLabel="Create Card"
+        [templates]="templates()"
+        [submitting]="creatingCardSubmitting()"
+        [previewTeamId]="selectedTeamId() ?? ''"
+        (save)="createCard($event)"
+        (cancelled)="cancelCreatingCard()"
+      />
+    </div>
+
     <div class="card-grid" *ngIf="availableQuests().length; else emptyAvailable">
       <app-chore-card
         *ngFor="let card of availableQuests()"
@@ -16,7 +31,7 @@
       />
     </div>
     <ng-template #emptyAvailable>
-      <p class="empty-state">No quests left on the board. Great work, team!</p>
+      <p class="empty-state" *ngIf="!creatingCard()">No quests left on the board. Great work, team!</p>
     </ng-template>
   </div>
 

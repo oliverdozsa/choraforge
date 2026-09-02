@@ -6,6 +6,7 @@ import {
   CardVerificationResponse,
   ChoreCardResponse,
   ChoreCardTemplateResponse,
+  CreateChoreCardRequest,
   CreateChoreCardTemplateRequest,
   CreateTeamRequest,
   JoinTeamRequest,
@@ -37,6 +38,10 @@ export class ApiService {
 
   getTeamCards(teamId: string): Observable<ChoreCardResponse[]> {
     return this.http.get<ChoreCardResponse[]>(`${this.base}/teams/${teamId}/cards`);
+  }
+
+  createCard(request: CreateChoreCardRequest): Observable<ChoreCardResponse> {
+    return this.http.post<ChoreCardResponse>(`${this.base}/cards`, request);
   }
 
   getLeaderboard(teamId: string): Observable<TeamMemberResponse[]> {

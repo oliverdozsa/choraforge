@@ -71,6 +71,27 @@
     padding: 0.1rem 0.5rem;
     border-radius: 999px;
   }
+
+  .new-card-btn {
+    margin-left: auto;
+    border: 1px solid rgba(74, 222, 128, 0.35);
+    background: rgba(74, 222, 128, 0.1);
+    color: #86efac;
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: rgba(74, 222, 128, 0.2);
+    }
+  }
+}
+
+.designer-slot {
+  margin-bottom: 1rem;
 }
 
 .card-grid {
