@@ -24,7 +24,7 @@ export class QuestBoardComponent {
   readonly isTeamAdmin = this.store.isTeamAdmin;
   readonly templates = this.store.templates;
   readonly selectedTeamId = this.store.selectedTeamId;
-  readonly activeReward = this.store.activeReward;
+  readonly activeRewards = this.store.activeRewards;
 
   readonly creatingCard = signal(false);
   readonly creatingCardSubmitting = signal(false);

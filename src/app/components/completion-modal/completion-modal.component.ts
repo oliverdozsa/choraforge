@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RewardResult } from '../../services/chore-store.service';
+import { RewardBatch } from '../../services/chore-store.service';
 
 
 @Component({
@@ -12,8 +12,16 @@ import { RewardResult } from '../../services/chore-store.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompletionModalComponent {
-  @Input({ required: true }) result!: RewardResult;
+  @Input({ required: true }) batch!: RewardBatch;
   @Output() dismiss = new EventEmitter<void>();
+
+  get totalXp(): number {
+    return this.batch.rewards.reduce((sum, r) => sum + r.xpGained, 0);
+  }
+
+  get totalGold(): number {
+    return this.batch.rewards.reduce((sum, r) => sum + r.goldGained, 0);
+  }
 
   onBackdropClick(): void {
     this.dismiss.emit();

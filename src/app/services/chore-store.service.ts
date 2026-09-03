@@ -16,6 +16,10 @@ export interface RewardResult {
   card: ChoreCardResponse;
   xpGained: number;
   goldGained: number;
+}
+
+export interface RewardBatch {
+  rewards: RewardResult[];
   leveledUp: boolean;
   newLevel: number;
 }
@@ -49,7 +53,7 @@ export class ChoreStoreService {
   private readonly _templates = signal<ChoreCardTemplateResponse[]>([]);
   private readonly _loading = signal(false);
   private readonly _error = signal<string | null>(null);
-  private readonly _activeReward = signal<RewardResult | null>(null);
+  private readonly _activeRewards = signal<RewardBatch | null>(null);
 
   private pollHandle: ReturnType<typeof setInterval> | null = null;
 
@@ -59,7 +63,7 @@ export class ChoreStoreService {
   readonly templates = this._templates.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
-  readonly activeReward = this._activeReward.asReadonly();
+  readonly activeRewards = this._activeRewards.asReadonly();
 
   readonly teams = computed<TeamMembershipResponse[]>(() => this._currentUser()?.teams ?? []);
   readonly hasTeam = computed(() => this.teams().length > 0);
@@ -194,7 +198,7 @@ export class ChoreStoreService {
     this._cards.set([]);
     this._leaderboard.set([]);
     this._templates.set([]);
-    this._activeReward.set(null);
+    this._activeRewards.set(null);
   }
 
   async createCard(request: CreateChoreCardRequest): Promise<void> {
@@ -257,28 +261,46 @@ export class ChoreStoreService {
         teamId ? firstValueFrom(this.api.getLeaderboard(teamId)).then((lb) => this._leaderboard.set(lb)) : Promise.resolve(),
       ]);
       if (result.cardCompleted.assignedUserId === this.currentUserId()) {
-        this._activeReward.set({
-          card: result.cardCompleted,
-          xpGained: result.xpGained,
-          goldGained: result.goldGained,
-          leveledUp: result.leveledUp,
-          newLevel: result.newLevel,
-        });
+        this.addRewards(
+          [{ card: result.cardCompleted, xpGained: result.xpGained, goldGained: result.goldGained }],
+          result.leveledUp,
+          result.newLevel,
+        );
       }
     } catch (err) {
       this._error.set(friendlyError(err));
     }
   }
 
+  // Merges into any batch already awaiting dismissal, so rewards earned in quick succession
+  // (self-verify while a poll-detected batch is showing, or vice versa) surface as one dialog.
+  private addRewards(rewards: RewardResult[], leveledUp: boolean, newLevel: number): void {
+    this._activeRewards.update((current) => {
+      const seen = new Set((current?.rewards ?? []).map((r) => r.card.id));
+      const fresh = rewards.filter((r) => !seen.has(r.card.id));
+      if (!current) {
+        return fresh.length ? { rewards: fresh, leveledUp, newLevel } : null;
+      }
+      if (!fresh.length) return current;
+      return {
+        rewards: [...current.rewards, ...fresh],
+        leveledUp: current.leveledUp || leveledUp,
+        newLevel: Math.max(current.newLevel, newLevel),
+      };
+    });
+  }
+
   async dismissReward(): Promise<void> {
-    const reward = this._activeReward();
-    this._activeReward.set(null);
-    if (!reward) return;
+    const batch = this._activeRewards();
+    this._activeRewards.set(null);
+    if (!batch) return;
     try {
-      const updated = await firstValueFrom(this.api.acknowledgeReward(reward.card.id));
-      this.replaceCard(updated);
+      const updated = await Promise.all(
+        batch.rewards.map((r) => firstValueFrom(this.api.acknowledgeReward(r.card.id))),
+      );
+      updated.forEach((card) => this.replaceCard(card));
     } catch {
-      // best-effort: if this fails the card may briefly re-surface on the next poll
+      // best-effort: if this fails the affected cards may briefly re-surface on the next poll
     }
   }
 
@@ -297,26 +319,24 @@ export class ChoreStoreService {
   private async checkPendingRewards(): Promise<void> {
     const teamId = this._selectedTeamId();
     const userId = this.currentUserId();
-    if (!teamId || !userId || this._activeReward()) return;
+    if (!teamId || !userId || this._activeRewards()) return;
     try {
       const cards = await firstValueFrom(this.api.getTeamCards(teamId));
       this._cards.set(cards);
-      const pending = cards.find(
+      const pending = cards.filter(
         (c) => c.status === 'VERIFIED' && c.assignedUserId === userId && !c.rewardAcknowledgedAt,
       );
-      if (!pending) return;
+      if (!pending.length) return;
 
       const levelBefore = this.currentMembership()?.level ?? 1;
       await this.refreshMe();
       const levelAfter = this.currentMembership()?.level ?? levelBefore;
 
-      this._activeReward.set({
-        card: pending,
-        xpGained: pending.xpReward,
-        goldGained: pending.goldReward,
-        leveledUp: levelAfter > levelBefore,
-        newLevel: levelAfter,
-      });
+      this.addRewards(
+        pending.map((card) => ({ card, xpGained: card.xpReward, goldGained: card.goldReward })),
+        levelAfter > levelBefore,
+        levelAfter,
+      );
 
       const teamIdNow = this._selectedTeamId();
       if (teamIdNow) {

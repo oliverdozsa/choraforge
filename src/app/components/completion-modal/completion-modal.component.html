@@ -2,26 +2,32 @@
   <div class="reward-overlay" (click)="$event.stopPropagation()">
     <div class="chest">🎉</div>
 
-    <h2 class="quest-title">Quest Verified!</h2>
-    <p class="quest-name">{{ result.card.title }}</p>
+    <h2 class="quest-title">{{ batch.rewards.length > 1 ? 'Quests Verified!' : 'Quest Verified!' }}</h2>
 
-    <div class="reward-grid">
+    <ul class="quest-list" [class.single]="batch.rewards.length === 1">
+      <li class="quest-item" *ngFor="let reward of batch.rewards">
+        <span class="quest-name">{{ reward.card.title }}</span>
+        <span class="quest-item-rewards">
+          <span class="reward-pill xp small">✦ {{ reward.xpGained }}</span>
+          <span class="reward-pill gold small">◈ {{ reward.goldGained }}</span>
+          <span class="reward-pill item small" *ngIf="reward.card.itemDrop">🎁 {{ reward.card.itemDrop }}</span>
+        </span>
+      </li>
+    </ul>
+
+    <div class="reward-grid" *ngIf="batch.rewards.length > 1">
       <div class="reward-pill xp">
         <span class="reward-icon">✦</span>
-        <span class="reward-value">+{{ result.xpGained }} XP</span>
+        <span class="reward-value">+{{ totalXp }} XP</span>
       </div>
       <div class="reward-pill gold">
         <span class="reward-icon">◈</span>
-        <span class="reward-value">+{{ result.goldGained }} Gold</span>
-      </div>
-      <div class="reward-pill item" *ngIf="result.card.itemDrop">
-        <span class="reward-icon">🎁</span>
-        <span class="reward-value">{{ result.card.itemDrop }}</span>
+        <span class="reward-value">+{{ totalGold }} Gold</span>
       </div>
     </div>
 
-    <div class="level-up-banner" *ngIf="result.leveledUp">
-      Level Up! You reached Level {{ result.newLevel }} ⚡
+    <div class="level-up-banner" *ngIf="batch.leveledUp">
+      Level Up! You reached Level {{ batch.newLevel }} ⚡
     </div>
 
     <button class="close-btn" (click)="dismiss.emit()">Collect Rewards</button>

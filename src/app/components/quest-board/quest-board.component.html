@@ -83,7 +83,7 @@
 </section>
 
 <app-completion-modal
-  *ngIf="activeReward() as result"
-  [result]="result"
+  *ngIf="activeRewards() as batch"
+  [batch]="batch"
   (dismiss)="dismissReward()"
 />
