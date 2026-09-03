@@ -8,10 +8,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
-  const token = inject(AuthService).idToken();
-  if (!token) {
-    return next(req);
+  const auth = inject(AuthService);
+  const token = auth.idToken();
+  if (token) {
+    return next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }));
   }
 
-  return next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }));
+  const devUser = auth.devUser();
+  if (devUser) {
+    return next(req.clone({ setHeaders: { 'X-Dev-User': devUser } }));
+  }
+
+  return next(req);
 };

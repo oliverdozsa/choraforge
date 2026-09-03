@@ -22,6 +22,11 @@ export interface RewardResult {
 
 const REWARD_POLL_INTERVAL_MS = 15000;
 
+function byDateDesc(getDate: (card: ChoreCardResponse) => string | undefined) {
+  return (a: ChoreCardResponse, b: ChoreCardResponse) =>
+    new Date(getDate(b) ?? 0).getTime() - new Date(getDate(a) ?? 0).getTime();
+}
+
 function friendlyError(err: unknown): string {
   if (err && typeof err === 'object' && 'status' in err) {
     const status = (err as { status: number }).status;
@@ -77,20 +82,24 @@ export class ChoreStoreService {
   });
 
   readonly availableQuests = computed(() =>
-    this._cards().filter((c) => c.status === 'AVAILABLE'),
+    this._cards()
+      .filter((c) => c.status === 'AVAILABLE')
+      .sort(byDateDesc((c) => c.createdAt)),
   );
 
   readonly activeHand = computed(() =>
-    this._cards().filter((c) => c.status === 'CLAIMED' && c.assignedUserId === this.currentUserId()),
+    this._cards()
+      .filter((c) => c.status === 'CLAIMED' && c.assignedUserId === this.currentUserId())
+      .sort(byDateDesc((c) => c.claimedAt)),
   );
 
   // Admins see every completed card on the team (they can verify anyone's); everyone else sees only their own.
   readonly awaitingVerification = computed(() => {
     const isAdmin = this.isTeamAdmin();
     const userId = this.currentUserId();
-    return this._cards().filter(
-      (c) => c.status === 'COMPLETED' && (isAdmin || c.assignedUserId === userId),
-    );
+    return this._cards()
+      .filter((c) => c.status === 'COMPLETED' && (isAdmin || c.assignedUserId === userId))
+      .sort(byDateDesc((c) => c.completedAt));
   });
 
   readonly teamActivity = computed(() => {

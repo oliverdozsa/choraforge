@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment';
 import { GoogleCredentialResponse } from '../models/google-identity';
 
 const STORAGE_KEY = 'choragon_id_token';
+const DEV_USER_KEY = 'choragon_dev_user';
 
 interface DecodedIdToken {
   sub: string;
@@ -15,13 +16,26 @@ interface DecodedIdToken {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly _idToken = signal<string | null>(this.loadStoredToken());
+  private readonly _devUser = signal<string | null>(sessionStorage.getItem(DEV_USER_KEY));
 
   readonly idToken = this._idToken.asReadonly();
-  readonly isAuthenticated = computed(() => this._idToken() !== null);
+  readonly devUser = this._devUser.asReadonly();
+  readonly isAuthenticated = computed(() => this._idToken() !== null || this._devUser() !== null);
   readonly profile = computed<DecodedIdToken | null>(() => {
     const token = this._idToken();
-    return token ? this.decodeToken(token) : null;
+    if (token) return this.decodeToken(token);
+    const devUser = this._devUser();
+    if (devUser) {
+      return { sub: devUser, email: devUser, name: devUser, exp: Number.MAX_SAFE_INTEGER };
+    }
+    return null;
   });
+
+  /** Dev-only: authenticate via the backend's X-Dev-User header instead of a real Google token. */
+  loginAsDevUser(email: string): void {
+    sessionStorage.setItem(DEV_USER_KEY, email);
+    this._devUser.set(email);
+  }
 
   private loadStoredToken(): string | null {
     const token = sessionStorage.getItem(STORAGE_KEY);
@@ -87,7 +101,9 @@ export class AuthService {
 
   logout(): void {
     sessionStorage.removeItem(STORAGE_KEY);
+    sessionStorage.removeItem(DEV_USER_KEY);
     this._idToken.set(null);
+    this._devUser.set(null);
     window.google?.accounts.id.disableAutoSelect();
   }
 }
