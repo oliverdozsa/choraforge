@@ -23,6 +23,10 @@ export class CompletionModalComponent {
     return this.batch.rewards.reduce((sum, r) => sum + r.goldGained, 0);
   }
 
+  rarityClass(rarity: string): string {
+    return `rarity-${rarity.toLowerCase()}`;
+  }
+
   onBackdropClick(): void {
     this.dismiss.emit();
   }

@@ -5,8 +5,11 @@
     <h2 class="quest-title">{{ batch.rewards.length > 1 ? 'Quests Verified!' : 'Quest Verified!' }}</h2>
 
     <ul class="quest-list" [class.single]="batch.rewards.length === 1">
-      <li class="quest-item" *ngFor="let reward of batch.rewards">
-        <span class="quest-name">{{ reward.card.title }}</span>
+      <li class="mini-card" [ngClass]="rarityClass(reward.card.rarity)" *ngFor="let reward of batch.rewards">
+        <div class="mini-card-header">
+          <span class="rarity-badge">{{ reward.card.rarity }}</span>
+          <span class="quest-name">{{ reward.card.title }}</span>
+        </div>
         <span class="quest-item-rewards">
           <span class="reward-pill xp small">✦ {{ reward.xpGained }}</span>
           <span class="reward-pill gold small">◈ {{ reward.goldGained }}</span>
