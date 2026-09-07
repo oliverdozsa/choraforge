@@ -72,7 +72,7 @@ export class ChoreStoreService {
   readonly assignedUserNames = computed(() => {
     const map = new Map<string, string>();
     for (const member of this._leaderboard()) {
-      map.set(member.userId, member.name);
+      map.set(member.userId, member.givenName ? member.givenName : member.name);
     }
     return map;
   });

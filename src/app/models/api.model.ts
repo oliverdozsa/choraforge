@@ -55,6 +55,8 @@ export interface UserResponse {
 export interface TeamMemberResponse {
   userId: string;
   name: string;
+  givenName: string;
+  familyName: string;
   email: string;
   level: number;
   currentXp: number;
