@@ -9,5 +9,20 @@
     @if (sdkError()) {
       <p class="sdk-error">Couldn't load Google Sign-In. Check your connection and refresh.</p>
     }
+
+    @if (isDevMode) {
+      <div class="dev-login">
+        <p class="dev-label">Dev sign-in</p>
+        <div class="dev-row">
+          <input
+            type="email"
+            placeholder="dev@example.com"
+            [(ngModel)]="devEmail"
+            (keydown.enter)="loginAsDevUser()"
+          />
+          <button type="button" (click)="loginAsDevUser()">Sign in as dev user</button>
+        </div>
+      </div>
+    }
   </div>
 </div>

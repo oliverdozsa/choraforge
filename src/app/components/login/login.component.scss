@@ -57,3 +57,49 @@
   color: #fca5a5;
   font-size: 0.8rem;
 }
+
+.dev-login {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.dev-label {
+  margin: 0 0 0.5rem;
+  color: #9ca3af;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dev-row {
+  display: flex;
+  gap: 0.5rem;
+
+  input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: #0b0d12;
+    color: #e5e7eb;
+    font-size: 0.85rem;
+  }
+
+  button {
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    border: none;
+    background: #38bdf8;
+    color: #0b0d12;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      background: #67d1fb;
+    }
+  }
+}
