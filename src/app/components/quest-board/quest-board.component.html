@@ -64,6 +64,7 @@
         *ngFor="let card of awaitingVerification()"
         [card]="card"
         [canVerify]="isTeamAdmin()"
+        [assignedUserName]="assignedUserName(card)"
         (claim)="claimCard($event)"
         (complete)="completeCard($event)"
         (verify)="verifyCard($event)"
@@ -77,7 +78,12 @@
       <span class="count-badge">{{ teamActivity().length }}</span>
     </div>
     <div class="card-grid">
-      <app-chore-card *ngFor="let card of teamActivity()" [card]="card" [readonlyCard]="true" />
+      <app-chore-card
+        *ngFor="let card of teamActivity()"
+        [card]="card"
+        [readonlyCard]="true"
+        [assignedUserName]="assignedUserName(card)"
+      />
     </div>
   </div>
 </section>

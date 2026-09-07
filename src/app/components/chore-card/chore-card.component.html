@@ -8,6 +8,7 @@
     <div class="card-art" aria-hidden="true">
       <div class="art-glow"></div>
       <span class="status-pill" *ngIf="statusLabel">{{ statusLabel }}</span>
+      <span class="assignee-pill" *ngIf="assignedUserName">👤 {{ assignedUserName }}</span>
     </div>
 
     <p class="description">{{ card.description }}</p>

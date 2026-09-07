@@ -69,6 +69,14 @@ export class ChoreStoreService {
   readonly hasTeam = computed(() => this.teams().length > 0);
   readonly currentUserId = computed(() => this._currentUser()?.id ?? null);
 
+  readonly assignedUserNames = computed(() => {
+    const map = new Map<string, string>();
+    for (const member of this._leaderboard()) {
+      map.set(member.userId, member.name);
+    }
+    return map;
+  });
+
   readonly currentMembership = computed<TeamMembershipResponse | null>(() => {
     const teamId = this._selectedTeamId();
     return this.teams().find((t) => t.teamId === teamId) ?? null;

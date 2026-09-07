@@ -14,6 +14,7 @@ export class ChoreCardComponent {
   @Input({ required: true }) card!: ChoreCardResponse;
   @Input() readonlyCard = false;
   @Input() canVerify = true;
+  @Input() assignedUserName?: string;
   @Output() claim = new EventEmitter<string>();
   @Output() complete = new EventEmitter<string>();
   @Output() verify = new EventEmitter<string>();

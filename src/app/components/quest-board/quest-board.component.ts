@@ -25,6 +25,7 @@ export class QuestBoardComponent {
   readonly templates = this.store.templates;
   readonly selectedTeamId = this.store.selectedTeamId;
   readonly activeRewards = this.store.activeRewards;
+  readonly assignedUserNames = this.store.assignedUserNames;
 
   readonly creatingCard = signal(false);
   readonly creatingCardSubmitting = signal(false);
@@ -39,6 +40,10 @@ export class QuestBoardComponent {
 
   verifyCard(cardId: string): void {
     this.store.verifyCard(cardId);
+  }
+
+  assignedUserName(card: { assignedUserId?: string }): string | undefined {
+    return card.assignedUserId ? this.assignedUserNames().get(card.assignedUserId) : undefined;
   }
 
   dismissReward(): void {
