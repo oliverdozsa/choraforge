@@ -68,17 +68,29 @@
 
   .card-art {
     position: relative;
-    height: 64px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     border-radius: 10px;
     background: linear-gradient(135deg, var(--accent-soft), transparent 70%);
+    background-size: cover;
+    background-position: center;
     border: 1px dashed var(--accent);
     overflow: hidden;
+
+    &.has-image {
+      border-style: solid;
+    }
 
     .art-glow {
       position: absolute;
       inset: -20%;
       background: radial-gradient(circle, var(--card-glow), transparent 65%);
       opacity: 0.8;
+    }
+
+    &.has-image .art-glow {
+      opacity: 0.2;
+      mix-blend-mode: overlay;
     }
 
     .status-pill {
@@ -280,6 +292,12 @@
       );
       background-size: 300% 300%;
       animation: holo-shift 3.5s ease-in-out infinite;
+
+      &.has-image {
+        background-size: cover;
+        background-position: center;
+        animation: none;
+      }
     }
 
     .title {
