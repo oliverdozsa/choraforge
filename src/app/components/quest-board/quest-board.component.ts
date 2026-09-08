@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChoreCardComponent } from '../chore-card/chore-card.component';
 import { CompletionModalComponent } from '../completion-modal/completion-modal.component';
@@ -20,6 +20,7 @@ export class QuestBoardComponent {
   readonly activeHand = this.store.activeHand;
   readonly awaitingVerification = this.store.awaitingVerification;
   readonly teamActivity = this.store.teamActivity;
+  readonly myVerifiedHistory = this.store.myVerifiedHistory;
   readonly error = this.store.error;
   readonly isTeamAdmin = this.store.isTeamAdmin;
   readonly templates = this.store.templates;
@@ -29,6 +30,32 @@ export class QuestBoardComponent {
 
   readonly creatingCard = signal(false);
   readonly creatingCardSubmitting = signal(false);
+
+  private readonly historyPageSize = 6;
+  readonly historyPage = signal(0);
+
+  readonly historyTotalPages = computed(() =>
+    Math.max(1, Math.ceil(this.myVerifiedHistory().length / this.historyPageSize)),
+  );
+
+  readonly pagedVerifiedHistory = computed(() => {
+    const page = Math.min(this.historyPage(), this.historyTotalPages() - 1);
+    const start = page * this.historyPageSize;
+    return this.myVerifiedHistory().slice(start, start + this.historyPageSize);
+  });
+
+  goToHistoryPage(page: number): void {
+    const clamped = Math.min(Math.max(page, 0), this.historyTotalPages() - 1);
+    this.historyPage.set(clamped);
+  }
+
+  prevHistoryPage(): void {
+    this.goToHistoryPage(this.historyPage() - 1);
+  }
+
+  nextHistoryPage(): void {
+    this.goToHistoryPage(this.historyPage() + 1);
+  }
 
   claimCard(cardId: string): void {
     this.store.claimCard(cardId);

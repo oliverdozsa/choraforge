@@ -72,6 +72,23 @@
     </div>
   </div>
 
+  <div class="board-section history-section" *ngIf="myVerifiedHistory().length">
+    <div class="section-heading">
+      <h2>My Verified History</h2>
+      <span class="count-badge">{{ myVerifiedHistory().length }}</span>
+    </div>
+    <div class="card-grid">
+      <app-chore-card *ngFor="let card of pagedVerifiedHistory()" [card]="card" [readonlyCard]="true" />
+    </div>
+    <div class="pagination" *ngIf="historyTotalPages() > 1">
+      <button type="button" [disabled]="historyPage() === 0" (click)="prevHistoryPage()">‹ Prev</button>
+      <span class="page-indicator">Page {{ historyPage() + 1 }} of {{ historyTotalPages() }}</span>
+      <button type="button" [disabled]="historyPage() >= historyTotalPages() - 1" (click)="nextHistoryPage()">
+        Next ›
+      </button>
+    </div>
+  </div>
+
   <div class="board-section activity-section" *ngIf="teamActivity().length">
     <div class="section-heading">
       <h2>Team Activity</h2>

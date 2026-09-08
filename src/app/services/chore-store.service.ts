@@ -114,6 +114,12 @@ export class ChoreStoreService {
       .sort(byDateDesc((c) => c.completedAt));
   });
 
+  readonly myVerifiedHistory = computed(() =>
+    this._cards()
+      .filter((c) => c.status === 'VERIFIED' && c.assignedUserId === this.currentUserId())
+      .sort(byDateDesc((c) => c.verifiedAt)),
+  );
+
   readonly teamActivity = computed(() => {
     const userId = this.currentUserId();
     const awaiting = new Set(this.awaitingVerification().map((c) => c.id));
