@@ -14,6 +14,7 @@ export interface ChoreCardResponse {
   xpReward: number;
   goldReward: number;
   itemDrop?: string;
+  imageUrl?: string;
   status: CardStatus;
   assignedUserId?: string;
   teamId: string;
@@ -97,6 +98,7 @@ export interface CreateChoreCardRequest {
   xpReward: number;
   goldReward: number;
   itemDrop?: string;
+  imageUrl?: string;
 }
 
 export interface ChoreCardTemplateResponse {
@@ -110,6 +112,7 @@ export interface ChoreCardTemplateResponse {
   xpReward: number;
   goldReward: number;
   itemDrop?: string;
+  imageUrl?: string;
   createdAt: string;
 }
 
@@ -123,4 +126,5 @@ export interface CreateChoreCardTemplateRequest {
   xpReward: number;
   goldReward: number;
   itemDrop?: string;
+  imageUrl?: string;
 }

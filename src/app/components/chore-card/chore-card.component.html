@@ -5,7 +5,12 @@
       <span class="title">{{ card.title }}</span>
     </header>
 
-    <div class="card-art" aria-hidden="true">
+    <div
+      class="card-art"
+      aria-hidden="true"
+      [class.has-image]="card.imageUrl"
+      [style.background-image]="card.imageUrl ? 'url(' + card.imageUrl + ')' : null"
+    >
       <div class="art-glow"></div>
       <span class="status-pill" *ngIf="statusLabel">{{ statusLabel }}</span>
       <span class="assignee-pill" *ngIf="assignedUserName">👤 {{ assignedUserName }}</span>

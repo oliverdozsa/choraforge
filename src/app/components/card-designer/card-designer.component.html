@@ -52,6 +52,11 @@
       <input type="text" name="itemDrop" [(ngModel)]="itemDrop" maxlength="60" />
     </label>
 
+    <label>
+      Image URL <span class="optional">(optional)</span>
+      <input type="url" name="imageUrl" [(ngModel)]="imageUrl" maxlength="500" placeholder="https://…" />
+    </label>
+
     <p class="form-error" *ngIf="formError">{{ formError }}</p>
 
     <div class="designer-actions">

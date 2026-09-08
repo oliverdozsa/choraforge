@@ -13,6 +13,7 @@ export interface CardDraft {
   xpReward: number;
   goldReward: number;
   itemDrop?: string;
+  imageUrl?: string;
 }
 
 @Component({
@@ -42,6 +43,7 @@ export class CardDesignerComponent {
   xpReward = 50;
   goldReward = 10;
   itemDrop = '';
+  imageUrl = '';
 
   formError = '';
 
@@ -57,6 +59,7 @@ export class CardDesignerComponent {
       xpReward: this.xpReward,
       goldReward: this.goldReward,
       itemDrop: this.itemDrop || undefined,
+      imageUrl: this.imageUrl || undefined,
       status: 'AVAILABLE',
       createdAt: new Date().toISOString(),
     };
@@ -73,6 +76,7 @@ export class CardDesignerComponent {
     this.xpReward = template.xpReward;
     this.goldReward = template.goldReward;
     this.itemDrop = template.itemDrop ?? '';
+    this.imageUrl = template.imageUrl ?? '';
   }
 
   onSubmit(): void {
@@ -90,6 +94,7 @@ export class CardDesignerComponent {
       xpReward: this.xpReward,
       goldReward: this.goldReward,
       itemDrop: this.itemDrop || undefined,
+      imageUrl: this.imageUrl || undefined,
     });
   }
 
