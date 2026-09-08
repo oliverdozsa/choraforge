@@ -25,6 +25,14 @@ export interface ChoreCardResponse {
   rewardAcknowledgedAt?: string;
 }
 
+export interface PagedResponse<T> {
+  items: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
 export interface CardVerificationResponse {
   cardCompleted: ChoreCardResponse;
   xpGained: number;

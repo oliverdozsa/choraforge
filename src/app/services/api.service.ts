@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom, from } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   CardStatus,
@@ -11,12 +11,14 @@ import {
   CreateChoreCardTemplateRequest,
   CreateTeamRequest,
   JoinTeamRequest,
+  PagedResponse,
   TeamMemberResponse,
   TeamResponse,
   UserResponse,
 } from '../models/api.model';
 
 const ALL_CARD_STATUSES: CardStatus[] = ['AVAILABLE', 'CLAIMED', 'COMPLETED', 'VERIFIED'];
+const TEAM_CARDS_PAGE_SIZE = 100;
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -39,10 +41,33 @@ export class ApiService {
     return this.http.post<TeamResponse>(`${this.base}/team/${teamId}/join`, request);
   }
 
-  getTeamCards(teamId: string, statuses: CardStatus[] = ALL_CARD_STATUSES): Observable<ChoreCardResponse[]> {
-    return this.http.get<ChoreCardResponse[]>(`${this.base}/teams/${teamId}/cards`, {
-      params: { status: statuses.join(',') },
+  getTeamCardsPage(
+    teamId: string,
+    page: number,
+    size: number = TEAM_CARDS_PAGE_SIZE,
+    statuses: CardStatus[] = ALL_CARD_STATUSES,
+  ): Observable<PagedResponse<ChoreCardResponse>> {
+    return this.http.get<PagedResponse<ChoreCardResponse>>(`${this.base}/teams/${teamId}/cards`, {
+      params: { page, size, status: statuses.join(',') },
     });
+  }
+
+  /** Fetches every page of the team's cards and flattens them into a single list. */
+  getTeamCards(teamId: string, statuses: CardStatus[] = ALL_CARD_STATUSES): Observable<ChoreCardResponse[]> {
+    return from(this.fetchAllTeamCards(teamId, statuses));
+  }
+
+  private async fetchAllTeamCards(teamId: string, statuses: CardStatus[]): Promise<ChoreCardResponse[]> {
+    const cards: ChoreCardResponse[] = [];
+    let page = 0;
+    let totalPages = 1;
+    do {
+      const response = await firstValueFrom(this.getTeamCardsPage(teamId, page, TEAM_CARDS_PAGE_SIZE, statuses));
+      cards.push(...response.items);
+      totalPages = response.totalPages;
+      page++;
+    } while (page < totalPages);
+    return cards;
   }
 
   createCard(request: CreateChoreCardRequest): Observable<ChoreCardResponse> {
