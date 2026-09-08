@@ -37,7 +37,7 @@
 
   <div class="board-section hand-section">
     <div class="section-heading">
-      <h2>My Active Hand</h2>
+      <h2>My Active Quests</h2>
       <span class="count-badge">{{ activeHand().length }}</span>
     </div>
     <div class="card-grid" *ngIf="activeHand().length; else emptyHand">
@@ -74,7 +74,7 @@
 
   <div class="board-section history-section" *ngIf="myVerifiedHistory().length">
     <div class="section-heading">
-      <h2>My Verified History</h2>
+      <h2>My History</h2>
       <span class="count-badge">{{ myVerifiedHistory().length }}</span>
     </div>
     <div class="card-grid">
