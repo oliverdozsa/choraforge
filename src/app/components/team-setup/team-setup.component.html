@@ -1,7 +1,9 @@
-<div class="setup-shell">
+<div class="setup-shell" [class.embedded]="embedded">
   <div class="setup-card">
-    <h1>Join the Adventure</h1>
-    <p class="subtitle">You're signed in, but not on a team yet. Create one or join an existing crew.</p>
+    <ng-container *ngIf="!embedded">
+      <h1>Join the Adventure</h1>
+      <p class="subtitle">You're signed in, but not on a team yet. Create one or join an existing crew.</p>
+    </ng-container>
 
     <div class="tabs">
       <button class="tab" [class.active]="mode() === 'create'" (click)="setMode('create')">Create Team</button>

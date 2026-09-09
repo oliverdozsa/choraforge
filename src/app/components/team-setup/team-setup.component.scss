@@ -14,6 +14,20 @@
   padding: 1.5rem;
 }
 
+.setup-shell.embedded {
+  min-height: auto;
+  padding: 0;
+  background: none;
+}
+
+.setup-shell.embedded .setup-card {
+  width: 100%;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  background: none;
+}
+
 .setup-card {
   width: min(420px, 100%);
   padding: 2.25rem 2rem;

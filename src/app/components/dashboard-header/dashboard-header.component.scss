@@ -19,6 +19,26 @@
   gap: 0.75rem;
   min-width: 0;
 
+  .avatar-menu-anchor {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .avatar-btn {
+    display: block;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: box-shadow 0.15s ease;
+
+    &:hover,
+    &[aria-expanded='true'] {
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.5);
+    }
+  }
+
   .avatar {
     width: 42px;
     height: 42px;
@@ -41,6 +61,45 @@
     border-radius: 12px;
     object-fit: cover;
     box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+  }
+
+  .avatar-menu-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+  }
+
+  .avatar-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    z-index: 160;
+    min-width: 170px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.4rem;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #1c202c, #171b26);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  }
+
+  .avatar-menu-item {
+    text-align: left;
+    border: none;
+    background: transparent;
+    color: #e5e7eb;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.5rem 0.6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: rgba(56, 189, 248, 0.12);
+    }
   }
 
   .name-block {
