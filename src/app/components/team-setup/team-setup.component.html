@@ -6,11 +6,39 @@
     </ng-container>
 
     <div class="tabs">
+      @if (hasTeam()) {
+        <button class="tab" [class.active]="mode() === 'teams'" (click)="setMode('teams')">My Teams</button>
+      }
       <button class="tab" [class.active]="mode() === 'create'" (click)="setMode('create')">Create Team</button>
       <button class="tab" [class.active]="mode() === 'join'" (click)="setMode('join')">Join Team</button>
     </div>
 
-    @if (mode() === 'create') {
+    @if (mode() === 'teams' && hasTeam()) {
+      <ul class="team-list">
+        @for (team of teams(); track team.teamId) {
+          <li class="team-row" [class.current]="team.teamId === selectedTeamId()">
+            <div class="team-info">
+              <span class="team-name">{{ team.teamName }}</span>
+              <span class="team-meta">{{ team.role }} · Level {{ team.level }}</span>
+            </div>
+            @if (team.teamId === selectedTeamId()) {
+              <span class="current-badge">Current</span>
+            } @else {
+              <button
+                type="button"
+                class="switch-btn"
+                [disabled]="switchingTeamId() === team.teamId"
+                (click)="switchTeam(team.teamId)"
+              >
+                {{ switchingTeamId() === team.teamId ? 'Switching…' : 'Switch' }}
+              </button>
+            }
+          </li>
+        } @empty {
+          <li class="empty-msg">You're not on any teams yet.</li>
+        }
+      </ul>
+    } @else if (mode() === 'create') {
       <form class="form" (ngSubmit)="createTeam()">
         <label>
           Team Name

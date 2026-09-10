@@ -19,19 +19,34 @@ export class TeamSetupComponent {
   /** Emits once a team has been created or joined. */
   @Output() completed = new EventEmitter<void>();
 
-  readonly mode = signal<'create' | 'join'>('create');
+  readonly hasTeam = this.store.hasTeam;
+  readonly mode = signal<'create' | 'join' | 'teams'>(this.hasTeam() ? 'teams' : 'create');
   readonly submitting = signal(false);
   readonly formError = signal<string | null>(null);
+  readonly switchingTeamId = signal<string | null>(null);
 
   teamName = '';
   joinTeamId = '';
   joinEmail = '';
 
   readonly error = this.store.error;
+  readonly teams = this.store.teams;
+  readonly selectedTeamId = this.store.selectedTeamId;
 
-  setMode(mode: 'create' | 'join'): void {
+  setMode(mode: 'create' | 'join' | 'teams'): void {
     this.mode.set(mode);
     this.formError.set(null);
+  }
+
+  async switchTeam(teamId: string): Promise<void> {
+    if (teamId === this.selectedTeamId()) return;
+    this.switchingTeamId.set(teamId);
+    try {
+      await this.store.selectTeam(teamId);
+      this.completed.emit();
+    } finally {
+      this.switchingTeamId.set(null);
+    }
   }
 
   async createTeam(): Promise<void> {

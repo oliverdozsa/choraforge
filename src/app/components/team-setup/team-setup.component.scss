@@ -116,6 +116,89 @@
   }
 }
 
+.team-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.team-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 12px;
+  background: #1f2430;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+
+  &.current {
+    border-color: rgba(56, 189, 248, 0.5);
+  }
+}
+
+.team-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.team-name {
+  color: #f3f4f6;
+  font-weight: 700;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.team-meta {
+  color: #9ca3af;
+  font-size: 0.75rem;
+}
+
+.current-badge {
+  flex-shrink: 0;
+  color: #38bdf8;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.switch-btn {
+  flex-shrink: 0;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: transparent;
+  color: #f3f4f6;
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  &:not(:disabled):hover {
+    background: rgba(148, 163, 184, 0.12);
+  }
+}
+
+.empty-msg {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 1rem 0;
+}
+
 .submit-btn {
   margin-top: 0.25rem;
   border: none;
