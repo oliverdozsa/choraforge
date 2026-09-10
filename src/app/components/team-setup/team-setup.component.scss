@@ -53,6 +53,23 @@
   }
 }
 
+.logout-link {
+  display: block;
+  margin: -0.75rem auto 1.5rem;
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:hover {
+    color: #fca5a5;
+  }
+}
+
 .tabs {
   display: flex;
   gap: 0.5rem;

@@ -38,6 +38,10 @@ export class TeamSetupComponent {
     this.formError.set(null);
   }
 
+  logout(): void {
+    this.store.logout();
+  }
+
   async switchTeam(teamId: string): Promise<void> {
     if (teamId === this.selectedTeamId()) return;
     this.switchingTeamId.set(teamId);
