@@ -34,7 +34,7 @@ export class ChoreCardComponent {
       case 'CLAIMED':
         return 'Complete Quest';
       case 'COMPLETED':
-        return 'Verify & Collect';
+        return 'Verify';
       case 'VERIFIED':
         return 'Verified ✓';
     }
