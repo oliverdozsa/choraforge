@@ -57,6 +57,59 @@
       <input type="url" name="imageUrl" [(ngModel)]="imageUrl" maxlength="500" placeholder="https://…" />
     </label>
 
+    <label>
+      Recurrence
+      <select name="recurrenceType" [(ngModel)]="recurrenceType">
+        <option *ngFor="let t of recurrenceTypes" [value]="t.value">{{ t.label }}</option>
+      </select>
+    </label>
+
+    <label *ngIf="recurrenceType === 'AFTER_COMPLETION'">
+      Respawn after (minutes)
+      <input type="number" name="intervalMinutes" [(ngModel)]="intervalMinutes" min="1" />
+    </label>
+
+    <ng-container *ngIf="recurrenceType === 'SCHEDULE'">
+      <div class="field-row">
+        <label>
+          Frequency
+          <select name="frequency" [(ngModel)]="frequency">
+            <option *ngFor="let f of frequencies" [value]="f">{{ f }}</option>
+          </select>
+        </label>
+        <label>
+          Every N
+          <input type="number" name="scheduleInterval" [(ngModel)]="scheduleInterval" min="1" max="100" />
+        </label>
+      </div>
+
+      <div class="weekdays" *ngIf="frequency === 'WEEKLY'">
+        <button
+          type="button"
+          *ngFor="let day of weekDays"
+          class="day-chip"
+          [class.active]="daysOfWeek.includes(day)"
+          (click)="toggleDay(day)"
+        >{{ day.slice(0, 3) }}</button>
+      </div>
+
+      <label *ngIf="frequency === 'MONTHLY'">
+        Day of month
+        <input type="number" name="dayOfMonth" [(ngModel)]="dayOfMonth" min="1" max="31" />
+      </label>
+
+      <div class="field-row">
+        <label>
+          Time
+          <input type="time" name="time" [(ngModel)]="time" />
+        </label>
+        <label>
+          Time zone
+          <input type="text" name="timeZone" [(ngModel)]="timeZone" />
+        </label>
+      </div>
+    </ng-container>
+
     <p class="form-error" *ngIf="formError">{{ formError }}</p>
 
     <div class="designer-actions">

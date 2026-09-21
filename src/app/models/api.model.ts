@@ -2,6 +2,34 @@ export type Rarity = 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
 
 export type CardStatus = 'AVAILABLE' | 'CLAIMED' | 'COMPLETED' | 'VERIFIED';
 
+export type RecurrenceType = 'SCHEDULE' | 'AFTER_COMPLETION';
+
+export type ScheduleFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY';
+
+export type DayOfWeek =
+  | 'MONDAY'
+  | 'TUESDAY'
+  | 'WEDNESDAY'
+  | 'THURSDAY'
+  | 'FRIDAY'
+  | 'SATURDAY'
+  | 'SUNDAY';
+
+export interface ScheduleDto {
+  frequency: ScheduleFrequency;
+  interval?: number;
+  daysOfWeek?: DayOfWeek[];
+  dayOfMonth?: number;
+  time: string;
+  timeZone?: string;
+}
+
+export interface RecurrenceDto {
+  type: RecurrenceType;
+  intervalMinutes?: number;
+  schedule?: ScheduleDto;
+}
+
 export type TeamRole = 'USER' | 'ADMIN' | 'TEAM_ADMIN';
 
 export interface ChoreCardResponse {
@@ -24,6 +52,7 @@ export interface ChoreCardResponse {
   completedAt?: string;
   verifiedAt?: string;
   rewardAcknowledgedAt?: string;
+  recurrence?: RecurrenceDto;
 }
 
 export interface PagedResponse<T> {
@@ -99,6 +128,7 @@ export interface CreateChoreCardRequest {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  recurrence?: RecurrenceDto;
 }
 
 export interface ChoreCardTemplateResponse {
@@ -114,6 +144,7 @@ export interface ChoreCardTemplateResponse {
   itemDrop?: string;
   imageUrl?: string;
   createdAt: string;
+  recurrence?: RecurrenceDto;
 }
 
 export interface CreateChoreCardTemplateRequest {
@@ -127,4 +158,5 @@ export interface CreateChoreCardTemplateRequest {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  recurrence?: RecurrenceDto;
 }

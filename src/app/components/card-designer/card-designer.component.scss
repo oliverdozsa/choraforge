@@ -111,3 +111,24 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.weekdays {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.day-chip {
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: #0b0d12;
+  color: #9ca3af;
+  font-size: 0.75rem;
+  cursor: pointer;
+
+  &.active {
+    border-color: #86efac;
+    color: #86efac;
+  }
+}
