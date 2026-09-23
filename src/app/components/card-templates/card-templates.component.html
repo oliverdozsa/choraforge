@@ -17,26 +17,24 @@
       <span class="plus">+</span>
       <span>New Template</span>
     </button>
-
-    <div class="designer-slot" *ngIf="creating()">
-      <app-card-designer
-        submitLabel="Save Template"
-        [submitting]="submitting()"
-        [previewTeamId]="selectedTeamId() ?? ''"
-        (save)="save($event)"
-        (cancelled)="cancel()"
-      />
-    </div>
-
-    <div class="designer-slot" *ngIf="editingTemplate() as template">
-      <app-card-designer
-        submitLabel="Save Changes"
-        [submitting]="editingSubmitting()"
-        [previewTeamId]="selectedTeamId() ?? ''"
-        [initial]="asDraft(template)"
-        (save)="saveEdited($event)"
-        (cancelled)="cancelEditing()"
-      />
-    </div>
   </div>
+
+  <app-card-designer-modal
+    *ngIf="creating()"
+    submitLabel="Save Template"
+    [submitting]="submitting()"
+    [previewTeamId]="selectedTeamId() ?? ''"
+    (save)="save($event)"
+    (cancelled)="cancel()"
+  />
+
+  <app-card-designer-modal
+    *ngIf="editingTemplate() as template"
+    submitLabel="Save Changes"
+    [submitting]="editingSubmitting()"
+    [previewTeamId]="selectedTeamId() ?? ''"
+    [initial]="asDraft(template)"
+    (save)="saveEdited($event)"
+    (cancelled)="cancelEditing()"
+  />
 </section>

@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChoreCardComponent } from '../chore-card/chore-card.component';
-import { CardDesignerComponent, CardDraft } from '../card-designer/card-designer.component';
+import { CardDraft } from '../card-designer/card-designer.component';
+import { CardDesignerModalComponent } from '../card-designer-modal/card-designer-modal.component';
 import { ChoreStoreService } from '../../services/chore-store.service';
 import { ChoreCardResponse, ChoreCardTemplateResponse } from '../../models/api.model';
 
 @Component({
   selector: 'app-card-templates',
   standalone: true,
-  imports: [CommonModule, ChoreCardComponent, CardDesignerComponent],
+  imports: [CommonModule, ChoreCardComponent, CardDesignerModalComponent],
   templateUrl: './card-templates.component.html',
   styleUrl: './card-templates.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

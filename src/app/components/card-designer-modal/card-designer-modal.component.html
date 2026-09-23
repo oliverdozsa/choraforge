@@ -1,0 +1,13 @@
+<div class="modal-backdrop" (click)="onBackdropClick()">
+  <div class="designer-overlay" (click)="$event.stopPropagation()">
+    <app-card-designer
+      [templates]="templates"
+      [submitting]="submitting"
+      [submitLabel]="submitLabel"
+      [previewTeamId]="previewTeamId"
+      [initial]="initial"
+      (save)="save.emit($event)"
+      (cancelled)="cancelled.emit()"
+    />
+  </div>
+</div>

@@ -2,14 +2,15 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { CommonModule } from '@angular/common';
 import { ChoreCardComponent } from '../chore-card/chore-card.component';
 import { CompletionModalComponent } from '../completion-modal/completion-modal.component';
-import { CardDesignerComponent, CardDraft } from '../card-designer/card-designer.component';
+import { CardDraft } from '../card-designer/card-designer.component';
+import { CardDesignerModalComponent } from '../card-designer-modal/card-designer-modal.component';
 import { ChoreStoreService } from '../../services/chore-store.service';
 import { ChoreCardResponse } from '../../models/api.model';
 
 @Component({
   selector: 'app-quest-board',
   standalone: true,
-  imports: [CommonModule, ChoreCardComponent, CompletionModalComponent, CardDesignerComponent],
+  imports: [CommonModule, ChoreCardComponent, CompletionModalComponent, CardDesignerModalComponent],
   templateUrl: './quest-board.component.html',
   styleUrl: './quest-board.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

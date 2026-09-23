@@ -1,15 +1,24 @@
 <p class="error-banner" *ngIf="error()">{{ error() }}</p>
 
-<div class="designer-slot" *ngIf="editingCard() as card">
-  <app-card-designer
-    submitLabel="Save Changes"
-    [submitting]="editingCardSubmitting()"
-    [previewTeamId]="selectedTeamId() ?? ''"
-    [initial]="asDraft(card)"
-    (save)="saveEditedCard($event)"
-    (cancelled)="cancelEditingCard()"
-  />
-</div>
+<app-card-designer-modal
+  *ngIf="editingCard() as card"
+  submitLabel="Save Changes"
+  [submitting]="editingCardSubmitting()"
+  [previewTeamId]="selectedTeamId() ?? ''"
+  [initial]="asDraft(card)"
+  (save)="saveEditedCard($event)"
+  (cancelled)="cancelEditingCard()"
+/>
+
+<app-card-designer-modal
+  *ngIf="creatingCard()"
+  submitLabel="Create Card"
+  [templates]="templates()"
+  [submitting]="creatingCardSubmitting()"
+  [previewTeamId]="selectedTeamId() ?? ''"
+  (save)="createCard($event)"
+  (cancelled)="cancelCreatingCard()"
+/>
 
 <section class="playmat">
   <div class="board-section">
@@ -19,17 +28,6 @@
       <button class="new-card-btn" *ngIf="isTeamAdmin() && !creatingCard()" (click)="startCreatingCard()">
         + New Card
       </button>
-    </div>
-
-    <div class="designer-slot" *ngIf="creatingCard()">
-      <app-card-designer
-        submitLabel="Create Card"
-        [templates]="templates()"
-        [submitting]="creatingCardSubmitting()"
-        [previewTeamId]="selectedTeamId() ?? ''"
-        (save)="createCard($event)"
-        (cancelled)="cancelCreatingCard()"
-      />
     </div>
 
     <div class="card-grid" *ngIf="availableQuests().length; else emptyAvailable">
