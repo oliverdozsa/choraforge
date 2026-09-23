@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChoreCardComponent } from '../chore-card/chore-card.component';
@@ -33,11 +33,13 @@ export interface CardDraft {
   styleUrl: './card-designer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CardDesignerComponent {
+export class CardDesignerComponent implements OnInit {
   @Input() templates: ChoreCardTemplateResponse[] = [];
   @Input() submitting = false;
   @Input() submitLabel = 'Save';
   @Input() previewTeamId = '';
+  /** When set, the designer opens pre-filled for editing rather than creating a new card/template. */
+  @Input() initial?: CardDraft;
   @Output() save = new EventEmitter<CardDraft>();
   @Output() cancelled = new EventEmitter<void>();
 
@@ -126,19 +128,29 @@ export class CardDesignerComponent {
     return undefined;
   }
 
+  ngOnInit(): void {
+    if (this.initial) {
+      this.applyDraft(this.initial);
+    }
+  }
+
   onTemplateSelected(): void {
     const template = this.templates.find((t) => t.id === this.selectedTemplateId);
     if (!template) return;
-    this.title = template.title;
-    this.description = template.description ?? '';
-    this.rarity = template.rarity;
-    this.complexity = template.complexity;
-    this.estimatedMinutes = template.estimatedMinutes;
-    this.xpReward = template.xpReward;
-    this.goldReward = template.goldReward;
-    this.itemDrop = template.itemDrop ?? '';
-    this.imageUrl = template.imageUrl ?? '';
-    this.applyRecurrence(template.recurrence);
+    this.applyDraft(template);
+  }
+
+  private applyDraft(draft: CardDraft): void {
+    this.title = draft.title;
+    this.description = draft.description ?? '';
+    this.rarity = draft.rarity;
+    this.complexity = draft.complexity;
+    this.estimatedMinutes = draft.estimatedMinutes;
+    this.xpReward = draft.xpReward;
+    this.goldReward = draft.goldReward;
+    this.itemDrop = draft.itemDrop ?? '';
+    this.imageUrl = draft.imageUrl ?? '';
+    this.applyRecurrence(draft.recurrence);
   }
 
   private applyRecurrence(r?: RecurrenceDto): void {

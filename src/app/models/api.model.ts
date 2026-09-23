@@ -160,3 +160,29 @@ export interface CreateChoreCardTemplateRequest {
   imageUrl?: string;
   recurrence?: RecurrenceDto;
 }
+
+export interface UpdateChoreCardRequest {
+  title: string;
+  description?: string;
+  rarity: Rarity;
+  complexity: number;
+  estimatedMinutes: number;
+  xpReward: number;
+  goldReward: number;
+  itemDrop?: string;
+  imageUrl?: string;
+  recurrence?: RecurrenceDto;
+}
+
+export interface UpdateChoreCardTemplateRequest {
+  title: string;
+  description?: string;
+  rarity: Rarity;
+  complexity: number;
+  estimatedMinutes: number;
+  xpReward: number;
+  goldReward: number;
+  itemDrop?: string;
+  imageUrl?: string;
+  recurrence?: RecurrenceDto;
+}

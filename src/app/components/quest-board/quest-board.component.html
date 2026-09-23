@@ -1,5 +1,16 @@
 <p class="error-banner" *ngIf="error()">{{ error() }}</p>
 
+<div class="designer-slot" *ngIf="editingCard() as card">
+  <app-card-designer
+    submitLabel="Save Changes"
+    [submitting]="editingCardSubmitting()"
+    [previewTeamId]="selectedTeamId() ?? ''"
+    [initial]="asDraft(card)"
+    (save)="saveEditedCard($event)"
+    (cancelled)="cancelEditingCard()"
+  />
+</div>
+
 <section class="playmat">
   <div class="board-section">
     <div class="section-heading">
@@ -25,9 +36,11 @@
       <app-chore-card
         *ngFor="let card of availableQuests()"
         [card]="card"
+        [canEdit]="isTeamAdmin()"
         (claim)="claimCard($event)"
         (complete)="completeCard($event)"
         (verify)="verifyCard($event)"
+        (edit)="startEditingCard($event)"
       />
     </div>
     <ng-template #emptyAvailable>
@@ -44,9 +57,11 @@
       <app-chore-card
         *ngFor="let card of activeHand()"
         [card]="card"
+        [canEdit]="isTeamAdmin()"
         (claim)="claimCard($event)"
         (complete)="completeCard($event)"
         (verify)="verifyCard($event)"
+        (edit)="startEditingCard($event)"
       />
     </div>
     <ng-template #emptyHand>
@@ -64,10 +79,12 @@
         *ngFor="let card of awaitingVerification()"
         [card]="card"
         [canVerify]="isTeamAdmin()"
+        [canEdit]="isTeamAdmin()"
         [assignedUserName]="assignedUserName(card)"
         (claim)="claimCard($event)"
         (complete)="completeCard($event)"
         (verify)="verifyCard($event)"
+        (edit)="startEditingCard($event)"
       />
     </div>
   </div>
@@ -78,7 +95,13 @@
       <span class="count-badge">{{ myVerifiedHistory().length }}</span>
     </div>
     <div class="card-grid">
-      <app-chore-card *ngFor="let card of pagedVerifiedHistory()" [card]="card" [readonlyCard]="true" />
+      <app-chore-card
+        *ngFor="let card of pagedVerifiedHistory()"
+        [card]="card"
+        [readonlyCard]="true"
+        [canEdit]="isTeamAdmin()"
+        (edit)="startEditingCard($event)"
+      />
     </div>
     <div class="pagination" *ngIf="historyTotalPages() > 1">
       <button type="button" [disabled]="historyPage() === 0" (click)="prevHistoryPage()">‹ Prev</button>
@@ -99,7 +122,9 @@
         *ngFor="let card of teamActivity()"
         [card]="card"
         [readonlyCard]="true"
+        [canEdit]="isTeamAdmin()"
         [assignedUserName]="assignedUserName(card)"
+        (edit)="startEditingCard($event)"
       />
     </div>
   </div>

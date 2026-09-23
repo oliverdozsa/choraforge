@@ -14,10 +14,17 @@ export class ChoreCardComponent {
   @Input({ required: true }) card!: ChoreCardResponse;
   @Input() readonlyCard = false;
   @Input() canVerify = true;
+  @Input() canEdit = false;
   @Input() assignedUserName?: string;
   @Output() claim = new EventEmitter<string>();
   @Output() complete = new EventEmitter<string>();
   @Output() verify = new EventEmitter<string>();
+  @Output() edit = new EventEmitter<string>();
+
+  onEdit(event: Event): void {
+    event.stopPropagation();
+    this.edit.emit(this.card.id);
+  }
 
   get rarityClass(): string {
     return `rarity-${this.card.rarity.toLowerCase()}`;

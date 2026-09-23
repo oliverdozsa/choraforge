@@ -1,6 +1,6 @@
 <div class="designer">
   <form class="designer-form" (ngSubmit)="onSubmit()">
-    <label *ngIf="templates.length">
+    <label *ngIf="templates.length && !initial">
       Start from template <span class="optional">(optional)</span>
       <select name="templateId" [(ngModel)]="selectedTemplateId" [ngModelOptions]="{standalone: true}" (ngModelChange)="onTemplateSelected()">
         <option value="">— Blank card —</option>

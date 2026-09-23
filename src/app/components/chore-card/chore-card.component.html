@@ -3,6 +3,9 @@
     <header class="card-header">
       <span class="rarity-badge">{{ card.rarity }}</span>
       <span class="title">{{ card.title }}</span>
+      <button type="button" class="edit-btn" *ngIf="canEdit" (click)="onEdit($event)" aria-label="Edit card">
+        ✎
+      </button>
     </header>
 
     <div

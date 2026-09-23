@@ -64,6 +64,27 @@
       background: var(--accent-soft);
       border: 1px solid var(--accent);
     }
+
+    .edit-btn {
+      flex-shrink: 0;
+      margin-left: auto;
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      border: 1px solid var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 0.7rem;
+      line-height: 1;
+
+      &:hover {
+        filter: brightness(1.2);
+      }
+    }
   }
 
   .card-art {

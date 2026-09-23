@@ -9,6 +9,8 @@
       *ngFor="let template of templates()"
       [card]="asChoreCard(template)"
       [readonlyCard]="true"
+      [canEdit]="true"
+      (edit)="startEditing(template.id)"
     />
 
     <button class="add-slot" *ngIf="!creating()" (click)="startCreating()">
@@ -23,6 +25,17 @@
         [previewTeamId]="selectedTeamId() ?? ''"
         (save)="save($event)"
         (cancelled)="cancel()"
+      />
+    </div>
+
+    <div class="designer-slot" *ngIf="editingTemplate() as template">
+      <app-card-designer
+        submitLabel="Save Changes"
+        [submitting]="editingSubmitting()"
+        [previewTeamId]="selectedTeamId() ?? ''"
+        [initial]="asDraft(template)"
+        (save)="saveEdited($event)"
+        (cancelled)="cancelEditing()"
       />
     </div>
   </div>

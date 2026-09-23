@@ -14,6 +14,8 @@ import {
   PagedResponse,
   TeamMemberResponse,
   TeamResponse,
+  UpdateChoreCardRequest,
+  UpdateChoreCardTemplateRequest,
   UserResponse,
 } from '../models/api.model';
 
@@ -74,6 +76,10 @@ export class ApiService {
     return this.http.post<ChoreCardResponse>(`${this.base}/cards`, request);
   }
 
+  updateCard(cardId: string, request: UpdateChoreCardRequest): Observable<ChoreCardResponse> {
+    return this.http.put<ChoreCardResponse>(`${this.base}/cards/${cardId}`, request);
+  }
+
   getLeaderboard(teamId: string): Observable<TeamMemberResponse[]> {
     return this.http.get<TeamMemberResponse[]>(`${this.base}/teams/${teamId}/leaderboard`);
   }
@@ -100,5 +106,12 @@ export class ApiService {
 
   createCardTemplate(request: CreateChoreCardTemplateRequest): Observable<ChoreCardTemplateResponse> {
     return this.http.post<ChoreCardTemplateResponse>(`${this.base}/card-templates`, request);
+  }
+
+  updateCardTemplate(
+    templateId: string,
+    request: UpdateChoreCardTemplateRequest,
+  ): Observable<ChoreCardTemplateResponse> {
+    return this.http.put<ChoreCardTemplateResponse>(`${this.base}/card-templates/${templateId}`, request);
   }
 }

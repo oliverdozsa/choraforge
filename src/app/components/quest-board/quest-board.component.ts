@@ -4,6 +4,7 @@ import { ChoreCardComponent } from '../chore-card/chore-card.component';
 import { CompletionModalComponent } from '../completion-modal/completion-modal.component';
 import { CardDesignerComponent, CardDraft } from '../card-designer/card-designer.component';
 import { ChoreStoreService } from '../../services/chore-store.service';
+import { ChoreCardResponse } from '../../models/api.model';
 
 @Component({
   selector: 'app-quest-board',
@@ -30,6 +31,8 @@ export class QuestBoardComponent {
 
   readonly creatingCard = signal(false);
   readonly creatingCardSubmitting = signal(false);
+  readonly editingCard = signal<ChoreCardResponse | null>(null);
+  readonly editingCardSubmitting = signal(false);
 
   private readonly historyPageSize = 6;
   readonly historyPage = signal(0);
@@ -73,11 +76,27 @@ export class QuestBoardComponent {
     return card.assignedUserId ? this.assignedUserNames().get(card.assignedUserId) : undefined;
   }
 
+  asDraft(card: ChoreCardResponse): CardDraft {
+    return {
+      title: card.title,
+      description: card.description,
+      rarity: card.rarity,
+      complexity: card.complexity,
+      estimatedMinutes: card.estimatedMinutes,
+      xpReward: card.xpReward,
+      goldReward: card.goldReward,
+      itemDrop: card.itemDrop,
+      imageUrl: card.imageUrl,
+      recurrence: card.recurrence,
+    };
+  }
+
   dismissReward(): void {
     this.store.dismissReward();
   }
 
   startCreatingCard(): void {
+    this.editingCard.set(null);
     this.creatingCard.set(true);
   }
 
@@ -96,6 +115,31 @@ export class QuestBoardComponent {
       // surfaced via store.error
     } finally {
       this.creatingCardSubmitting.set(false);
+    }
+  }
+
+  startEditingCard(cardId: string): void {
+    const card = this.store.cards().find((c) => c.id === cardId);
+    if (!card) return;
+    this.creatingCard.set(false);
+    this.editingCard.set(card);
+  }
+
+  cancelEditingCard(): void {
+    this.editingCard.set(null);
+  }
+
+  async saveEditedCard(draft: CardDraft): Promise<void> {
+    const card = this.editingCard();
+    if (!card) return;
+    this.editingCardSubmitting.set(true);
+    try {
+      await this.store.updateCard(card.id, draft);
+      this.editingCard.set(null);
+    } catch {
+      // surfaced via store.error
+    } finally {
+      this.editingCardSubmitting.set(false);
     }
   }
 }

@@ -9,6 +9,8 @@ import {
   CreateChoreCardTemplateRequest,
   TeamMemberResponse,
   TeamMembershipResponse,
+  UpdateChoreCardRequest,
+  UpdateChoreCardTemplateRequest,
   UserResponse,
 } from '../models/api.model';
 
@@ -59,6 +61,7 @@ export class ChoreStoreService {
 
   readonly currentUser = this._currentUser.asReadonly();
   readonly selectedTeamId = this._selectedTeamId.asReadonly();
+  readonly cards = this._cards.asReadonly();
   readonly leaderboard = this._leaderboard.asReadonly();
   readonly templates = this._templates.asReadonly();
   readonly loading = this._loading.asReadonly();
@@ -237,8 +240,34 @@ export class ChoreStoreService {
     }
   }
 
+  async updateCard(cardId: string, request: UpdateChoreCardRequest): Promise<void> {
+    this._error.set(null);
+    try {
+      const updated = await firstValueFrom(this.api.updateCard(cardId, request));
+      this.replaceCard(updated);
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      throw err;
+    }
+  }
+
+  async updateCardTemplate(templateId: string, request: UpdateChoreCardTemplateRequest): Promise<void> {
+    this._error.set(null);
+    try {
+      const updated = await firstValueFrom(this.api.updateCardTemplate(templateId, request));
+      this.replaceTemplate(updated);
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      throw err;
+    }
+  }
+
   private replaceCard(updated: ChoreCardResponse): void {
     this._cards.update((cards) => cards.map((c) => (c.id === updated.id ? updated : c)));
+  }
+
+  private replaceTemplate(updated: ChoreCardTemplateResponse): void {
+    this._templates.update((templates) => templates.map((t) => (t.id === updated.id ? updated : t)));
   }
 
   async claimCard(cardId: string): Promise<void> {

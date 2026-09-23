@@ -22,8 +22,11 @@ export class CardTemplatesComponent {
 
   readonly creating = signal(false);
   readonly submitting = signal(false);
+  readonly editingTemplate = signal<ChoreCardTemplateResponse | null>(null);
+  readonly editingSubmitting = signal(false);
 
   startCreating(): void {
+    this.editingTemplate.set(null);
     this.creating.set(true);
   }
 
@@ -33,6 +36,21 @@ export class CardTemplatesComponent {
 
   asChoreCard(template: ChoreCardTemplateResponse): ChoreCardResponse {
     return { ...template, status: 'AVAILABLE' };
+  }
+
+  asDraft(template: ChoreCardTemplateResponse): CardDraft {
+    return {
+      title: template.title,
+      description: template.description,
+      rarity: template.rarity,
+      complexity: template.complexity,
+      estimatedMinutes: template.estimatedMinutes,
+      xpReward: template.xpReward,
+      goldReward: template.goldReward,
+      itemDrop: template.itemDrop,
+      imageUrl: template.imageUrl,
+      recurrence: template.recurrence,
+    };
   }
 
   async save(draft: CardDraft): Promise<void> {
@@ -46,6 +64,31 @@ export class CardTemplatesComponent {
       // surfaced via store.error
     } finally {
       this.submitting.set(false);
+    }
+  }
+
+  startEditing(templateId: string): void {
+    const template = this.templates().find((t) => t.id === templateId);
+    if (!template) return;
+    this.creating.set(false);
+    this.editingTemplate.set(template);
+  }
+
+  cancelEditing(): void {
+    this.editingTemplate.set(null);
+  }
+
+  async saveEdited(draft: CardDraft): Promise<void> {
+    const template = this.editingTemplate();
+    if (!template) return;
+    this.editingSubmitting.set(true);
+    try {
+      await this.store.updateCardTemplate(template.id, draft);
+      this.editingTemplate.set(null);
+    } catch {
+      // surfaced via store.error
+    } finally {
+      this.editingSubmitting.set(false);
     }
   }
 }
