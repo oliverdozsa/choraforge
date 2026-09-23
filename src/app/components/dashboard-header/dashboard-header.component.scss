@@ -236,9 +236,17 @@
     row-gap: 0.6rem;
   }
 
+  .identity {
+    flex: 1 1 0%;
+  }
+
   .level-block {
     order: 3;
     max-width: none;
     flex-basis: 100%;
+  }
+
+  .header-actions {
+    margin-left: auto;
   }
 }
