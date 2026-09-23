@@ -262,6 +262,28 @@ export class ChoreStoreService {
     }
   }
 
+  async deleteCard(cardId: string): Promise<void> {
+    this._error.set(null);
+    try {
+      await firstValueFrom(this.api.deleteCard(cardId));
+      this._cards.update((cards) => cards.filter((c) => c.id !== cardId));
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      throw err;
+    }
+  }
+
+  async deleteCardTemplate(templateId: string): Promise<void> {
+    this._error.set(null);
+    try {
+      await firstValueFrom(this.api.deleteCardTemplate(templateId));
+      this._templates.update((templates) => templates.filter((t) => t.id !== templateId));
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      throw err;
+    }
+  }
+
   private replaceCard(updated: ChoreCardResponse): void {
     this._cards.update((cards) => cards.map((c) => (c.id === updated.id ? updated : c)));
   }

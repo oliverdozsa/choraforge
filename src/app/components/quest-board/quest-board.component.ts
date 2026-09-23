@@ -4,13 +4,20 @@ import { ChoreCardComponent } from '../chore-card/chore-card.component';
 import { CompletionModalComponent } from '../completion-modal/completion-modal.component';
 import { CardDraft } from '../card-designer/card-designer.component';
 import { CardDesignerModalComponent } from '../card-designer-modal/card-designer-modal.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { ChoreStoreService } from '../../services/chore-store.service';
 import { ChoreCardResponse } from '../../models/api.model';
 
 @Component({
   selector: 'app-quest-board',
   standalone: true,
-  imports: [CommonModule, ChoreCardComponent, CompletionModalComponent, CardDesignerModalComponent],
+  imports: [
+    CommonModule,
+    ChoreCardComponent,
+    CompletionModalComponent,
+    CardDesignerModalComponent,
+    ConfirmDialogComponent,
+  ],
   templateUrl: './quest-board.component.html',
   styleUrl: './quest-board.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +41,8 @@ export class QuestBoardComponent {
   readonly creatingCardSubmitting = signal(false);
   readonly editingCard = signal<ChoreCardResponse | null>(null);
   readonly editingCardSubmitting = signal(false);
+  readonly deletingCard = signal<ChoreCardResponse | null>(null);
+  readonly deletingCardSubmitting = signal(false);
 
   private readonly historyPageSize = 6;
   readonly historyPage = signal(0);
@@ -141,6 +150,30 @@ export class QuestBoardComponent {
       // surfaced via store.error
     } finally {
       this.editingCardSubmitting.set(false);
+    }
+  }
+
+  startDeletingCard(cardId: string): void {
+    const card = this.store.cards().find((c) => c.id === cardId);
+    if (!card) return;
+    this.deletingCard.set(card);
+  }
+
+  cancelDeletingCard(): void {
+    this.deletingCard.set(null);
+  }
+
+  async confirmDeleteCard(): Promise<void> {
+    const card = this.deletingCard();
+    if (!card) return;
+    this.deletingCardSubmitting.set(true);
+    try {
+      await this.store.deleteCard(card.id);
+      this.deletingCard.set(null);
+    } catch {
+      // surfaced via store.error
+    } finally {
+      this.deletingCardSubmitting.set(false);
     }
   }
 }

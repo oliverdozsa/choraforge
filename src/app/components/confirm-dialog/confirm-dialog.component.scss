@@ -1,0 +1,51 @@
+:host {
+  display: block;
+}
+
+.confirm-message {
+  margin: 0 0 1.25rem;
+  color: #d1d5db;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.cancel-btn,
+.confirm-btn {
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.1s ease;
+  border: none;
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+
+  &:not(:disabled):hover {
+    filter: brightness(1.1);
+  }
+}
+
+.cancel-btn {
+  color: #d1d5db;
+  background: rgba(148, 163, 184, 0.14);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.confirm-btn {
+  color: #0b0d12;
+  background: linear-gradient(135deg, #f87171, #ef4444);
+}

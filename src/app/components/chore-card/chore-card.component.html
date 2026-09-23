@@ -3,9 +3,20 @@
     <header class="card-header">
       <span class="rarity-badge">{{ card.rarity }}</span>
       <span class="title">{{ card.title }}</span>
-      <button type="button" class="edit-btn" *ngIf="canEdit" (click)="onEdit($event)" aria-label="Edit card">
-        ✎
-      </button>
+      <div class="card-actions" *ngIf="canEdit || canDelete">
+        <button type="button" class="edit-btn" *ngIf="canEdit" (click)="onEdit($event)" aria-label="Edit card">
+          ✎
+        </button>
+        <button
+          type="button"
+          class="delete-btn"
+          *ngIf="canDelete"
+          (click)="onDelete($event)"
+          aria-label="Delete card"
+        >
+          🗑
+        </button>
+      </div>
     </header>
 
     <div

@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ChoreCardComponent } from '../chore-card/chore-card.component';
 import { CardDraft } from '../card-designer/card-designer.component';
 import { CardDesignerModalComponent } from '../card-designer-modal/card-designer-modal.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { ChoreStoreService } from '../../services/chore-store.service';
 import { ChoreCardResponse, ChoreCardTemplateResponse } from '../../models/api.model';
 
 @Component({
   selector: 'app-card-templates',
   standalone: true,
-  imports: [CommonModule, ChoreCardComponent, CardDesignerModalComponent],
+  imports: [CommonModule, ChoreCardComponent, CardDesignerModalComponent, ConfirmDialogComponent],
   templateUrl: './card-templates.component.html',
   styleUrl: './card-templates.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +26,8 @@ export class CardTemplatesComponent {
   readonly submitting = signal(false);
   readonly editingTemplate = signal<ChoreCardTemplateResponse | null>(null);
   readonly editingSubmitting = signal(false);
+  readonly deletingTemplate = signal<ChoreCardTemplateResponse | null>(null);
+  readonly deletingSubmitting = signal(false);
 
   startCreating(): void {
     this.editingTemplate.set(null);
@@ -90,6 +93,30 @@ export class CardTemplatesComponent {
       // surfaced via store.error
     } finally {
       this.editingSubmitting.set(false);
+    }
+  }
+
+  startDeleting(templateId: string): void {
+    const template = this.templates().find((t) => t.id === templateId);
+    if (!template) return;
+    this.deletingTemplate.set(template);
+  }
+
+  cancelDeleting(): void {
+    this.deletingTemplate.set(null);
+  }
+
+  async confirmDelete(): Promise<void> {
+    const template = this.deletingTemplate();
+    if (!template) return;
+    this.deletingSubmitting.set(true);
+    try {
+      await this.store.deleteCardTemplate(template.id);
+      this.deletingTemplate.set(null);
+    } catch {
+      // surfaced via store.error
+    } finally {
+      this.deletingSubmitting.set(false);
     }
   }
 }

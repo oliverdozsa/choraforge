@@ -80,6 +80,10 @@ export class ApiService {
     return this.http.put<ChoreCardResponse>(`${this.base}/cards/${cardId}`, request);
   }
 
+  deleteCard(cardId: string): Observable<void> {
+    return this.http.delete<void>(`${this.base}/cards/${cardId}`);
+  }
+
   getLeaderboard(teamId: string): Observable<TeamMemberResponse[]> {
     return this.http.get<TeamMemberResponse[]>(`${this.base}/teams/${teamId}/leaderboard`);
   }
@@ -113,5 +117,9 @@ export class ApiService {
     request: UpdateChoreCardTemplateRequest,
   ): Observable<ChoreCardTemplateResponse> {
     return this.http.put<ChoreCardTemplateResponse>(`${this.base}/card-templates/${templateId}`, request);
+  }
+
+  deleteCardTemplate(templateId: string): Observable<void> {
+    return this.http.delete<void>(`${this.base}/card-templates/${templateId}`);
   }
 }

@@ -20,6 +20,15 @@
   (cancelled)="cancelCreatingCard()"
 />
 
+<app-confirm-dialog
+  *ngIf="deletingCard() as card"
+  title="Delete Card"
+  [message]="'Delete &quot;' + card.title + '&quot;? This cannot be undone.'"
+  [confirming]="deletingCardSubmitting()"
+  (confirmed)="confirmDeleteCard()"
+  (cancelled)="cancelDeletingCard()"
+/>
+
 <section class="playmat">
   <div class="board-section">
     <div class="section-heading">
@@ -35,10 +44,12 @@
         *ngFor="let card of availableQuests()"
         [card]="card"
         [canEdit]="isTeamAdmin()"
+        [canDelete]="isTeamAdmin()"
         (claim)="claimCard($event)"
         (complete)="completeCard($event)"
         (verify)="verifyCard($event)"
         (edit)="startEditingCard($event)"
+        (delete)="startDeletingCard($event)"
       />
     </div>
     <ng-template #emptyAvailable>
@@ -56,10 +67,12 @@
         *ngFor="let card of activeHand()"
         [card]="card"
         [canEdit]="isTeamAdmin()"
+        [canDelete]="isTeamAdmin()"
         (claim)="claimCard($event)"
         (complete)="completeCard($event)"
         (verify)="verifyCard($event)"
         (edit)="startEditingCard($event)"
+        (delete)="startDeletingCard($event)"
       />
     </div>
     <ng-template #emptyHand>
@@ -78,11 +91,13 @@
         [card]="card"
         [canVerify]="isTeamAdmin()"
         [canEdit]="isTeamAdmin()"
+        [canDelete]="isTeamAdmin()"
         [assignedUserName]="assignedUserName(card)"
         (claim)="claimCard($event)"
         (complete)="completeCard($event)"
         (verify)="verifyCard($event)"
         (edit)="startEditingCard($event)"
+        (delete)="startDeletingCard($event)"
       />
     </div>
   </div>
@@ -98,7 +113,9 @@
         [card]="card"
         [readonlyCard]="true"
         [canEdit]="isTeamAdmin()"
+        [canDelete]="isTeamAdmin()"
         (edit)="startEditingCard($event)"
+        (delete)="startDeletingCard($event)"
       />
     </div>
     <div class="pagination" *ngIf="historyTotalPages() > 1">
@@ -121,8 +138,10 @@
         [card]="card"
         [readonlyCard]="true"
         [canEdit]="isTeamAdmin()"
+        [canDelete]="isTeamAdmin()"
         [assignedUserName]="assignedUserName(card)"
         (edit)="startEditingCard($event)"
+        (delete)="startDeletingCard($event)"
       />
     </div>
   </div>

@@ -10,7 +10,9 @@
       [card]="asChoreCard(template)"
       [readonlyCard]="true"
       [canEdit]="true"
+      [canDelete]="true"
       (edit)="startEditing(template.id)"
+      (delete)="startDeleting(template.id)"
     />
 
     <button class="add-slot" *ngIf="!creating()" (click)="startCreating()">
@@ -36,5 +38,14 @@
     [initial]="asDraft(template)"
     (save)="saveEdited($event)"
     (cancelled)="cancelEditing()"
+  />
+
+  <app-confirm-dialog
+    *ngIf="deletingTemplate() as template"
+    title="Delete Template"
+    [message]="'Delete &quot;' + template.title + '&quot;? This cannot be undone.'"
+    [confirming]="deletingSubmitting()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDeleting()"
   />
 </section>
