@@ -60,7 +60,11 @@ export class ChoreCardComponent {
 
   get isOverdue(): boolean {
     if (!this.card.dueAt || this.card.status === 'VERIFIED') return false;
-    return new Date(this.card.dueAt).getTime() < Date.now();
+    const dueAt = new Date(this.card.dueAt).getTime();
+    const remainingMs = dueAt - Date.now();
+    if (!this.card.dueDateIntervalHours) return remainingMs < 0;
+    const totalMs = this.card.dueDateIntervalHours * 60 * 60 * 1000;
+    return remainingMs < totalMs * 0.2;
   }
 
   get statusLabel(): string {
