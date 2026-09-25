@@ -57,6 +57,24 @@
       <input type="url" name="imageUrl" [(ngModel)]="imageUrl" maxlength="500" placeholder="https://…" />
     </label>
 
+    <label class="checkbox-label">
+      <input type="checkbox" name="hasDueDate" [(ngModel)]="hasDueDate" />
+      Set a due date
+    </label>
+
+    <div class="field-row" *ngIf="hasDueDate">
+      <label>
+        Due in
+        <input type="number" name="dueDateAmount" [(ngModel)]="dueDateAmount" min="1" />
+      </label>
+      <label>
+        Unit
+        <select name="dueDateUnit" [(ngModel)]="dueDateUnit">
+          <option *ngFor="let u of dueDateUnits" [value]="u.value">{{ u.label }}</option>
+        </select>
+      </label>
+    </div>
+
     <label>
       Recurrence
       <select name="recurrenceType" [(ngModel)]="recurrenceType">

@@ -97,6 +97,7 @@ export class QuestBoardComponent {
       goldReward: card.goldReward,
       itemDrop: card.itemDrop,
       imageUrl: card.imageUrl,
+      dueDateIntervalHours: card.dueDateIntervalHours,
       recurrence: card.recurrence,
     };
   }

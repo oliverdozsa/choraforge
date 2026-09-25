@@ -52,6 +52,8 @@ export interface ChoreCardResponse {
   completedAt?: string;
   verifiedAt?: string;
   rewardAcknowledgedAt?: string;
+  dueDateIntervalHours?: number;
+  dueAt?: string;
   recurrence?: RecurrenceDto;
 }
 
@@ -128,6 +130,7 @@ export interface CreateChoreCardRequest {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
 }
 
@@ -144,6 +147,7 @@ export interface ChoreCardTemplateResponse {
   itemDrop?: string;
   imageUrl?: string;
   createdAt: string;
+  dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
 }
 
@@ -158,6 +162,7 @@ export interface CreateChoreCardTemplateRequest {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
 }
 
@@ -171,6 +176,7 @@ export interface UpdateChoreCardRequest {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
 }
 
@@ -184,5 +190,6 @@ export interface UpdateChoreCardTemplateRequest {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
 }

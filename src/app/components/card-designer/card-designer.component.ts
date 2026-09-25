@@ -12,6 +12,8 @@ import {
   ScheduleFrequency,
 } from '../../models/api.model';
 
+export type DueDateUnit = 'HOURS' | 'DAYS';
+
 export interface CardDraft {
   title: string;
   description?: string;
@@ -22,6 +24,7 @@ export interface CardDraft {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
 }
 
@@ -50,6 +53,10 @@ export class CardDesignerComponent implements OnInit {
     { value: 'SCHEDULE', label: 'On a schedule' },
     { value: 'AFTER_COMPLETION', label: 'After verification' },
   ];
+  readonly dueDateUnits: { value: DueDateUnit; label: string }[] = [
+    { value: 'HOURS', label: 'Hours' },
+    { value: 'DAYS', label: 'Days' },
+  ];
   readonly frequencies: ScheduleFrequency[] = ['DAILY', 'WEEKLY', 'MONTHLY'];
   readonly weekDays: DayOfWeek[] = [
     'MONDAY',
@@ -71,6 +78,14 @@ export class CardDesignerComponent implements OnInit {
   goldReward = 10;
   itemDrop = '';
   imageUrl = '';
+
+  hasDueDate = false;
+  dueDateAmount = 1;
+  dueDateUnit: DueDateUnit = 'DAYS';
+
+  get dueDateIntervalHours(): number {
+    return this.dueDateUnit === 'DAYS' ? this.dueDateAmount * 24 : this.dueDateAmount;
+  }
 
   recurrenceType: RecurrenceType | '' = '';
   intervalMinutes = 1440;
@@ -98,6 +113,7 @@ export class CardDesignerComponent implements OnInit {
       imageUrl: this.imageUrl || undefined,
       status: 'AVAILABLE',
       createdAt: new Date().toISOString(),
+      dueDateIntervalHours: this.hasDueDate ? this.dueDateIntervalHours : undefined,
       recurrence: this.buildRecurrence(),
     };
   }
@@ -150,7 +166,20 @@ export class CardDesignerComponent implements OnInit {
     this.goldReward = draft.goldReward;
     this.itemDrop = draft.itemDrop ?? '';
     this.imageUrl = draft.imageUrl ?? '';
+    this.applyDueDate(draft.dueDateIntervalHours);
     this.applyRecurrence(draft.recurrence);
+  }
+
+  private applyDueDate(hours?: number): void {
+    this.hasDueDate = hours != null;
+    if (hours == null) return;
+    if (hours >= 24 && hours % 24 === 0) {
+      this.dueDateUnit = 'DAYS';
+      this.dueDateAmount = hours / 24;
+    } else {
+      this.dueDateUnit = 'HOURS';
+      this.dueDateAmount = hours;
+    }
   }
 
   private applyRecurrence(r?: RecurrenceDto): void {
@@ -171,6 +200,10 @@ export class CardDesignerComponent implements OnInit {
   onSubmit(): void {
     if (!this.title.trim()) {
       this.formError = 'Title is required.';
+      return;
+    }
+    if (this.hasDueDate && !(this.dueDateAmount >= 1)) {
+      this.formError = 'Due in must be at least 1.';
       return;
     }
     if (this.recurrenceType === 'AFTER_COMPLETION' && !(this.intervalMinutes >= 1)) {
@@ -198,6 +231,7 @@ export class CardDesignerComponent implements OnInit {
       goldReward: this.goldReward,
       itemDrop: this.itemDrop || undefined,
       imageUrl: this.imageUrl || undefined,
+      dueDateIntervalHours: this.hasDueDate ? this.dueDateIntervalHours : undefined,
       recurrence: this.buildRecurrence(),
     });
   }

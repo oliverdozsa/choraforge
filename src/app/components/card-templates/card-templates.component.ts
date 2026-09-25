@@ -53,6 +53,7 @@ export class CardTemplatesComponent {
       goldReward: template.goldReward,
       itemDrop: template.itemDrop,
       imageUrl: template.imageUrl,
+      dueDateIntervalHours: template.dueDateIntervalHours,
       recurrence: template.recurrence,
     };
   }
