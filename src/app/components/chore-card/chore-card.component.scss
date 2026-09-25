@@ -189,6 +189,10 @@
 
     .stat-value {
       font-weight: 600;
+
+      &.overdue {
+        color: #f87171;
+      }
     }
 
     .pips {

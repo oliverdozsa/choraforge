@@ -58,6 +58,10 @@
         <span class="stat-label">Completed</span>
         <span class="stat-value">{{ card.completedAt | date: 'MMM d, y' }}</span>
       </div>
+      <div class="stat" *ngIf="card.dueAt && !card.completedAt">
+        <span class="stat-label">Due</span>
+        <span class="stat-value" [class.overdue]="isOverdue">{{ card.dueAt | date: 'MMM d, y, h:mm a' }}</span>
+      </div>
     </div>
 
     <div class="rewards-row">

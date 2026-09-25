@@ -58,6 +58,11 @@ export class ChoreCardComponent {
     return this.card.status !== 'COMPLETED' || this.canVerify;
   }
 
+  get isOverdue(): boolean {
+    if (!this.card.dueAt || this.card.status === 'VERIFIED') return false;
+    return new Date(this.card.dueAt).getTime() < Date.now();
+  }
+
   get statusLabel(): string {
     switch (this.card.status) {
       case 'CLAIMED':
