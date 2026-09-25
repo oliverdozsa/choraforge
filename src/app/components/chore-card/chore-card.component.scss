@@ -244,8 +244,14 @@
     }
   }
 
-  .cta-btn {
+  .cta-row {
     margin-top: auto;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .cta-btn {
+    flex: 1;
     border: none;
     border-radius: 10px;
     padding: 0.55rem 0.8rem;
@@ -277,6 +283,11 @@
 
     &.verify {
       background: linear-gradient(135deg, #fde68a, #fbbf24);
+    }
+
+    &.unclaim {
+      background: #ef4444;
+      color: #fff5f5;
     }
 
     &:not(:disabled):hover {

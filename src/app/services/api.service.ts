@@ -92,6 +92,10 @@ export class ApiService {
     return this.http.post<ChoreCardResponse>(`${this.base}/cards/${cardId}/claim`, {});
   }
 
+  unclaimCard(cardId: string): Observable<ChoreCardResponse> {
+    return this.http.post<ChoreCardResponse>(`${this.base}/cards/${cardId}/unclaim`, {});
+  }
+
   completeCard(cardId: string): Observable<ChoreCardResponse> {
     return this.http.post<ChoreCardResponse>(`${this.base}/cards/${cardId}/complete`, {});
   }

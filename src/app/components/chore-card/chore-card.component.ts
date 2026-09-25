@@ -18,6 +18,7 @@ export class ChoreCardComponent {
   @Input() canDelete = false;
   @Input() assignedUserName?: string;
   @Output() claim = new EventEmitter<string>();
+  @Output() unclaim = new EventEmitter<string>();
   @Output() complete = new EventEmitter<string>();
   @Output() verify = new EventEmitter<string>();
   @Output() edit = new EventEmitter<string>();
@@ -31,6 +32,15 @@ export class ChoreCardComponent {
   onDelete(event: Event): void {
     event.stopPropagation();
     this.delete.emit(this.card.id);
+  }
+
+  onUnclaim(event: Event): void {
+    event.stopPropagation();
+    this.unclaim.emit(this.card.id);
+  }
+
+  get canUnclaim(): boolean {
+    return this.card.status === 'CLAIMED';
   }
 
   get rarityClass(): string {

@@ -74,6 +74,10 @@ export class QuestBoardComponent {
     this.store.claimCard(cardId);
   }
 
+  unclaimCard(cardId: string): void {
+    this.store.unclaimCard(cardId);
+  }
+
   completeCard(cardId: string): void {
     this.store.completeCard(cardId);
   }

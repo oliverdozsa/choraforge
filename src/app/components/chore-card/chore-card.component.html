@@ -70,16 +70,26 @@
       <span class="badge item-badge" *ngIf="card.itemDrop">🎁 {{ card.itemDrop }}</span>
     </div>
 
-    <button
-      *ngIf="!readonlyCard && showCta"
-      class="cta-btn"
-      [class.claim]="card.status === 'AVAILABLE'"
-      [class.complete]="card.status === 'CLAIMED'"
-      [class.verify]="card.status === 'COMPLETED'"
-      [disabled]="card.status === 'VERIFIED'"
-      (click)="onAction()"
-    >
-      {{ ctaLabel }}
-    </button>
+    <div class="cta-row">
+      <button
+        *ngIf="!readonlyCard && showCta"
+        class="cta-btn"
+        [class.claim]="card.status === 'AVAILABLE'"
+        [class.complete]="card.status === 'CLAIMED'"
+        [class.verify]="card.status === 'COMPLETED'"
+        [disabled]="card.status === 'VERIFIED'"
+        (click)="onAction()"
+      >
+        {{ ctaLabel }}
+      </button>
+      <button
+        *ngIf="!readonlyCard && canUnclaim"
+        type="button"
+        class="cta-btn unclaim"
+        (click)="onUnclaim($event)"
+      >
+        Unclaim
+      </button>
+    </div>
   </div>
 </article>

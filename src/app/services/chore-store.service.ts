@@ -302,6 +302,16 @@ export class ChoreStoreService {
     }
   }
 
+  async unclaimCard(cardId: string): Promise<void> {
+    this._error.set(null);
+    try {
+      const updated = await firstValueFrom(this.api.unclaimCard(cardId));
+      this.replaceCard(updated);
+    } catch (err) {
+      this._error.set(friendlyError(err));
+    }
+  }
+
   async completeCard(cardId: string): Promise<void> {
     this._error.set(null);
     try {
