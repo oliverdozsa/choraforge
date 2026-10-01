@@ -27,6 +27,23 @@ export interface RewardBatch {
 }
 
 const REWARD_POLL_INTERVAL_MS = 15000;
+const SELECTED_TEAM_KEY_PREFIX = 'choragon_selected_team_';
+
+function loadSelectedTeamId(userId: string): string | null {
+  try {
+    return localStorage.getItem(SELECTED_TEAM_KEY_PREFIX + userId);
+  } catch {
+    return null;
+  }
+}
+
+function saveSelectedTeamId(userId: string, teamId: string): void {
+  try {
+    localStorage.setItem(SELECTED_TEAM_KEY_PREFIX + userId, teamId);
+  } catch {
+    // Storage unavailable (e.g. private mode); selection just won't survive a reload.
+  }
+}
 
 function byDateDesc(getDate: (card: ChoreCardResponse) => string | undefined) {
   return (a: ChoreCardResponse, b: ChoreCardResponse) =>
@@ -138,7 +155,9 @@ export class ChoreStoreService {
       const me = await firstValueFrom(this.api.getMe());
       this._currentUser.set(me);
       if (me.teams.length) {
-        await this.selectTeam(me.teams[0].teamId);
+        const storedTeamId = loadSelectedTeamId(me.id);
+        const team = me.teams.find((t) => t.teamId === storedTeamId) ?? me.teams[0];
+        await this.selectTeam(team.teamId);
       }
     } catch (err) {
       this._error.set(friendlyError(err));
@@ -149,6 +168,8 @@ export class ChoreStoreService {
 
   async selectTeam(teamId: string): Promise<void> {
     this._selectedTeamId.set(teamId);
+    const userId = this._currentUser()?.id;
+    if (userId) saveSelectedTeamId(userId, teamId);
     await this.refreshTeamData();
     this.startRewardPolling();
   }
