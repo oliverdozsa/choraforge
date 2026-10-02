@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChoreStoreService } from '../../services/chore-store.service';
@@ -24,6 +24,12 @@ export class DashboardHeaderComponent {
   readonly membership = this.store.currentMembership;
   readonly xpProgressPercent = this.store.xpProgressPercent;
   readonly profile = this.auth.profile;
+
+  readonly level = computed(() => this.membership()?.level ?? 1);
+  readonly xpToNext = computed(() => {
+    const m = this.membership();
+    return m ? Math.max(0, m.nextLevelXp - m.currentXp) : 0;
+  });
 
   readonly avatarMenuOpen = signal(false);
   readonly profileDialogOpen = signal(false);

@@ -6,7 +6,13 @@ import { CardDraft } from '../card-designer/card-designer.component';
 import { CardDesignerModalComponent } from '../card-designer-modal/card-designer-modal.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { ChoreStoreService } from '../../services/chore-store.service';
-import { ChoreCardResponse } from '../../models/api.model';
+import { CardStatus, ChoreCardResponse } from '../../models/api.model';
+
+const ACTIVITY_STATUS_LABELS: Partial<Record<CardStatus, string>> = {
+  CLAIMED: 'In Progress',
+  COMPLETED: 'Awaiting Verification',
+  VERIFIED: 'Verified',
+};
 
 @Component({
   selector: 'app-quest-board',
@@ -56,6 +62,60 @@ export class QuestBoardComponent {
     const start = page * this.historyPageSize;
     return this.myVerifiedHistory().slice(start, start + this.historyPageSize);
   });
+
+  readonly activityAssigneeFilter = signal<ReadonlySet<string>>(new Set());
+  readonly activityStatusFilter = signal<ReadonlySet<CardStatus>>(new Set());
+
+  readonly activityAssigneeOptions = computed(() => {
+    const names = this.assignedUserNames();
+    const ids = new Set<string>();
+    for (const card of this.teamActivity()) {
+      if (card.assignedUserId) ids.add(card.assignedUserId);
+    }
+    return [...ids]
+      .map((id) => ({ id, label: names.get(id) ?? 'Unknown' }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  });
+
+  readonly activityStatusOptions = computed(() => {
+    const present = new Set(this.teamActivity().map((c) => c.status));
+    return (Object.keys(ACTIVITY_STATUS_LABELS) as CardStatus[])
+      .filter((status) => present.has(status))
+      .map((status) => ({ id: status, label: ACTIVITY_STATUS_LABELS[status]! }));
+  });
+
+  readonly filteredTeamActivity = computed(() => {
+    const assignees = this.activityAssigneeFilter();
+    const statuses = this.activityStatusFilter();
+    return this.teamActivity().filter(
+      (c) =>
+        (!assignees.size || (c.assignedUserId !== undefined && assignees.has(c.assignedUserId))) &&
+        (!statuses.size || statuses.has(c.status)),
+    );
+  });
+
+  readonly activityFilterActive = computed(
+    () => this.activityAssigneeFilter().size > 0 || this.activityStatusFilter().size > 0,
+  );
+
+  toggleActivityAssignee(userId: string): void {
+    this.activityAssigneeFilter.update((set) => toggled(set, userId));
+  }
+
+  toggleActivityStatus(status: CardStatus): void {
+    this.activityStatusFilter.update((set) => toggled(set, status));
+  }
+
+  clearActivityFilters(): void {
+    this.activityAssigneeFilter.set(new Set());
+    this.activityStatusFilter.set(new Set());
+  }
+
+  browseQuests(section: HTMLElement): void {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    section.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    section.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true });
+  }
 
   goToHistoryPage(page: number): void {
     const clamped = Math.min(Math.max(page, 0), this.historyTotalPages() - 1);
@@ -181,4 +241,10 @@ export class QuestBoardComponent {
       this.deletingCardSubmitting.set(false);
     }
   }
+}
+
+function toggled<T>(set: ReadonlySet<T>, value: T): ReadonlySet<T> {
+  const next = new Set(set);
+  if (!next.delete(value)) next.add(value);
+  return next;
 }

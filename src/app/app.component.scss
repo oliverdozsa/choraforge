@@ -3,9 +3,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 0.9rem;
-  background: #0b0d12;
+  background: var(--bg);
 }
 
 .app-shell {
@@ -13,24 +13,25 @@
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(circle at 15% -10%, rgba(56, 189, 248, 0.08), transparent 40%),
-    radial-gradient(circle at 85% 0%, rgba(168, 85, 247, 0.08), transparent 40%),
-    #0b0d12;
+    radial-gradient(60% 40% at 70% 0%, oklch(0.25 0.06 270 / 0.55), transparent),
+    radial-gradient(50% 40% at 0% 100%, oklch(0.22 0.05 230 / 0.4), transparent),
+    var(--bg);
+  background-attachment: fixed;
 }
 
 .app-body {
   display: grid;
   grid-template-columns: 260px 1fr;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  max-width: 1400px;
+  gap: 28px;
+  padding: 28px;
+  max-width: 1600px;
   width: 100%;
   margin: 0 auto;
 }
 
 .sidebar {
   position: sticky;
-  top: 1.5rem;
+  top: 28px;
   align-self: start;
 }
 
@@ -45,5 +46,12 @@
 
   .sidebar {
     position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .app-body {
+    gap: 16px;
+    padding: 16px;
   }
 }

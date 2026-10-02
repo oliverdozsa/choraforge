@@ -1,9 +1,20 @@
 <header class="dash-header">
   <div class="identity">
     <div class="avatar-menu-anchor">
-      <button type="button" class="avatar-btn" (click)="toggleAvatarMenu()" title="Account menu" aria-haspopup="true" [attr.aria-expanded]="avatarMenuOpen()">
-        <div class="avatar" *ngIf="!profile()?.picture">{{ (user()?.name ?? '?').charAt(0) }}</div>
-        <img class="avatar-img" *ngIf="profile()?.picture as pic" [src]="pic" alt="" />
+      <button
+        type="button"
+        class="avatar-btn"
+        (click)="toggleAvatarMenu()"
+        title="Account menu"
+        aria-label="Account menu"
+        aria-haspopup="true"
+        [attr.aria-expanded]="avatarMenuOpen()"
+        [style.--p]="xpProgressPercent() + '%'"
+      >
+        <img class="avatar" *ngIf="profile()?.picture as pic; else initialAvatar" [src]="pic" alt="" />
+        <ng-template #initialAvatar>
+          <span class="avatar">{{ (user()?.name ?? '?').charAt(0) }}</span>
+        </ng-template>
       </button>
 
       <div class="avatar-menu-backdrop" *ngIf="avatarMenuOpen()" (click)="closeAvatarMenu()"></div>
@@ -14,14 +25,13 @@
     </div>
     <div class="name-block">
       <span class="username">{{ user()?.name }}</span>
-      <select
-        *ngIf="teams().length > 1; else singleTeamName"
-        class="team-select"
-        [ngModel]="membership()?.teamId"
-        (ngModelChange)="onTeamChange($event)"
-      >
-        <option *ngFor="let t of teams()" [value]="t.teamId">{{ t.teamName }}</option>
-      </select>
+      <label class="team-switch" *ngIf="teams().length > 1; else singleTeamName">
+        <span class="visually-hidden">Household</span>
+        <select [ngModel]="membership()?.teamId" (ngModelChange)="onTeamChange($event)">
+          <option *ngFor="let t of teams()" [value]="t.teamId">{{ t.teamName }}</option>
+        </select>
+        <span class="caret" aria-hidden="true">▼</span>
+      </label>
       <ng-template #singleTeamName>
         <span class="team-name">{{ membership()?.teamName }}</span>
       </ng-template>
@@ -29,19 +39,35 @@
   </div>
 
   <div class="level-block">
-    <div class="level-tag">Lv. {{ membership()?.level ?? 1 }}</div>
-    <div class="xp-bar-track">
-      <div class="xp-bar-fill" [style.width.%]="xpProgressPercent()"></div>
-      <span class="xp-bar-label">{{ membership()?.currentXp ?? 0 }} / {{ membership()?.nextLevelXp ?? 0 }} XP</span>
+    <div class="level-shield" [attr.aria-label]="'Level ' + level()">
+      <span class="lv">LV</span>
+      <span class="lv-num">{{ level() }}</span>
+    </div>
+    <div class="xp">
+      <div class="xp-labels">
+        <span>{{ membership()?.currentXp ?? 0 }} <span class="muted">/ {{ membership()?.nextLevelXp ?? 0 }} XP</span></span>
+        <span class="muted">{{ xpToNext() }} XP to Lv {{ level() + 1 }}</span>
+      </div>
+      <div
+        class="xp-track"
+        role="progressbar"
+        aria-label="Experience"
+        aria-valuemin="0"
+        [attr.aria-valuemax]="membership()?.nextLevelXp ?? 0"
+        [attr.aria-valuenow]="membership()?.currentXp ?? 0"
+      >
+        <div class="xp-fill" [style.width.%]="xpProgressPercent()"></div>
+        <div class="xp-ticks"></div>
+      </div>
     </div>
   </div>
 
   <div class="header-actions">
-    <div class="gold-counter">
-      <span class="gold-icon">◈</span>
+    <div class="gold-counter" [attr.aria-label]="(membership()?.gold ?? 0) + ' gold'">
+      <span class="coin" aria-hidden="true"></span>
       <span class="gold-value">{{ membership()?.gold ?? 0 }}</span>
     </div>
-    <button class="logout-btn" (click)="logout()" title="Sign out">⏻</button>
+    <button type="button" class="logout-btn" (click)="logout()">Sign out</button>
   </div>
 </header>
 

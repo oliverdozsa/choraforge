@@ -11,22 +11,16 @@
           <span class="quest-name">{{ reward.card.title }}</span>
         </div>
         <span class="quest-item-rewards">
-          <span class="reward-pill xp small">✦ {{ reward.xpGained }}</span>
-          <span class="reward-pill gold small">◈ {{ reward.goldGained }}</span>
-          <span class="reward-pill item small" *ngIf="reward.card.itemDrop">🎁 {{ reward.card.itemDrop }}</span>
+          <span class="reward-chip xp">+{{ reward.xpGained }} XP</span>
+          <span class="reward-chip gold">+{{ reward.goldGained }} Gold</span>
+          <span class="reward-chip loot" *ngIf="reward.card.itemDrop">{{ reward.card.itemDrop }}</span>
         </span>
       </li>
     </ul>
 
     <div class="reward-grid" *ngIf="batch.rewards.length > 1">
-      <div class="reward-pill xp">
-        <span class="reward-icon">✦</span>
-        <span class="reward-value">+{{ totalXp }} XP</span>
-      </div>
-      <div class="reward-pill gold">
-        <span class="reward-icon">◈</span>
-        <span class="reward-value">+{{ totalGold }} Gold</span>
-      </div>
+      <span class="reward-chip xp lg">+{{ totalXp }} XP</span>
+      <span class="reward-chip gold lg">+{{ totalGold }} Gold</span>
     </div>
 
     <div class="level-up-banner" *ngIf="batch.leveledUp">

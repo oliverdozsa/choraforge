@@ -1,17 +1,28 @@
-<aside class="leaderboard">
-  <h2 class="panel-title">Team Leaderboard</h2>
+<aside class="leaderboard" aria-labelledby="leaderboard-title">
+  <div class="panel-head">
+    <h2 id="leaderboard-title" class="panel-title">Leaderboard</h2>
+    <span class="panel-scope">All time</span>
+  </div>
   <ol class="rank-list">
     <li
       *ngFor="let member of rankedMembers(); let i = index"
       class="rank-row"
       [class.self]="member.userId === currentUserId()"
+      [style.--h]="avatarHue(member.userId)"
     >
-      <span class="rank-icon">{{ rankSuffix(i + 1) }}</span>
-      <div class="rank-name-block">
-        <span class="rank-name">{{ member.name }}</span>
-        <span class="rank-level">Lv. {{ member.level }}</span>
+      <span class="rank-badge" [ngClass]="rankClass(i + 1)"><span>{{ i + 1 }}</span></span>
+      <span class="avatar" aria-hidden="true">{{ member.name.charAt(0) }}</span>
+      <div class="name-block">
+        <span class="name">
+          {{ member.name }}
+          <span class="you-tag" *ngIf="member.userId === currentUserId()">YOU</span>
+        </span>
+        <div class="level-line">
+          <span class="level">Lv {{ member.level }}</span>
+          <span class="level-bar" [style.--p]="levelProgress(member) + '%'"></span>
+        </div>
       </div>
-      <span class="rank-score">◈ {{ member.gold }}</span>
+      <span class="gold" [attr.aria-label]="member.gold + ' gold'">{{ member.gold }}</span>
     </li>
   </ol>
 </aside>

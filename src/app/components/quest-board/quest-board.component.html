@@ -29,97 +29,123 @@
   (cancelled)="cancelDeletingCard()"
 />
 
-<section class="playmat">
-  <div class="board-section">
+<div class="playmat">
+  <section class="board-section marker-available" #availableSection aria-labelledby="available-title">
     <div class="section-heading">
-      <h2>Available Quests</h2>
+      <span class="marker" aria-hidden="true"></span>
+      <h2 id="available-title" tabindex="-1">Available Quests</h2>
       <span class="count-badge">{{ availableQuests().length }}</span>
+      <span class="helper">Claim a card to start it</span>
       <button class="new-card-btn" *ngIf="isTeamAdmin() && !creatingCard()" (click)="startCreatingCard()">
         + New Card
       </button>
     </div>
 
     <div class="card-grid" *ngIf="availableQuests().length; else emptyAvailable">
-      <app-chore-card
-        *ngFor="let card of availableQuests()"
-        [card]="card"
-        [canEdit]="isTeamAdmin()"
-        [canDelete]="isTeamAdmin()"
-        (claim)="claimCard($event)"
-        (unclaim)="unclaimCard($event)"
-        (complete)="completeCard($event)"
-        (verify)="verifyCard($event)"
-        (edit)="startEditingCard($event)"
-        (delete)="startDeletingCard($event)"
-      />
+      @for (card of availableQuests(); track card.id) {
+        <app-chore-card
+          [card]="card"
+          [canEdit]="isTeamAdmin()"
+          [canDelete]="isTeamAdmin()"
+          (claim)="claimCard($event)"
+          (unclaim)="unclaimCard($event)"
+          (complete)="completeCard($event)"
+          (verify)="verifyCard($event)"
+          (edit)="startEditingCard($event)"
+          (delete)="startDeletingCard($event)"
+        />
+      }
     </div>
     <ng-template #emptyAvailable>
-      <p class="empty-state" *ngIf="!creatingCard()">No quests left on the board. Great work, team!</p>
+      <p class="empty-row" *ngIf="!creatingCard()">
+        <span class="empty-marker" aria-hidden="true"></span>
+        No quests left on the board. Great work, team!
+      </p>
     </ng-template>
-  </div>
+  </section>
 
-  <div class="board-section hand-section">
+  <section class="board-section marker-active" aria-labelledby="active-title">
     <div class="section-heading">
-      <h2>My Active Quests</h2>
+      <span class="marker" aria-hidden="true"></span>
+      <h2 id="active-title">My Active Quests</h2>
       <span class="count-badge">{{ activeHand().length }}</span>
     </div>
     <div class="card-grid" *ngIf="activeHand().length; else emptyHand">
-      <app-chore-card
-        *ngFor="let card of activeHand()"
-        [card]="card"
-        [canEdit]="isTeamAdmin()"
-        [canDelete]="isTeamAdmin()"
-        (claim)="claimCard($event)"
-        (unclaim)="unclaimCard($event)"
-        (complete)="completeCard($event)"
-        (verify)="verifyCard($event)"
-        (edit)="startEditingCard($event)"
-        (delete)="startDeletingCard($event)"
-      />
+      @for (card of activeHand(); track card.id) {
+        <app-chore-card
+          [card]="card"
+          [canEdit]="isTeamAdmin()"
+          [canDelete]="isTeamAdmin()"
+          (claim)="claimCard($event)"
+          (unclaim)="unclaimCard($event)"
+          (complete)="completeCard($event)"
+          (verify)="verifyCard($event)"
+          (edit)="startEditingCard($event)"
+          (delete)="startDeletingCard($event)"
+        />
+      }
     </div>
     <ng-template #emptyHand>
-      <p class="empty-state">Claim a quest from the board to add it to your hand.</p>
+      <div class="empty-hand">
+        <div class="empty-slot" aria-hidden="true"><span class="slot-diamond"></span></div>
+        <div class="empty-copy">
+          <h3>Your hand is empty</h3>
+          <p>Claim a quest from Available Quests and it'll show up here until you complete it.</p>
+          <button type="button" class="browse-btn" (click)="browseQuests(availableSection)">Browse quests</button>
+        </div>
+      </div>
     </ng-template>
-  </div>
+  </section>
 
-  <div class="board-section verify-section" *ngIf="awaitingVerification().length">
+  <section class="board-section marker-verify" aria-labelledby="verify-title">
     <div class="section-heading">
-      <h2>Awaiting Verification</h2>
+      <span class="marker" aria-hidden="true"></span>
+      <h2 id="verify-title">Awaiting Verification</h2>
       <span class="count-badge">{{ awaitingVerification().length }}</span>
+      <span class="helper">A teammate confirms before rewards pay out</span>
     </div>
-    <div class="card-grid">
-      <app-chore-card
-        *ngFor="let card of awaitingVerification()"
-        [card]="card"
-        [canVerify]="isTeamAdmin()"
-        [canEdit]="isTeamAdmin()"
-        [canDelete]="isTeamAdmin()"
-        [assignedUserName]="assignedUserName(card)"
-        (claim)="claimCard($event)"
-        (unclaim)="unclaimCard($event)"
-        (complete)="completeCard($event)"
-        (verify)="verifyCard($event)"
-        (edit)="startEditingCard($event)"
-        (delete)="startDeletingCard($event)"
-      />
+    <div class="card-grid" *ngIf="awaitingVerification().length; else emptyVerify">
+      @for (card of awaitingVerification(); track card.id) {
+        <app-chore-card
+          [card]="card"
+          [canVerify]="isTeamAdmin()"
+          [canEdit]="isTeamAdmin()"
+          [canDelete]="isTeamAdmin()"
+          [assignedUserName]="assignedUserName(card)"
+          (claim)="claimCard($event)"
+          (unclaim)="unclaimCard($event)"
+          (complete)="completeCard($event)"
+          (verify)="verifyCard($event)"
+          (edit)="startEditingCard($event)"
+          (delete)="startDeletingCard($event)"
+        />
+      }
     </div>
-  </div>
+    <ng-template #emptyVerify>
+      <p class="empty-row">
+        <span class="empty-marker" aria-hidden="true"></span>
+        Nothing waiting on review. Completed quests land here for a teammate to verify.
+      </p>
+    </ng-template>
+  </section>
 
-  <div class="board-section history-section" *ngIf="myVerifiedHistory().length">
+  <section class="board-section marker-history" *ngIf="myVerifiedHistory().length" aria-labelledby="history-title">
     <div class="section-heading">
-      <h2>My History</h2>
+      <span class="marker" aria-hidden="true"></span>
+      <h2 id="history-title">My History</h2>
       <span class="count-badge">{{ myVerifiedHistory().length }}</span>
     </div>
     <div class="card-grid">
-      <app-chore-card
-        *ngFor="let card of pagedVerifiedHistory()"
-        [card]="card"
-        [readonlyCard]="true"
-        [canEdit]="isTeamAdmin()"
-        [canDelete]="isTeamAdmin()"
-        (edit)="startEditingCard($event)"
-        (delete)="startDeletingCard($event)"
-      />
+      @for (card of pagedVerifiedHistory(); track card.id) {
+        <app-chore-card
+          [card]="card"
+          [readonlyCard]="true"
+          [canEdit]="isTeamAdmin()"
+          [canDelete]="isTeamAdmin()"
+          (edit)="startEditingCard($event)"
+          (delete)="startDeletingCard($event)"
+        />
+      }
     </div>
     <div class="pagination" *ngIf="historyTotalPages() > 1">
       <button type="button" [disabled]="historyPage() === 0" (click)="prevHistoryPage()">‹ Prev</button>
@@ -128,27 +154,72 @@
         Next ›
       </button>
     </div>
-  </div>
+  </section>
 
-  <div class="board-section activity-section" *ngIf="teamActivity().length">
+  <section class="board-section marker-team" aria-labelledby="team-title">
     <div class="section-heading">
-      <h2>Team Activity</h2>
-      <span class="count-badge">{{ teamActivity().length }}</span>
+      <span class="marker" aria-hidden="true"></span>
+      <h2 id="team-title">Team Activity</h2>
+      <span class="count-badge">
+        <ng-container *ngIf="activityFilterActive()">{{ filteredTeamActivity().length }} / </ng-container>{{ teamActivity().length }}
+      </span>
+      <button type="button" class="clear-filters-btn" *ngIf="activityFilterActive()" (click)="clearActivityFilters()">
+        Clear filters
+      </button>
     </div>
-    <div class="card-grid">
-      <app-chore-card
-        *ngFor="let card of teamActivity()"
-        [card]="card"
-        [readonlyCard]="true"
-        [canEdit]="isTeamAdmin()"
-        [canDelete]="isTeamAdmin()"
-        [assignedUserName]="assignedUserName(card)"
-        (edit)="startEditingCard($event)"
-        (delete)="startDeletingCard($event)"
-      />
+    <div class="activity-filters" *ngIf="activityAssigneeOptions().length > 1 || activityStatusOptions().length > 1">
+      <div class="filter-group" *ngIf="activityAssigneeOptions().length > 1">
+        <span class="filter-label">Assignee</span>
+        <button
+          type="button"
+          class="filter-chip"
+          *ngFor="let option of activityAssigneeOptions()"
+          [class.active]="activityAssigneeFilter().has(option.id)"
+          [attr.aria-pressed]="activityAssigneeFilter().has(option.id)"
+          (click)="toggleActivityAssignee(option.id)"
+        >
+          {{ option.label }}
+        </button>
+      </div>
+      <div class="filter-group" *ngIf="activityStatusOptions().length > 1">
+        <span class="filter-label">Status</span>
+        <button
+          type="button"
+          class="filter-chip"
+          *ngFor="let option of activityStatusOptions()"
+          [class.active]="activityStatusFilter().has(option.id)"
+          [attr.aria-pressed]="activityStatusFilter().has(option.id)"
+          (click)="toggleActivityStatus(option.id)"
+        >
+          {{ option.label }}
+        </button>
+      </div>
     </div>
-  </div>
-</section>
+    <div class="card-grid" *ngIf="filteredTeamActivity().length; else emptyActivity">
+      @for (card of filteredTeamActivity(); track card.id) {
+        <app-chore-card
+          [card]="card"
+          [readonlyCard]="true"
+          [canEdit]="isTeamAdmin()"
+          [canDelete]="isTeamAdmin()"
+          [assignedUserName]="assignedUserName(card)"
+          (edit)="startEditingCard($event)"
+          (delete)="startDeletingCard($event)"
+        />
+      }
+    </div>
+    <ng-template #emptyActivity>
+      <p class="empty-row">
+        <span class="empty-marker" aria-hidden="true"></span>
+        @if (teamActivity().length) {
+          No team activity matches these filters.
+        } @else {
+          Nobody else is on a quest right now. Claimed and finished quests from teammates show up here.
+        }
+      </p>
+    </ng-template>
+  </section>
+</div>
 
 <app-completion-modal
   *ngIf="activeRewards() as batch"

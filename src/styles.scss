@@ -1,3 +1,39 @@
+:root {
+  --font-display: 'Cinzel', serif; /* card titles, seals, type line */
+  --font-ui: 'Manrope', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace; /* time, codes */
+
+  --bg: #090c16;
+  --surface: rgba(255, 255, 255, 0.035);
+  --surface-border: rgba(255, 255, 255, 0.07);
+  --text: #e6e9f2;
+  --text-muted: rgba(230, 233, 242, 0.55);
+
+  --rarity-common: oklch(0.8 0.025 250);
+  --rarity-uncommon: oklch(0.78 0.16 155);
+  --rarity-rare: oklch(0.72 0.15 245);
+  --rarity-epic: oklch(0.7 0.19 310);
+  --rarity-legendary: oklch(0.83 0.15 80);
+
+  --status-active: oklch(0.76 0.13 235);
+  --status-verifying: oklch(0.84 0.14 78);
+  --status-verified: oklch(0.8 0.15 155);
+  --danger: oklch(0.65 0.18 25);
+  --gold: oklch(0.83 0.15 80);
+  --xp: oklch(0.72 0.15 245);
+  --loot: oklch(0.8 0.12 330);
+
+  color-scheme: dark;
+}
+
+/* Lets the legendary card border spin. Without @property support the
+   animation can't interpolate the angle, so the border just stays static. */
+@property --ang {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -10,16 +46,78 @@ body {
 }
 
 body {
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: #0b0d12;
-  color: #e5e7eb;
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
 }
 
-button {
+button,
+input,
+select,
+textarea {
   font-family: inherit;
 }
 
 ::selection {
   background: rgba(56, 189, 248, 0.35);
+}
+
+:focus-visible {
+  outline: 2px solid var(--status-active);
+  outline-offset: 2px;
+}
+
+/* Reward chips: used wherever rewards appear outside a quest card. */
+.reward-chip {
+  --chip: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--chip) 16%, transparent);
+  color: var(--chip);
+  font: 700 11px/1 var(--font-ui);
+  white-space: nowrap;
+
+  &.xp {
+    --chip: var(--xp);
+  }
+
+  &.gold {
+    --chip: var(--gold);
+  }
+
+  &.loot {
+    --chip: var(--loot);
+  }
+
+  &.lg {
+    padding: 7px 13px;
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }

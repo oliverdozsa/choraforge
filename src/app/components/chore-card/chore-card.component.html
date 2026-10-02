@@ -1,95 +1,144 @@
-<article class="tcg-card" [ngClass]="rarityClass">
-  <div class="card-frame">
-    <header class="card-header">
-      <span class="rarity-badge">{{ card.rarity }}</span>
-      <span class="title">{{ card.title }}</span>
-      <div class="card-actions" *ngIf="canEdit || canDelete">
-        <button type="button" class="edit-btn" *ngIf="canEdit" (click)="onEdit($event)" aria-label="Edit card">
-          ✎
-        </button>
-        <button
-          type="button"
-          class="delete-btn"
-          *ngIf="canDelete"
-          (click)="onDelete($event)"
-          aria-label="Delete card"
-        >
-          🗑
-        </button>
-      </div>
-    </header>
+<div
+  #stage
+  class="stage"
+  role="button"
+  tabindex="0"
+  [attr.aria-pressed]="flipped()"
+  [attr.aria-label]="card.title + ', ' + rarityName + ' quest, ' + card.xpReward + ' XP, ' + card.goldReward + ' gold. Flip card'"
+  (click)="toggleFlip()"
+  (keydown.enter)="toggleFlip($event)"
+  (keydown.space)="toggleFlip($event)"
+>
+  <div class="flipper" [class.flipped]="flipped()">
+    <div class="face front" aria-hidden="true">
+      @if (card.rarity === 'LEGENDARY') {
+        <div class="legend-glow"></div>
+      }
+      <div class="bezel">
+        <div class="panel">
+          <div class="banner">
+            <span class="title" [title]="card.title">{{ card.title }}</span>
+            <span class="time">{{ timeLabel }}</span>
+          </div>
 
-    <div
-      class="card-art"
-      aria-hidden="true"
-      [class.has-image]="card.imageUrl"
-      [style.background-image]="card.imageUrl ? 'url(' + card.imageUrl + ')' : null"
-    >
-      <div class="art-glow"></div>
-      <span class="status-pill" *ngIf="statusLabel">{{ statusLabel }}</span>
-      <span class="assignee-pill" *ngIf="assignedUserName">👤 {{ assignedUserName }}</span>
-    </div>
+          <div class="art">
+            @if (showArt) {
+              <img [src]="card.imageUrl" alt="" loading="lazy" (error)="failedArtUrl.set(card.imageUrl ?? null)" />
+            } @else {
+              <div class="art-placeholder">QUEST ART</div>
+            }
+            <div class="vignette"></div>
+            @if (tier >= 4) {
+              <div class="foil"></div>
+            }
+            @if (statusLabel) {
+              <span class="status-badge" [ngClass]="statusClass">{{ statusLabel }}</span>
+            }
+            @if (ownerName) {
+              <span class="owner-chip">{{ ownerName }}</span>
+            }
+          </div>
 
-    <p class="description">{{ card.description }}</p>
+          <div class="type-line">
+            <span>Quest — {{ rarityName }}</span>
+            <span class="gems">
+              @for (gem of gems; track gem) {
+                <span class="gem" [class.lit]="gem < tier"></span>
+              }
+            </span>
+          </div>
 
-    <div class="stats-row">
-      <div class="stat">
-        <span class="stat-label">Complexity</span>
-        <div class="pips">
-          <span
-            class="pip"
-            *ngFor="let pip of complexityPips"
-            [class.filled]="pip < card.complexity"
-          ></span>
+          <div class="text-box">
+            <p class="desc">{{ card.description }}</p>
+            @if (card.itemDrop) {
+              <span class="loot">Drops: {{ card.itemDrop }}</span>
+            }
+            @if (card.dueAt && !card.completedAt) {
+              <span class="due" [class.overdue]="isOverdue">Due {{ card.dueAt | date: 'MMM d, h:mm a' }}</span>
+            }
+            <div class="meter">
+              <span class="meter-label">Complexity</span>
+              <div class="pips">
+                @for (pip of complexityPips; track pip) {
+                  <span class="pip" [class.filled]="pip < card.complexity"></span>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="seal xp" [class.long]="card.xpReward >= 1000">
+            <span class="seal-value">{{ card.xpReward }}</span>
+            <span class="seal-label">XP</span>
+          </div>
+          <div class="seal gold" [class.long]="card.goldReward >= 1000">
+            <span class="seal-value">{{ card.goldReward }}</span>
+            <span class="seal-label">GOLD</span>
+          </div>
         </div>
-      </div>
-      <div class="stat">
-        <span class="stat-label">Time</span>
-        <span class="stat-value">{{ card.estimatedMinutes }}m</span>
+        <span class="rivet left"></span>
+        <span class="rivet right"></span>
       </div>
     </div>
 
-    <div class="stats-row">
-      <div class="stat">
-        <span class="stat-label">Created</span>
-        <span class="stat-value">{{ card.createdAt | date: 'MMM d, y' }}</span>
-      </div>
-      <div class="stat" *ngIf="card.completedAt">
-        <span class="stat-label">Completed</span>
-        <span class="stat-value">{{ card.completedAt | date: 'MMM d, y' }}</span>
-      </div>
-      <div class="stat" *ngIf="card.dueAt && !card.completedAt">
-        <span class="stat-label">Due</span>
-        <span class="stat-value" [class.overdue]="isOverdue">{{ card.dueAt | date: 'MMM d, y, h:mm a' }}</span>
-      </div>
-    </div>
-
-    <div class="rewards-row">
-      <span class="badge xp-badge">✦ {{ card.xpReward }} XP</span>
-      <span class="badge gold-badge">◈ {{ card.goldReward }} Gold</span>
-      <span class="badge item-badge" *ngIf="card.itemDrop">🎁 {{ card.itemDrop }}</span>
-    </div>
-
-    <div class="cta-row">
-      <button
-        *ngIf="!readonlyCard && showCta"
-        class="cta-btn"
-        [class.claim]="card.status === 'AVAILABLE'"
-        [class.complete]="card.status === 'CLAIMED'"
-        [class.verify]="card.status === 'COMPLETED'"
-        [disabled]="card.status === 'VERIFIED'"
-        (click)="onAction()"
-      >
-        {{ ctaLabel }}
-      </button>
-      <button
-        *ngIf="!readonlyCard && canUnclaim"
-        type="button"
-        class="cta-btn unclaim"
-        (click)="onUnclaim($event)"
-      >
-        Unclaim
-      </button>
+    <div class="face back" aria-hidden="true">
+      <div class="emblem"><span class="emblem-ring"></span><span class="emblem-core"></span></div>
+      <span class="wordmark">CHORAGON</span>
+      <dl class="log">
+        <dt>Quest</dt>
+        <dd class="mono">{{ questCode }}</dd>
+        <dt>Rarity</dt>
+        <dd>{{ rarityName }}</dd>
+        <dt>Created</dt>
+        <dd>{{ card.createdAt | date: 'MMM d' }}</dd>
+        <dt>Claimed by</dt>
+        <dd>{{ ownerName ?? '—' }}</dd>
+        <dt>Completed</dt>
+        <dd>{{ card.completedAt ? (card.completedAt | date: 'MMM d') : '—' }}</dd>
+        <dt>Loot</dt>
+        <dd>{{ card.itemDrop || '—' }}</dd>
+      </dl>
+      <span class="flip-hint">Click to flip back</span>
     </div>
   </div>
-</article>
+</div>
+
+<div class="tray">
+  @switch (card.status) {
+    @case ('AVAILABLE') {
+      @if (!readonlyCard) {
+        <button type="button" class="btn claim" (click)="onAction()">Claim quest</button>
+      }
+    }
+    @case ('CLAIMED') {
+      @if (!readonlyCard) {
+        <div class="btn-pair">
+          <button type="button" class="btn complete" (click)="onAction()">Complete</button>
+          <button type="button" class="btn unclaim" (click)="onUnclaim($event)">Unclaim</button>
+        </div>
+      }
+    }
+    @case ('COMPLETED') {
+      @if (!readonlyCard && canVerify) {
+        <button type="button" class="btn verify" (click)="onAction()">Verify</button>
+      } @else {
+        <div class="pill waiting"><span class="pulse-dot"></span>Waiting on a teammate</div>
+      }
+    }
+    @case ('VERIFIED') {
+      <div class="pill verified">Verified · {{ (card.verifiedAt ?? card.completedAt) | date: 'MMM d' }}</div>
+    }
+  }
+
+  @if (canEdit || canDelete) {
+    <div class="admin-row">
+      @if (canEdit) {
+        <button type="button" class="btn ghost" (click)="onEdit($event)" [attr.aria-label]="'Edit ' + card.title">✎ Edit</button>
+      }
+      @if (canDelete) {
+        <button type="button" class="btn ghost danger" (click)="onDelete($event)" [attr.aria-label]="'Delete ' + card.title">
+          Delete
+        </button>
+      }
+    </div>
+  }
+</div>

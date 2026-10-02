@@ -5,15 +5,16 @@
   </div>
 
   <div class="template-grid">
-    <app-chore-card
-      *ngFor="let template of templates()"
-      [card]="asChoreCard(template)"
-      [readonlyCard]="true"
-      [canEdit]="true"
-      [canDelete]="true"
-      (edit)="startEditing(template.id)"
-      (delete)="startDeleting(template.id)"
-    />
+    @for (template of templates(); track template.id) {
+      <app-chore-card
+        [card]="asChoreCard(template)"
+        [readonlyCard]="true"
+        [canEdit]="true"
+        [canDelete]="true"
+        (edit)="startEditing(template.id)"
+        (delete)="startDeleting(template.id)"
+      />
+    }
 
     <button class="add-slot" *ngIf="!creating()" (click)="startCreating()">
       <span class="plus">+</span>
