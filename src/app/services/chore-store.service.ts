@@ -343,6 +343,22 @@ export class ChoreStoreService {
     }
   }
 
+  // Only admins may call this (server-enforced). Returns true on success.
+  async setMemberGold(userId: string, gold: number): Promise<boolean> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return false;
+    this._error.set(null);
+    try {
+      const updated = await firstValueFrom(this.api.setMemberGold(teamId, userId, { gold }));
+      this._leaderboard.update((lb) => lb.map((m) => (m.userId === updated.userId ? updated : m)));
+      if (userId === this.currentUserId()) await this.refreshMe();
+      return true;
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return false;
+    }
+  }
+
   // Only admins may call this (server-enforced). Verifying someone else's card refreshes
   // team state but doesn't pop the reward modal here — the assignee's own client picks that
   // up via polling once the backend marks the reward unacknowledged.

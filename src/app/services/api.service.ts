@@ -12,6 +12,7 @@ import {
   CreateTeamRequest,
   JoinTeamRequest,
   PagedResponse,
+  SetGoldRequest,
   TeamMemberResponse,
   TeamResponse,
   UpdateChoreCardRequest,
@@ -86,6 +87,10 @@ export class ApiService {
 
   getLeaderboard(teamId: string): Observable<TeamMemberResponse[]> {
     return this.http.get<TeamMemberResponse[]>(`${this.base}/teams/${teamId}/leaderboard`);
+  }
+
+  setMemberGold(teamId: string, userId: string, request: SetGoldRequest): Observable<TeamMemberResponse> {
+    return this.http.put<TeamMemberResponse>(`${this.base}/teams/${teamId}/members/${userId}/gold`, request);
   }
 
   claimCard(cardId: string): Observable<ChoreCardResponse> {

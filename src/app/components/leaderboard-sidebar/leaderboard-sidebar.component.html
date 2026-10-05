@@ -22,7 +22,30 @@
           <span class="level-bar" [style.--p]="levelProgress(member) + '%'"></span>
         </div>
       </div>
-      <span class="gold" [attr.aria-label]="member.gold + ' gold'">{{ member.gold }}</span>
+      <span class="gold-cell">
+        <span class="gold" [attr.aria-label]="member.gold + ' gold'">{{ member.gold }}</span>
+        <button
+          *ngIf="isTeamAdmin()"
+          type="button"
+          class="edit-gold"
+          title="Edit gold"
+          [attr.aria-label]="'Edit gold for ' + member.name"
+          (click)="openGoldEditor(member)"
+        >
+          ✎
+        </button>
+      </span>
     </li>
   </ol>
 </aside>
+
+<app-dialog *ngIf="editingMember() as member" [title]="'Edit gold: ' + member.name" (closed)="closeGoldEditor()">
+  <form class="gold-form" (ngSubmit)="saveGold()">
+    <label>
+      Gold
+      <input type="number" name="gold" min="0" step="1" [(ngModel)]="goldInput" autocomplete="off" />
+    </label>
+    <p class="form-error" *ngIf="formError()">{{ formError() }}</p>
+    <button type="submit" class="save-btn" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button>
+  </form>
+</app-dialog>

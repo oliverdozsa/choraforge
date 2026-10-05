@@ -32,6 +32,8 @@
 .sidebar {
   position: sticky;
   top: 28px;
+  // Sticky creates a stacking context; lift it so the sidebar's dialogs overlay (and blur) the cards.
+  z-index: 10;
   align-self: start;
 }
 

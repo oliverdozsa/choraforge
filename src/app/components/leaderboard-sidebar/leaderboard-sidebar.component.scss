@@ -145,3 +145,70 @@
   font: 800 12px/1 var(--font-ui);
   color: oklch(0.88 0.13 88);
 }
+
+.gold-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.edit-gold {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    color: oklch(0.88 0.13 88);
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.gold-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  input {
+    background: #1f2430;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 10px;
+    padding: 0.65rem 0.8rem;
+    color: #f3f4f6;
+    font-size: 0.9rem;
+  }
+}
+
+.form-error {
+  margin: 0;
+  color: #fca5a5;
+  font-size: 0.8rem;
+}
+
+.save-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 0.7rem;
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: #0b0d12;
+  cursor: pointer;
+  background: linear-gradient(135deg, #38bdf8, #818cf8);
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
