@@ -50,6 +50,10 @@
   display: flex;
   justify-content: center;
   min-height: 44px;
+  /* The Google button is an iframe with a light color scheme. If it inherits
+     our global dark scheme, the browser paints an opaque white backdrop behind
+     it, so match the iframe's scheme to keep it transparent. */
+  color-scheme: light;
 }
 
 .sdk-error {
