@@ -12,6 +12,9 @@
       }
       <button class="tab" [class.active]="mode() === 'create'" (click)="setMode('create')">Create Team</button>
       <button class="tab" [class.active]="mode() === 'join'" (click)="setMode('join')">Join Team</button>
+      @if (embedded && isTeamAdmin()) {
+        <button class="tab" [class.active]="mode() === 'invite'" (click)="setMode('invite')">Invite</button>
+      }
     </div>
 
     @if (mode() === 'teams' && hasTeam()) {
@@ -49,20 +52,63 @@
           {{ submitting() ? 'Creating…' : 'Create Team' }}
         </button>
       </form>
-    } @else {
-      <form class="form" (ngSubmit)="joinTeam()">
+    } @else if (mode() === 'invite' && isTeamAdmin()) {
+      <form class="form" (ngSubmit)="sendInvite()">
         <label>
-          Team ID
-          <input type="text" name="joinTeamId" [(ngModel)]="joinTeamId" placeholder="Team UUID" autocomplete="off" />
+          Invite by Email
+          <input type="email" name="inviteEmail" [(ngModel)]="inviteEmail" placeholder="friend@example.com" autocomplete="off" />
         </label>
+        <button type="submit" class="submit-btn" [disabled]="submitting()">
+          {{ submitting() ? 'Sending…' : 'Send Invitation' }}
+        </button>
+      </form>
+      @if (inviteNotice()) {
+        <p class="notice-msg">{{ inviteNotice() }}</p>
+      }
+      <h3 class="list-heading">Invitations</h3>
+      <ul class="team-list">
+        @for (inv of teamInvitations(); track inv.id) {
+          <li class="team-row">
+            <div class="team-info">
+              <span class="team-name">{{ inv.email }}</span>
+              <span class="team-meta">
+                {{ inv.status }}@if (inv.status === 'PENDING') { · expires {{ inv.expiresAt | date: 'mediumDate' }} }
+              </span>
+            </div>
+            @if (inv.status === 'PENDING') {
+              <button type="button" class="switch-btn" (click)="revoke(inv.id)">Revoke</button>
+            }
+          </li>
+        } @empty {
+          <li class="empty-msg">No invitations yet.</li>
+        }
+      </ul>
+    } @else {
+      <form class="form" (ngSubmit)="acceptInvitation()">
         <label>
-          Your Email
-          <input type="email" name="joinEmail" [(ngModel)]="joinEmail" placeholder="you@example.com" autocomplete="off" />
+          Invitation Code
+          <input type="text" name="joinCode" [(ngModel)]="joinCode" placeholder="Paste your code" autocomplete="off" />
         </label>
         <button type="submit" class="submit-btn" [disabled]="submitting()">
           {{ submitting() ? 'Joining…' : 'Join Team' }}
         </button>
       </form>
+      @if (myInvitations().length) {
+        <h3 class="list-heading">Pending invitations</h3>
+        <ul class="team-list">
+          @for (inv of myInvitations(); track inv.id) {
+            <li class="team-row">
+              <div class="team-info">
+                <span class="team-name">{{ inv.teamName }}</span>
+                <span class="team-meta">expires {{ inv.expiresAt | date: 'mediumDate' }}</span>
+              </div>
+              @if (inv.code) {
+                <button type="button" class="switch-btn" (click)="useCode(inv.code)">Use code</button>
+              }
+            </li>
+          }
+        </ul>
+      }
     }
 
     @if (formError()) {

@@ -10,7 +10,9 @@ import {
   CreateChoreCardRequest,
   CreateChoreCardTemplateRequest,
   CreateTeamRequest,
-  JoinTeamRequest,
+  AcceptInvitationRequest,
+  CreateInvitationRequest,
+  InvitationResponse,
   AssignRoleRequest,
   PagedResponse,
   SetGoldRequest,
@@ -41,8 +43,24 @@ export class ApiService {
     return this.http.post<TeamResponse>(`${this.base}/teams`, request);
   }
 
-  joinTeam(teamId: string, request: JoinTeamRequest): Observable<TeamResponse> {
-    return this.http.post<TeamResponse>(`${this.base}/team/${teamId}/join`, request);
+  getTeamInvitations(teamId: string): Observable<InvitationResponse[]> {
+    return this.http.get<InvitationResponse[]>(`${this.base}/teams/${teamId}/invitations`);
+  }
+
+  inviteToTeam(teamId: string, request: CreateInvitationRequest): Observable<unknown> {
+    return this.http.post<unknown>(`${this.base}/teams/${teamId}/invitations`, request);
+  }
+
+  revokeInvitation(teamId: string, invitationId: string): Observable<unknown> {
+    return this.http.delete<unknown>(`${this.base}/teams/${teamId}/invitations/${invitationId}`);
+  }
+
+  getMyInvitations(): Observable<InvitationResponse[]> {
+    return this.http.get<InvitationResponse[]>(`${this.base}/invitations`);
+  }
+
+  acceptInvitationByCode(request: AcceptInvitationRequest): Observable<TeamResponse> {
+    return this.http.post<TeamResponse>(`${this.base}/invitations/accept`, request);
   }
 
   getTeamCardsPage(

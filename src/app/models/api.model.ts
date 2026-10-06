@@ -124,8 +124,25 @@ export interface CreateTeamRequest {
   name: string;
 }
 
-export interface JoinTeamRequest {
+export type InvitationStatus = 'PENDING' | 'ACCEPTED' | 'REVOKED';
+
+export interface InvitationResponse {
+  id: string;
+  teamId: string;
+  teamName: string;
   email: string;
+  status: InvitationStatus;
+  createdAt: string;
+  expiresAt: string;
+  code?: string;
+}
+
+export interface CreateInvitationRequest {
+  email: string;
+}
+
+export interface AcceptInvitationRequest {
+  code: string;
 }
 
 export interface CreateChoreCardRequest {

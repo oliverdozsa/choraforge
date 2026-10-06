@@ -7,6 +7,7 @@ import {
   ChoreCardTemplateResponse,
   CreateChoreCardRequest,
   CreateChoreCardTemplateRequest,
+  InvitationResponse,
   TeamMemberResponse,
   TeamMembershipResponse,
   UpdateChoreCardRequest,
@@ -216,15 +217,61 @@ export class ChoreStoreService {
     }
   }
 
-  async joinTeam(teamId: string, email: string): Promise<void> {
+  async acceptInvitationByCode(code: string): Promise<void> {
     this._error.set(null);
     try {
-      await firstValueFrom(this.api.joinTeam(teamId, { email }));
+      const team = await firstValueFrom(this.api.acceptInvitationByCode({ code }));
       await this.refreshMe();
-      await this.selectTeam(teamId);
+      await this.selectTeam(team.id);
     } catch (err) {
       this._error.set(friendlyError(err));
       throw err;
+    }
+  }
+
+  async loadMyInvitations(): Promise<InvitationResponse[]> {
+    try {
+      return await firstValueFrom(this.api.getMyInvitations());
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return [];
+    }
+  }
+
+  // Team admins / admins only (server-enforced).
+  async loadTeamInvitations(): Promise<InvitationResponse[]> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return [];
+    try {
+      return await firstValueFrom(this.api.getTeamInvitations(teamId));
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return [];
+    }
+  }
+
+  async inviteToTeam(email: string): Promise<void> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return;
+    this._error.set(null);
+    try {
+      await firstValueFrom(this.api.inviteToTeam(teamId, { email }));
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      throw err;
+    }
+  }
+
+  async revokeInvitation(invitationId: string): Promise<boolean> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return false;
+    this._error.set(null);
+    try {
+      await firstValueFrom(this.api.revokeInvitation(teamId, invitationId));
+      return true;
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return false;
     }
   }
 

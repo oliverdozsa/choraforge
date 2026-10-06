@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { InvitationResponse } from '../../models/api.model';
 import { ChoreStoreService } from '../../services/chore-store.service';
 
 @Component({
@@ -20,22 +21,74 @@ export class TeamSetupComponent {
   @Output() completed = new EventEmitter<void>();
 
   readonly hasTeam = this.store.hasTeam;
-  readonly mode = signal<'create' | 'join' | 'teams'>(this.hasTeam() ? 'teams' : 'create');
+  readonly mode = signal<'create' | 'join' | 'teams' | 'invite'>(this.hasTeam() ? 'teams' : 'create');
   readonly submitting = signal(false);
   readonly formError = signal<string | null>(null);
   readonly switchingTeamId = signal<string | null>(null);
 
   teamName = '';
-  joinTeamId = '';
-  joinEmail = '';
+  joinCode = '';
+  inviteEmail = '';
+
+  readonly myInvitations = signal<InvitationResponse[]>([]);
+  readonly teamInvitations = signal<InvitationResponse[]>([]);
+  readonly inviteNotice = signal<string | null>(null);
 
   readonly error = this.store.error;
   readonly teams = this.store.teams;
+  readonly isTeamAdmin = this.store.isTeamAdmin;
   readonly selectedTeamId = this.store.selectedTeamId;
 
-  setMode(mode: 'create' | 'join' | 'teams'): void {
+  constructor() {
+    void this.loadMyInvitations();
+  }
+
+  setMode(mode: 'create' | 'join' | 'teams' | 'invite'): void {
     this.mode.set(mode);
     this.formError.set(null);
+    this.inviteNotice.set(null);
+    if (mode === 'invite') void this.loadTeamInvitations();
+    if (mode === 'join') void this.loadMyInvitations();
+  }
+
+  private async loadMyInvitations(): Promise<void> {
+    const all = await this.store.loadMyInvitations();
+    this.myInvitations.set(all.filter((i) => i.status === 'PENDING'));
+  }
+
+  private async loadTeamInvitations(): Promise<void> {
+    this.teamInvitations.set(await this.store.loadTeamInvitations());
+  }
+
+  useCode(code: string | undefined): void {
+    if (code) this.joinCode = code;
+  }
+
+  async sendInvite(): Promise<void> {
+    const email = this.inviteEmail.trim();
+    if (!email) {
+      this.formError.set('Email is required.');
+      return;
+    }
+    this.formError.set(null);
+    this.inviteNotice.set(null);
+    this.submitting.set(true);
+    try {
+      await this.store.inviteToTeam(email);
+      this.inviteEmail = '';
+      this.inviteNotice.set(`Invitation sent to ${email}.`);
+      await this.loadTeamInvitations();
+    } catch {
+      // surfaced via store.error
+    } finally {
+      this.submitting.set(false);
+    }
+  }
+
+  async revoke(invitationId: string): Promise<void> {
+    if (await this.store.revokeInvitation(invitationId)) {
+      await this.loadTeamInvitations();
+    }
   }
 
   logout(): void {
@@ -70,15 +123,17 @@ export class TeamSetupComponent {
     }
   }
 
-  async joinTeam(): Promise<void> {
-    if (!this.joinTeamId.trim() || !this.joinEmail.trim()) {
-      this.formError.set('Team ID and email are required.');
+  async acceptInvitation(): Promise<void> {
+    const code = this.joinCode.trim();
+    if (!code) {
+      this.formError.set('Invitation code is required.');
       return;
     }
     this.formError.set(null);
     this.submitting.set(true);
     try {
-      await this.store.joinTeam(this.joinTeamId.trim(), this.joinEmail.trim());
+      await this.store.acceptInvitationByCode(code);
+      this.joinCode = '';
       this.completed.emit();
     } catch {
       // surfaced via store.error
