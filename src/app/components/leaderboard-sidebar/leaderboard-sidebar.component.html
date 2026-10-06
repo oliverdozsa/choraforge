@@ -34,6 +34,16 @@
         >
           ✎
         </button>
+        <button
+          *ngIf="canChangeRole(member)"
+          type="button"
+          class="edit-gold"
+          title="Change role"
+          [attr.aria-label]="'Change role for ' + member.name"
+          (click)="openRoleEditor(member)"
+        >
+          ⚑
+        </button>
       </span>
     </li>
   </ol>
@@ -44,6 +54,20 @@
     <label>
       Gold
       <input type="number" name="gold" min="0" step="1" [(ngModel)]="goldInput" autocomplete="off" />
+    </label>
+    <p class="form-error" *ngIf="formError()">{{ formError() }}</p>
+    <button type="submit" class="save-btn" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button>
+  </form>
+</app-dialog>
+
+<app-dialog *ngIf="roleMember() as member" [title]="'Change role: ' + member.name" (closed)="closeRoleEditor()">
+  <form class="gold-form" (ngSubmit)="saveRole()">
+    <label>
+      Role
+      <select name="role" [(ngModel)]="roleInput">
+        <option value="USER">USER</option>
+        <option value="ADMIN">ADMIN</option>
+      </select>
     </label>
     <p class="form-error" *ngIf="formError()">{{ formError() }}</p>
     <button type="submit" class="save-btn" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button>

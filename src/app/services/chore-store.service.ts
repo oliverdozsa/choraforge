@@ -359,6 +359,21 @@ export class ChoreStoreService {
     }
   }
 
+  // Only admins may call this (server-enforced); only USER/ADMIN can be assigned. Returns true on success.
+  async assignRole(userId: string, role: 'USER' | 'ADMIN'): Promise<boolean> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return false;
+    this._error.set(null);
+    try {
+      const updated = await firstValueFrom(this.api.assignRole(teamId, { userId, role }));
+      this._leaderboard.update((lb) => lb.map((m) => (m.userId === updated.userId ? updated : m)));
+      return true;
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return false;
+    }
+  }
+
   // Only admins may call this (server-enforced). Verifying someone else's card refreshes
   // team state but doesn't pop the reward modal here — the assignee's own client picks that
   // up via polling once the backend marks the reward unacknowledged.

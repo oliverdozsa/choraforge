@@ -105,6 +105,11 @@ export interface TeamMemberResponse {
   role: TeamRole;
 }
 
+export interface AssignRoleRequest {
+  userId: string;
+  role: TeamRole;
+}
+
 export interface SetGoldRequest {
   gold: number;
 }

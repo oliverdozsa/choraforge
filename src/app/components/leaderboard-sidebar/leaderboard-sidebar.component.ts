@@ -24,6 +24,34 @@ export class LeaderboardSidebarComponent {
   readonly formError = signal<string | null>(null);
   goldInput: number | null = null;
 
+  readonly roleMember = signal<TeamMemberResponse | null>(null);
+  roleInput: 'USER' | 'ADMIN' = 'USER';
+
+  /** The team owner (TEAM_ADMIN) and yourself can't be re-roled. */
+  canChangeRole(member: TeamMemberResponse): boolean {
+    return this.isTeamAdmin() && member.role !== 'TEAM_ADMIN' && member.userId !== this.currentUserId();
+  }
+
+  openRoleEditor(member: TeamMemberResponse): void {
+    this.roleInput = member.role === 'ADMIN' ? 'ADMIN' : 'USER';
+    this.formError.set(null);
+    this.roleMember.set(member);
+  }
+
+  closeRoleEditor(): void {
+    this.roleMember.set(null);
+  }
+
+  async saveRole(): Promise<void> {
+    const member = this.roleMember();
+    if (!member || this.saving()) return;
+    this.saving.set(true);
+    const ok = await this.store.assignRole(member.userId, this.roleInput);
+    this.saving.set(false);
+    if (ok) this.closeRoleEditor();
+    else this.formError.set(this.store.error() ?? 'Could not change role.');
+  }
+
   openGoldEditor(member: TeamMemberResponse): void {
     this.goldInput = member.gold;
     this.formError.set(null);
