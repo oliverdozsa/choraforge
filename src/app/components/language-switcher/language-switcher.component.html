@@ -1,0 +1,15 @@
+<div class="lang-switch" role="group" [attr.aria-label]="'language.label' | transloco">
+  @for (lang of langs; track lang) {
+    <button
+      type="button"
+      class="lang-btn"
+      [class.active]="current() === lang"
+      [attr.aria-pressed]="current() === lang"
+      [attr.lang]="lang"
+      [title]="'language.' + lang | transloco"
+      (click)="select(lang)"
+    >
+      {{ lang.toUpperCase() }}
+    </button>
+  }
+</div>

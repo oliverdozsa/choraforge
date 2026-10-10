@@ -1,13 +1,15 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { InvitationResponse } from '../../models/api.model';
+import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
 import { ChoreStoreService } from '../../services/chore-store.service';
 
 @Component({
   selector: 'app-team-setup',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslocoDirective, LocalizedDatePipe],
   templateUrl: './team-setup.component.html',
   styleUrl: './team-setup.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +25,7 @@ export class TeamSetupComponent {
   readonly hasTeam = this.store.hasTeam;
   readonly mode = signal<'create' | 'join' | 'teams' | 'invite'>(this.hasTeam() ? 'teams' : 'create');
   readonly submitting = signal(false);
+  /** Translation key of the current form error. */
   readonly formError = signal<string | null>(null);
   readonly switchingTeamId = signal<string | null>(null);
 
@@ -32,6 +35,7 @@ export class TeamSetupComponent {
 
   readonly myInvitations = signal<InvitationResponse[]>([]);
   readonly teamInvitations = signal<InvitationResponse[]>([]);
+  /** Email address of the most recent invitation sent, shown in the confirmation notice. */
   readonly inviteNotice = signal<string | null>(null);
 
   readonly error = this.store.error;
@@ -67,7 +71,7 @@ export class TeamSetupComponent {
   async sendInvite(): Promise<void> {
     const email = this.inviteEmail.trim();
     if (!email) {
-      this.formError.set('Email is required.');
+      this.formError.set('team.errors.emailRequired');
       return;
     }
     this.formError.set(null);
@@ -76,7 +80,7 @@ export class TeamSetupComponent {
     try {
       await this.store.inviteToTeam(email);
       this.inviteEmail = '';
-      this.inviteNotice.set(`Invitation sent to ${email}.`);
+      this.inviteNotice.set(email);
       await this.loadTeamInvitations();
     } catch {
       // surfaced via store.error
@@ -108,7 +112,7 @@ export class TeamSetupComponent {
 
   async createTeam(): Promise<void> {
     if (!this.teamName.trim()) {
-      this.formError.set('Team name is required.');
+      this.formError.set('team.errors.nameRequired');
       return;
     }
     this.formError.set(null);
@@ -126,7 +130,7 @@ export class TeamSetupComponent {
   async acceptInvitation(): Promise<void> {
     const code = this.joinCode.trim();
     if (!code) {
-      this.formError.set('Invitation code is required.');
+      this.formError.set('team.errors.codeRequired');
       return;
     }
     this.formError.set(null);

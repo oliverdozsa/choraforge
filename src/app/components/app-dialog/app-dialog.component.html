@@ -2,7 +2,7 @@
   <div class="dialog-panel" (click)="$event.stopPropagation()">
     <header class="dialog-header">
       <h2>{{ title }}</h2>
-      <button class="dialog-close" type="button" (click)="close()" title="Close" aria-label="Close">×</button>
+      <button class="dialog-close" type="button" (click)="close()" [title]="'common.close' | transloco" [attr.aria-label]="'common.close' | transloco">×</button>
     </header>
     <div class="dialog-body">
       <ng-content></ng-content>

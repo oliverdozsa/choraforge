@@ -2,12 +2,14 @@
   <div class="login-card">
     <div class="crest">⚔️</div>
     <h1 class="brand">Choragon</h1>
-    <p class="tagline">Turn chores into quests. Claim cards, earn XP, level up your team.</p>
+    <p class="tagline">{{ 'login.tagline' | transloco }}</p>
 
     <div class="button-host" #buttonHost></div>
 
+    <div class="login-lang"><app-language-switcher /></div>
+
     @if (sdkError()) {
-      <p class="sdk-error">Couldn't load Google Sign-In. Check your connection and refresh.</p>
+      <p class="sdk-error">{{ 'login.sdkError' | transloco }}</p>
     }
 
     @if (isDevMode) {

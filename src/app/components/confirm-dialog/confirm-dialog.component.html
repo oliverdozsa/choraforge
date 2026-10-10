@@ -1,11 +1,11 @@
-<app-dialog [title]="title" (closed)="cancelled.emit()">
+<app-dialog [title]="title || ('confirm.title' | transloco)" (closed)="cancelled.emit()">
   <p class="confirm-message">{{ message }}</p>
   <div class="confirm-actions">
     <button type="button" class="cancel-btn" [disabled]="confirming" (click)="cancelled.emit()">
-      {{ cancelLabel }}
+      {{ cancelLabel || ('common.cancel' | transloco) }}
     </button>
     <button type="button" class="confirm-btn" [disabled]="confirming" (click)="confirmed.emit()">
-      {{ confirming ? 'Deleting…' : confirmLabel }}
+      {{ confirming ? ('common.deleting' | transloco) : (confirmLabel || ('common.delete' | transloco)) }}
     </button>
   </div>
 </app-dialog>

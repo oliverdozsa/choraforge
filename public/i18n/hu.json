@@ -1,0 +1,254 @@
+{
+  "app": {
+    "loading": "A profilod betöltése…"
+  },
+  "language": {
+    "label": "Nyelv",
+    "en": "English",
+    "hu": "Magyar"
+  },
+  "formats": {
+    "dueDate": "MMM d., H:mm",
+    "shortDate": "MMM d."
+  },
+  "common": {
+    "cancel": "Mégse",
+    "close": "Bezárás",
+    "current": "Jelenlegi",
+    "delete": "Törlés",
+    "deleting": "Törlés…",
+    "edit": "Szerkesztés",
+    "gold": "Arany",
+    "goldAria": "{count} arany",
+    "next": "Következő",
+    "optional": "opcionális",
+    "prev": "Előző",
+    "save": "Mentés",
+    "saving": "Mentés…",
+    "signOut": "Kijelentkezés",
+    "switch": "Váltás",
+    "unknown": "Ismeretlen",
+    "xp": "XP",
+    "you": "Te"
+  },
+  "confirm": {
+    "title": "Biztos vagy benne?"
+  },
+  "login": {
+    "tagline": "Alakítsd át a munkát küldetésekké. Vállalj kártyákat, szerezz XP-t, fejleszd a csapatod!",
+    "sdkError": "Nem sikerült betölteni a Google-bejelentkezést. Ellenőrizd a kapcsolatot, és frissítsd az oldalt."
+  },
+  "header": {
+    "accountMenu": "Fiókmenü",
+    "myProfile": "Profilom",
+    "team": "Csapat",
+    "levelAria": "{level}. szint",
+    "lv": "SZ",
+    "experience": "Tapasztalat",
+    "xpToNext": "{xp} XP hiányzik ({level}. szint)"
+  },
+  "profile": {
+    "myTeams": "Csapataim",
+    "levelShort": "{level}. szint"
+  },
+  "team": {
+    "joinTitle": "Csatlakozz a kalandhoz",
+    "joinSubtitle": "Be vagy jelentkezve, de még nem tartozol csapathoz. Hozz létre egyet, vagy csatlakozz egy meglévőhöz.",
+    "create": "Csapat létrehozása",
+    "creating": "Létrehozás…",
+    "join": "Csatlakozás",
+    "joining": "Csatlakozás…",
+    "invite": "Meghívás",
+    "level": "{level}. szint",
+    "switching": "Váltás…",
+    "noTeams": "Még nem tartozol egyetlen csapathoz sem.",
+    "name": "Csapat neve",
+    "namePlaceholder": "A Takarító Keresztesek",
+    "inviteByEmail": "Meghívás e-mailben",
+    "emailPlaceholder": "baratod@example.com",
+    "sendInvitation": "Meghívó küldése",
+    "sending": "Küldés…",
+    "inviteSent": "Meghívó elküldve ide: {email}.",
+    "invitations": "Meghívók",
+    "noInvitations": "Még nincsenek meghívók.",
+    "expires": "lejár: {date}",
+    "revoke": "Visszavonás",
+    "invitationCode": "Meghívókód",
+    "codePlaceholder": "Illeszd be a kódot",
+    "pendingInvitations": "Függő meghívók",
+    "useCode": "Kód használata",
+    "errors": {
+      "emailRequired": "Az e-mail-cím megadása kötelező.",
+      "nameRequired": "A csapat nevének megadása kötelező.",
+      "codeRequired": "A meghívókód megadása kötelező."
+    }
+  },
+  "board": {
+    "available": "Elérhető küldetések",
+    "availableHelper": "Vállalj egy kártyát az induláshoz",
+    "newCard": "+ Új kártya",
+    "emptyAvailable": "Nincs több küldetés a táblán. Szép munka, csapat!",
+    "active": "Aktív küldetéseim",
+    "emptyHandTitle": "Üres a kezed",
+    "emptyHandText": "Vállalj egy küldetést az elérhetők közül, és itt fog megjelenni, amíg be nem fejezed.",
+    "browse": "Küldetések böngészése",
+    "awaiting": "Jóváhagyásra vár",
+    "awaitingHelper": "A jutalmak kifizetése előtt egy csapattárs megerősíti",
+    "emptyAwaiting": "Nincs ellenőrzésre váró küldetés. A befejezett küldetések ide kerülnek, hogy egy csapattárs jóváhagyhassa őket.",
+    "history": "Előzményeim",
+    "page": "{page}. oldal / {total}",
+    "teamActivity": "Csapattevékenység",
+    "clearFilters": "Szűrők törlése",
+    "assignee": "Vállalta",
+    "status": "Állapot",
+    "noMatch": "Nincs a szűrőknek megfelelő csapattevékenység.",
+    "emptyActivity": "Jelenleg senki más nem teljesít küldetést. A csapattársak vállalt és befejezett küldetései itt jelennek meg.",
+    "deleteTitle": "Kártya törlése",
+    "deleteMessage": "Biztosan törlöd ezt a kártyát: „{title}”? Ez nem vonható vissza."
+  },
+  "templates": {
+    "title": "Kártyasablonok",
+    "new": "Új sablon",
+    "deleteTitle": "Sablon törlése",
+    "deleteMessage": "Biztosan törlöd ezt a sablont: „{title}”? Ez nem vonható vissza."
+  },
+  "card": {
+    "aria": "{title}, {rarity} küldetés, {xp} XP, {gold} arany. Kártya megfordítása",
+    "time": {
+      "m": "{m} p",
+      "h": "{h} ó",
+      "hm": "{h} ó {m} p"
+    },
+    "questArt": "KÜLDETÉS-KÉP",
+    "typeLine": "Küldetés — {rarity}",
+    "drops": "Zsákmány: {item}",
+    "due": "Határidő: {date}",
+    "complexity": "Nehézség",
+    "back": {
+      "quest": "Küldetés",
+      "rarity": "Ritkaság",
+      "created": "Létrehozva",
+      "claimedBy": "Vállalta",
+      "completed": "Befejezve",
+      "loot": "Zsákmány"
+    },
+    "flipBack": "Kattints a visszafordításhoz",
+    "claim": "Küldetés vállalása",
+    "complete": "Befejezés",
+    "unclaim": "Lemondás",
+    "verify": "Jóváhagyás",
+    "waiting": "Csapattársra vár",
+    "verifiedOn": "Jóváhagyva · {date}",
+    "editAria": "{title} szerkesztése",
+    "deleteAria": "{title} törlése"
+  },
+  "designer": {
+    "startFromTemplate": "Indulás sablonból",
+    "blankCard": "— Üres kártya —",
+    "title": "Cím",
+    "description": "Leírás",
+    "rarity": "Ritkaság",
+    "complexity": "Nehézség",
+    "minutes": "Percek",
+    "xpReward": "XP-jutalom",
+    "goldReward": "Aranyjutalom",
+    "itemDrop": "Zsákmány",
+    "imageUrl": "Kép URL-je",
+    "imageTip": "opcionális, használj 4:3 arányú képet a legjobb eredményhez",
+    "setDueDate": "Határidő megadása",
+    "dueIn": "Határidő",
+    "unit": {
+      "label": "Mértékegység",
+      "HOURS": "Óra",
+      "DAYS": "Nap"
+    },
+    "recurrence": {
+      "label": "Ismétlődés",
+      "NONE": "Nem ismétlődik",
+      "SCHEDULE": "Ütemezés szerint",
+      "AFTER_COMPLETION": "Jóváhagyás után"
+    },
+    "respawnAfter": "Újrakezdés ennyi idő után (perc)",
+    "frequency": "Gyakoriság",
+    "everyN": "Minden N.",
+    "dayOfMonth": "A hónap napja",
+    "time": "Időpont",
+    "timeZone": "Időzóna",
+    "saveChanges": "Módosítások mentése",
+    "createCard": "Kártya létrehozása",
+    "saveTemplate": "Sablon mentése",
+    "errors": {
+      "titleRequired": "A cím megadása kötelező.",
+      "dueMin": "A határidőnek legalább 1-nek kell lennie.",
+      "repeatMin": "Az ismétlési késleltetés legalább 1 perc legyen.",
+      "timeRequired": "Az ütemezés időpontjának megadása kötelező.",
+      "weekdayRequired": "Válassz legalább egy napot a hétből."
+    }
+  },
+  "completion": {
+    "questVerified": "Küldetés jóváhagyva!",
+    "questsVerified": "Küldetések jóváhagyva!",
+    "levelUp": "Szintlépés! Új szinted: {level}.",
+    "collect": "Jutalmak átvétele"
+  },
+  "leaderboard": {
+    "title": "Ranglista",
+    "allTime": "Mindenkori",
+    "you": "TE",
+    "level": "{level}. sz.",
+    "editGold": "Arany szerkesztése",
+    "editGoldFor": "{name} aranyának szerkesztése",
+    "editGoldTitle": "Arany szerkesztése: {name}",
+    "changeRole": "Szerepkör módosítása",
+    "changeRoleFor": "{name} szerepkörének módosítása",
+    "changeRoleTitle": "Szerepkör módosítása: {name}",
+    "role": "Szerepkör"
+  },
+  "errors": {
+    "sessionExpired": "A munkamenet lejárt. Jelentkezz be újra.",
+    "forbidden": "Ehhez nincs jogosultságod.",
+    "badRequest": "A kérés érvénytelen volt.",
+    "generic": "Hiba történt a szerverrel való kommunikáció során.",
+    "changeRole": "Nem sikerült módosítani a szerepkört.",
+    "updateGold": "Nem sikerült frissíteni az aranyat.",
+    "wholeNumber": "Adj meg egy egész számot, 0 vagy nagyobbat."
+  },
+  "enums": {
+    "rarity": {
+      "COMMON": "Közönséges",
+      "RARE": "Ritka",
+      "EPIC": "Epikus",
+      "LEGENDARY": "Legendás"
+    },
+    "cardStatus": {
+      "CLAIMED": "Folyamatban",
+      "COMPLETED": "Jóváhagyásra vár",
+      "VERIFIED": "Jóváhagyva"
+    },
+    "role": {
+      "USER": "Felhasználó",
+      "ADMIN": "Admin",
+      "TEAM_ADMIN": "Csapatadmin"
+    },
+    "invitationStatus": {
+      "PENDING": "Függőben",
+      "ACCEPTED": "Elfogadva",
+      "REVOKED": "Visszavonva",
+      "EXPIRED": "Lejárt"
+    },
+    "frequency": {
+      "DAILY": "Naponta",
+      "WEEKLY": "Hetente",
+      "MONTHLY": "Havonta"
+    },
+    "weekdayShort": {
+      "MONDAY": "H",
+      "TUESDAY": "K",
+      "WEDNESDAY": "Sze",
+      "THURSDAY": "Cs",
+      "FRIDAY": "P",
+      "SATURDAY": "Szo",
+      "SUNDAY": "V"
+    }
+  }
+}

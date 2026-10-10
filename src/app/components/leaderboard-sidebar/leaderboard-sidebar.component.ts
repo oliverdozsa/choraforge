@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { AppDialogComponent } from '../app-dialog/app-dialog.component';
 import { ChoreStoreService } from '../../services/chore-store.service';
 import { TeamMemberResponse } from '../../models/api.model';
@@ -8,7 +9,7 @@ import { TeamMemberResponse } from '../../models/api.model';
 @Component({
   selector: 'app-leaderboard-sidebar',
   standalone: true,
-  imports: [CommonModule, FormsModule, AppDialogComponent],
+  imports: [CommonModule, FormsModule, TranslocoDirective, AppDialogComponent],
   templateUrl: './leaderboard-sidebar.component.html',
   styleUrl: './leaderboard-sidebar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +22,7 @@ export class LeaderboardSidebarComponent {
 
   readonly editingMember = signal<TeamMemberResponse | null>(null);
   readonly saving = signal(false);
+  /** Translation key of the current form error. */
   readonly formError = signal<string | null>(null);
   goldInput: number | null = null;
 
@@ -49,7 +51,7 @@ export class LeaderboardSidebarComponent {
     const ok = await this.store.assignRole(member.userId, this.roleInput);
     this.saving.set(false);
     if (ok) this.closeRoleEditor();
-    else this.formError.set(this.store.error() ?? 'Could not change role.');
+    else this.formError.set(this.store.error() ?? 'errors.changeRole');
   }
 
   openGoldEditor(member: TeamMemberResponse): void {
@@ -67,14 +69,14 @@ export class LeaderboardSidebarComponent {
     if (!member || this.saving()) return;
     const gold = this.goldInput;
     if (gold === null || !Number.isInteger(gold) || gold < 0) {
-      this.formError.set('Enter a whole number, 0 or more.');
+      this.formError.set('errors.wholeNumber');
       return;
     }
     this.saving.set(true);
     const ok = await this.store.setMemberGold(member.userId, gold);
     this.saving.set(false);
     if (ok) this.closeGoldEditor();
-    else this.formError.set(this.store.error() ?? 'Could not update gold.');
+    else this.formError.set(this.store.error() ?? 'errors.updateGold');
   }
 
   readonly rankedMembers = computed(() =>

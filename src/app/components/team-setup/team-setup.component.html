@@ -1,19 +1,20 @@
+<ng-container *transloco="let t">
 <div class="setup-shell" [class.embedded]="embedded">
   <div class="setup-card">
     <ng-container *ngIf="!embedded">
-      <h1>Join the Adventure</h1>
-      <p class="subtitle">You're signed in, but not on a team yet. Create one or join an existing crew.</p>
-      <button type="button" class="logout-link" (click)="logout()">Sign out</button>
+      <h1>{{ t('team.joinTitle') }}</h1>
+      <p class="subtitle">{{ t('team.joinSubtitle') }}</p>
+      <button type="button" class="logout-link" (click)="logout()">{{ t('common.signOut') }}</button>
     </ng-container>
 
     <div class="tabs">
       @if (hasTeam()) {
-        <button class="tab" [class.active]="mode() === 'teams'" (click)="setMode('teams')">My Teams</button>
+        <button class="tab" [class.active]="mode() === 'teams'" (click)="setMode('teams')">{{ t('profile.myTeams') }}</button>
       }
-      <button class="tab" [class.active]="mode() === 'create'" (click)="setMode('create')">Create Team</button>
-      <button class="tab" [class.active]="mode() === 'join'" (click)="setMode('join')">Join Team</button>
+      <button class="tab" [class.active]="mode() === 'create'" (click)="setMode('create')">{{ t('team.create') }}</button>
+      <button class="tab" [class.active]="mode() === 'join'" (click)="setMode('join')">{{ t('team.join') }}</button>
       @if (embedded && isTeamAdmin()) {
-        <button class="tab" [class.active]="mode() === 'invite'" (click)="setMode('invite')">Invite</button>
+        <button class="tab" [class.active]="mode() === 'invite'" (click)="setMode('invite')">{{ t('team.invite') }}</button>
       }
     </div>
 
@@ -23,10 +24,10 @@
           <li class="team-row" [class.current]="team.teamId === selectedTeamId()">
             <div class="team-info">
               <span class="team-name">{{ team.teamName }}</span>
-              <span class="team-meta">{{ team.role }} · Level {{ team.level }}</span>
+              <span class="team-meta">{{ t('enums.role.' + team.role) }} · {{ t('team.level', { level: team.level }) }}</span>
             </div>
             @if (team.teamId === selectedTeamId()) {
-              <span class="current-badge">Current</span>
+              <span class="current-badge">{{ t('common.current') }}</span>
             } @else {
               <button
                 type="button"
@@ -34,76 +35,76 @@
                 [disabled]="switchingTeamId() === team.teamId"
                 (click)="switchTeam(team.teamId)"
               >
-                {{ switchingTeamId() === team.teamId ? 'Switching…' : 'Switch' }}
+                {{ switchingTeamId() === team.teamId ? t('team.switching') : t('common.switch') }}
               </button>
             }
           </li>
         } @empty {
-          <li class="empty-msg">You're not on any teams yet.</li>
+          <li class="empty-msg">{{ t('team.noTeams') }}</li>
         }
       </ul>
     } @else if (mode() === 'create') {
       <form class="form" (ngSubmit)="createTeam()">
         <label>
-          Team Name
-          <input type="text" name="teamName" [(ngModel)]="teamName" placeholder="The Chore Crusaders" autocomplete="off" />
+          {{ t('team.name') }}
+          <input type="text" name="teamName" [(ngModel)]="teamName" [placeholder]="t('team.namePlaceholder')" autocomplete="off" />
         </label>
         <button type="submit" class="submit-btn" [disabled]="submitting()">
-          {{ submitting() ? 'Creating…' : 'Create Team' }}
+          {{ submitting() ? t('team.creating') : t('team.create') }}
         </button>
       </form>
     } @else if (mode() === 'invite' && isTeamAdmin()) {
       <form class="form" (ngSubmit)="sendInvite()">
         <label>
-          Invite by Email
-          <input type="email" name="inviteEmail" [(ngModel)]="inviteEmail" placeholder="friend@example.com" autocomplete="off" />
+          {{ t('team.inviteByEmail') }}
+          <input type="email" name="inviteEmail" [(ngModel)]="inviteEmail" [placeholder]="t('team.emailPlaceholder')" autocomplete="off" />
         </label>
         <button type="submit" class="submit-btn" [disabled]="submitting()">
-          {{ submitting() ? 'Sending…' : 'Send Invitation' }}
+          {{ submitting() ? t('team.sending') : t('team.sendInvitation') }}
         </button>
       </form>
-      @if (inviteNotice()) {
-        <p class="notice-msg">{{ inviteNotice() }}</p>
+      @if (inviteNotice(); as invitedEmail) {
+        <p class="notice-msg">{{ t('team.inviteSent', { email: invitedEmail }) }}</p>
       }
-      <h3 class="list-heading">Invitations</h3>
+      <h3 class="list-heading">{{ t('team.invitations') }}</h3>
       <ul class="team-list">
         @for (inv of teamInvitations(); track inv.id) {
           <li class="team-row">
             <div class="team-info">
               <span class="team-name">{{ inv.email }}</span>
               <span class="team-meta">
-                {{ inv.status }}@if (inv.status === 'PENDING') { · expires {{ inv.expiresAt | date: 'mediumDate' }} }
+                {{ t('enums.invitationStatus.' + inv.status) }}@if (inv.status === 'PENDING') { · {{ t('team.expires', { date: (inv.expiresAt | localizedDate: 'mediumDate') }) }} }
               </span>
             </div>
             @if (inv.status === 'PENDING') {
-              <button type="button" class="switch-btn" (click)="revoke(inv.id)">Revoke</button>
+              <button type="button" class="switch-btn" (click)="revoke(inv.id)">{{ t('team.revoke') }}</button>
             }
           </li>
         } @empty {
-          <li class="empty-msg">No invitations yet.</li>
+          <li class="empty-msg">{{ t('team.noInvitations') }}</li>
         }
       </ul>
     } @else {
       <form class="form" (ngSubmit)="acceptInvitation()">
         <label>
-          Invitation Code
-          <input type="text" name="joinCode" [(ngModel)]="joinCode" placeholder="Paste your code" autocomplete="off" />
+          {{ t('team.invitationCode') }}
+          <input type="text" name="joinCode" [(ngModel)]="joinCode" [placeholder]="t('team.codePlaceholder')" autocomplete="off" />
         </label>
         <button type="submit" class="submit-btn" [disabled]="submitting()">
-          {{ submitting() ? 'Joining…' : 'Join Team' }}
+          {{ submitting() ? t('team.joining') : t('team.join') }}
         </button>
       </form>
       @if (myInvitations().length) {
-        <h3 class="list-heading">Pending invitations</h3>
+        <h3 class="list-heading">{{ t('team.pendingInvitations') }}</h3>
         <ul class="team-list">
           @for (inv of myInvitations(); track inv.id) {
             <li class="team-row">
               <div class="team-info">
                 <span class="team-name">{{ inv.teamName }}</span>
-                <span class="team-meta">expires {{ inv.expiresAt | date: 'mediumDate' }}</span>
+                <span class="team-meta">{{ t('team.expires', { date: (inv.expiresAt | localizedDate: 'mediumDate') }) }}</span>
               </div>
               @if (inv.code) {
-                <button type="button" class="switch-btn" (click)="useCode(inv.code)">Use code</button>
+                <button type="button" class="switch-btn" (click)="useCode(inv.code)">{{ t('team.useCode') }}</button>
               }
             </li>
           }
@@ -112,10 +113,11 @@
     }
 
     @if (formError()) {
-      <p class="error-msg">{{ formError() }}</p>
+      <p class="error-msg">{{ t(formError()!) }}</p>
     }
     @if (error()) {
-      <p class="error-msg">{{ error() }}</p>
+      <p class="error-msg">{{ t(error()!) }}</p>
     }
   </div>
 </div>
+</ng-container>

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { ChoreCardComponent } from '../chore-card/chore-card.component';
 import { CardDraft } from '../card-designer/card-designer.component';
 import { CardDesignerModalComponent } from '../card-designer-modal/card-designer-modal.component';
@@ -10,7 +11,7 @@ import { ChoreCardResponse, ChoreCardTemplateResponse } from '../../models/api.m
 @Component({
   selector: 'app-card-templates',
   standalone: true,
-  imports: [CommonModule, ChoreCardComponent, CardDesignerModalComponent, ConfirmDialogComponent],
+  imports: [CommonModule, ChoreCardComponent, CardDesignerModalComponent, ConfirmDialogComponent, TranslocoDirective],
   templateUrl: './card-templates.component.html',
   styleUrl: './card-templates.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

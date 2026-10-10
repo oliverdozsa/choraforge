@@ -1,32 +1,34 @@
+<ng-container *transloco="let t">
 <div class="modal-backdrop" (click)="onBackdropClick()">
   <div class="reward-overlay" (click)="$event.stopPropagation()">
     <div class="chest">🎉</div>
 
-    <h2 class="quest-title">{{ batch.rewards.length > 1 ? 'Quests Verified!' : 'Quest Verified!' }}</h2>
+    <h2 class="quest-title">{{ t(batch.rewards.length > 1 ? 'completion.questsVerified' : 'completion.questVerified') }}</h2>
 
     <ul class="quest-list" [class.single]="batch.rewards.length === 1">
       <li class="mini-card" [ngClass]="rarityClass(reward.card.rarity)" *ngFor="let reward of batch.rewards">
         <div class="mini-card-header">
-          <span class="rarity-badge">{{ reward.card.rarity }}</span>
+          <span class="rarity-badge">{{ t('enums.rarity.' + reward.card.rarity) }}</span>
           <span class="quest-name">{{ reward.card.title }}</span>
         </div>
         <span class="quest-item-rewards">
-          <span class="reward-chip xp">+{{ reward.xpGained }} XP</span>
-          <span class="reward-chip gold">+{{ reward.goldGained }} Gold</span>
+          <span class="reward-chip xp">+{{ reward.xpGained }} {{ t('common.xp') }}</span>
+          <span class="reward-chip gold">+{{ reward.goldGained }} {{ t('common.gold') }}</span>
           <span class="reward-chip loot" *ngIf="reward.card.itemDrop">{{ reward.card.itemDrop }}</span>
         </span>
       </li>
     </ul>
 
     <div class="reward-grid" *ngIf="batch.rewards.length > 1">
-      <span class="reward-chip xp lg">+{{ totalXp }} XP</span>
-      <span class="reward-chip gold lg">+{{ totalGold }} Gold</span>
+      <span class="reward-chip xp lg">+{{ totalXp }} {{ t('common.xp') }}</span>
+      <span class="reward-chip gold lg">+{{ totalGold }} {{ t('common.gold') }}</span>
     </div>
 
     <div class="level-up-banner" *ngIf="batch.leveledUp">
-      Level Up! You reached Level {{ batch.newLevel }} ⚡
+      {{ t('completion.levelUp', { level: batch.newLevel }) }} ⚡
     </div>
 
-    <button class="close-btn" (click)="dismiss.emit()">Collect Rewards</button>
+    <button class="close-btn" (click)="dismiss.emit()">{{ t('completion.collect') }}</button>
   </div>
 </div>
+</ng-container>

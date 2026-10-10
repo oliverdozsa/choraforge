@@ -13,7 +13,9 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { CardStatus, ChoreCardResponse, Rarity } from '../../models/api.model';
+import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
 import { ChoreStoreService } from '../../services/chore-store.service';
 
 const RARITY_TIER: Record<Rarity, number> = {
@@ -23,16 +25,13 @@ const RARITY_TIER: Record<Rarity, number> = {
   LEGENDARY: 5,
 };
 
-const STATUS_LABELS: Partial<Record<CardStatus, string>> = {
-  CLAIMED: 'In Progress',
-  COMPLETED: 'Awaiting Verification',
-  VERIFIED: 'Verified',
-};
+/** Statuses that get a badge on the card art. */
+const BADGE_STATUSES: readonly CardStatus[] = ['CLAIMED', 'COMPLETED', 'VERIFIED'];
 
 @Component({
   selector: 'app-chore-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslocoPipe, LocalizedDatePipe],
   templateUrl: './chore-card.component.html',
   styleUrl: './chore-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -131,8 +130,8 @@ export class ChoreCardComponent implements AfterViewInit, OnDestroy {
     return `var(--rarity-${this.card.rarity.toLowerCase()})`;
   }
 
-  get rarityName(): string {
-    return this.card.rarity.charAt(0) + this.card.rarity.slice(1).toLowerCase();
+  get rarityKey(): string {
+    return `enums.rarity.${this.card.rarity}`;
   }
 
   get tier(): number {
@@ -143,31 +142,44 @@ export class ChoreCardComponent implements AfterViewInit, OnDestroy {
     return !!this.card.imageUrl && this.failedArtUrl() !== this.card.imageUrl;
   }
 
-  get statusLabel(): string {
-    return STATUS_LABELS[this.card.status] ?? '';
+  /** Translation key for the status badge, or '' when the status has no badge. */
+  get statusKey(): string {
+    return BADGE_STATUSES.includes(this.card.status) ? `enums.cardStatus.${this.card.status}` : '';
   }
 
   get statusClass(): string {
     return `status-${this.card.status.toLowerCase()}`;
   }
 
+  get ownerIsSelf(): boolean {
+    const userId = this.card.assignedUserId;
+    return !!userId && userId === this.store.currentUserId();
+  }
+
+  /** Name of the card's owner when it is someone else; undefined for unowned or own cards. */
   get ownerName(): string | undefined {
     const userId = this.card.assignedUserId;
-    if (!userId) return undefined;
-    if (userId === this.store.currentUserId()) return 'You';
+    if (!userId || this.ownerIsSelf) return undefined;
     return this.assignedUserName ?? this.store.assignedUserNames().get(userId);
+  }
+
+  get hasOwner(): boolean {
+    return this.ownerIsSelf || !!this.ownerName;
   }
 
   get questCode(): string {
     return this.card.id ? `QST-${this.card.id.slice(0, 4).toUpperCase()}` : '—';
   }
 
-  get timeLabel(): string {
+  get timeKey(): string {
     const minutes = this.card.estimatedMinutes;
-    if (minutes < 60) return `${minutes}m`;
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return m ? `${h}h ${m}m` : `${h}h`;
+    if (minutes < 60) return 'card.time.m';
+    return minutes % 60 ? 'card.time.hm' : 'card.time.h';
+  }
+
+  get timeParams(): { h: number; m: number } {
+    const minutes = this.card.estimatedMinutes;
+    return minutes < 60 ? { h: 0, m: minutes } : { h: Math.floor(minutes / 60), m: minutes % 60 };
   }
 
   get isOverdue(): boolean {

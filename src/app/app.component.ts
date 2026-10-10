@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, inject, untracked } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
 import { LeaderboardSidebarComponent } from './components/leaderboard-sidebar/leaderboard-sidebar.component';
 import { QuestBoardComponent } from './components/quest-board/quest-board.component';
@@ -12,6 +13,7 @@ import { ChoreStoreService } from './services/chore-store.service';
   selector: 'app-root',
   standalone: true,
   imports: [
+    TranslocoPipe,
     DashboardHeaderComponent,
     LeaderboardSidebarComponent,
     QuestBoardComponent,

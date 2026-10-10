@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { ChoreCardComponent } from '../chore-card/chore-card.component';
 import { CompletionModalComponent } from '../completion-modal/completion-modal.component';
 import { CardDraft } from '../card-designer/card-designer.component';
@@ -8,11 +9,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { ChoreStoreService } from '../../services/chore-store.service';
 import { CardStatus, ChoreCardResponse } from '../../models/api.model';
 
-const ACTIVITY_STATUS_LABELS: Partial<Record<CardStatus, string>> = {
-  CLAIMED: 'In Progress',
-  COMPLETED: 'Awaiting Verification',
-  VERIFIED: 'Verified',
-};
+const ACTIVITY_STATUSES: readonly CardStatus[] = ['CLAIMED', 'COMPLETED', 'VERIFIED'];
 
 @Component({
   selector: 'app-quest-board',
@@ -23,6 +20,7 @@ const ACTIVITY_STATUS_LABELS: Partial<Record<CardStatus, string>> = {
     CompletionModalComponent,
     CardDesignerModalComponent,
     ConfirmDialogComponent,
+    TranslocoDirective,
   ],
   templateUrl: './quest-board.component.html',
   styleUrl: './quest-board.component.scss',
@@ -73,15 +71,13 @@ export class QuestBoardComponent {
       if (card.assignedUserId) ids.add(card.assignedUserId);
     }
     return [...ids]
-      .map((id) => ({ id, label: names.get(id) ?? 'Unknown' }))
-      .sort((a, b) => a.label.localeCompare(b.label));
+      .map((id) => ({ id, label: names.get(id) ?? null }))
+      .sort((a, b) => (a.label ?? '').localeCompare(b.label ?? ''));
   });
 
   readonly activityStatusOptions = computed(() => {
     const present = new Set(this.teamActivity().map((c) => c.status));
-    return (Object.keys(ACTIVITY_STATUS_LABELS) as CardStatus[])
-      .filter((status) => present.has(status))
-      .map((status) => ({ id: status, label: ACTIVITY_STATUS_LABELS[status]! }));
+    return ACTIVITY_STATUSES.filter((status) => present.has(status)).map((status) => ({ id: status }));
   });
 
   readonly filteredTeamActivity = computed(() => {

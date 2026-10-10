@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
+import { TranslocoPipe } from '@jsverse/transloco';
+
 @Component({
   selector: 'app-dialog',
   standalone: true,
+  imports: [TranslocoPipe],
   templateUrl: './app-dialog.component.html',
   styleUrl: './app-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

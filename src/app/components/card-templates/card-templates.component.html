@@ -1,6 +1,7 @@
+<ng-container *transloco="let t">
 <section class="templates-panel" *ngIf="isTeamAdmin()">
   <div class="section-heading">
-    <h2>Card Templates</h2>
+    <h2>{{ t('templates.title') }}</h2>
     <span class="count-badge">{{ templates().length }}</span>
   </div>
 
@@ -18,13 +19,13 @@
 
     <button class="add-slot" *ngIf="!creating()" (click)="startCreating()">
       <span class="plus">+</span>
-      <span>New Template</span>
+      <span>{{ t('templates.new') }}</span>
     </button>
   </div>
 
   <app-card-designer-modal
     *ngIf="creating()"
-    submitLabel="Save Template"
+    submitLabel="designer.saveTemplate"
     [submitting]="submitting()"
     [previewTeamId]="selectedTeamId() ?? ''"
     (save)="save($event)"
@@ -33,7 +34,7 @@
 
   <app-card-designer-modal
     *ngIf="editingTemplate() as template"
-    submitLabel="Save Changes"
+    submitLabel="designer.saveChanges"
     [submitting]="editingSubmitting()"
     [previewTeamId]="selectedTeamId() ?? ''"
     [initial]="asDraft(template)"
@@ -43,10 +44,11 @@
 
   <app-confirm-dialog
     *ngIf="deletingTemplate() as template"
-    title="Delete Template"
-    [message]="'Delete &quot;' + template.title + '&quot;? This cannot be undone.'"
+    [title]="t('templates.deleteTitle')"
+    [message]="t('templates.deleteMessage', { title: template.title })"
     [confirming]="deletingSubmitting()"
     (confirmed)="confirmDelete()"
     (cancelled)="cancelDeleting()"
   />
 </section>
+</ng-container>

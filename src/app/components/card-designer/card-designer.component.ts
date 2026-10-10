@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslocoDirective } from '@jsverse/transloco';
 import { ChoreCardComponent } from '../chore-card/chore-card.component';
 import {
   ChoreCardResponse,
@@ -31,7 +32,7 @@ export interface CardDraft {
 @Component({
   selector: 'app-card-designer',
   standalone: true,
-  imports: [CommonModule, FormsModule, ChoreCardComponent],
+  imports: [CommonModule, FormsModule, TranslocoDirective, ChoreCardComponent],
   templateUrl: './card-designer.component.html',
   styleUrl: './card-designer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +40,8 @@ export interface CardDraft {
 export class CardDesignerComponent implements OnInit {
   @Input() templates: ChoreCardTemplateResponse[] = [];
   @Input() submitting = false;
-  @Input() submitLabel = 'Save';
+  /** Translation key of the submit button label. */
+  @Input() submitLabel = 'common.save';
   @Input() previewTeamId = '';
   /** When set, the designer opens pre-filled for editing rather than creating a new card/template. */
   @Input() initial?: CardDraft;
@@ -49,13 +51,13 @@ export class CardDesignerComponent implements OnInit {
   readonly rarities: Rarity[] = ['COMMON', 'RARE', 'EPIC', 'LEGENDARY'];
 
   readonly recurrenceTypes: { value: RecurrenceType | ''; label: string }[] = [
-    { value: '', label: 'Does not repeat' },
-    { value: 'SCHEDULE', label: 'On a schedule' },
-    { value: 'AFTER_COMPLETION', label: 'After verification' },
+    { value: '', label: 'designer.recurrence.NONE' },
+    { value: 'SCHEDULE', label: 'designer.recurrence.SCHEDULE' },
+    { value: 'AFTER_COMPLETION', label: 'designer.recurrence.AFTER_COMPLETION' },
   ];
   readonly dueDateUnits: { value: DueDateUnit; label: string }[] = [
-    { value: 'HOURS', label: 'Hours' },
-    { value: 'DAYS', label: 'Days' },
+    { value: 'HOURS', label: 'designer.unit.HOURS' },
+    { value: 'DAYS', label: 'designer.unit.DAYS' },
   ];
   readonly frequencies: ScheduleFrequency[] = ['DAILY', 'WEEKLY', 'MONTHLY'];
   readonly weekDays: DayOfWeek[] = [
@@ -96,6 +98,7 @@ export class CardDesignerComponent implements OnInit {
   time = '09:00';
   timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+  /** Translation key of the current validation error, or ''. */
   formError = '';
 
   get previewCard(): ChoreCardResponse {
@@ -199,24 +202,24 @@ export class CardDesignerComponent implements OnInit {
 
   onSubmit(): void {
     if (!this.title.trim()) {
-      this.formError = 'Title is required.';
+      this.formError = 'designer.errors.titleRequired';
       return;
     }
     if (this.hasDueDate && !(this.dueDateAmount >= 1)) {
-      this.formError = 'Due in must be at least 1.';
+      this.formError = 'designer.errors.dueMin';
       return;
     }
     if (this.recurrenceType === 'AFTER_COMPLETION' && !(this.intervalMinutes >= 1)) {
-      this.formError = 'Repeat delay must be at least 1 minute.';
+      this.formError = 'designer.errors.repeatMin';
       return;
     }
     if (this.recurrenceType === 'SCHEDULE') {
       if (!this.time) {
-        this.formError = 'Schedule time is required.';
+        this.formError = 'designer.errors.timeRequired';
         return;
       }
       if (this.frequency === 'WEEKLY' && !this.daysOfWeek.length) {
-        this.formError = 'Pick at least one weekday.';
+        this.formError = 'designer.errors.weekdayRequired';
         return;
       }
     }

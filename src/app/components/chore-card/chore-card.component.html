@@ -4,7 +4,7 @@
   role="button"
   tabindex="0"
   [attr.aria-pressed]="flipped()"
-  [attr.aria-label]="card.title + ', ' + rarityName + ' quest, ' + card.xpReward + ' XP, ' + card.goldReward + ' gold. Flip card'"
+  [attr.aria-label]="'card.aria' | transloco: { title: card.title, rarity: (rarityKey | transloco), xp: card.xpReward, gold: card.goldReward }"
   (click)="toggleFlip()"
   (keydown.enter)="toggleFlip($event)"
   (keydown.space)="toggleFlip($event)"
@@ -18,29 +18,29 @@
         <div class="panel">
           <div class="banner">
             <span class="title" [title]="card.title">{{ card.title }}</span>
-            <span class="time">{{ timeLabel }}</span>
+            <span class="time">{{ timeKey | transloco: timeParams }}</span>
           </div>
 
           <div class="art">
             @if (showArt) {
               <img [src]="card.imageUrl" alt="" loading="lazy" (error)="failedArtUrl.set(card.imageUrl ?? null)" />
             } @else {
-              <div class="art-placeholder">QUEST ART</div>
+              <div class="art-placeholder">{{ 'card.questArt' | transloco }}</div>
             }
             <div class="vignette"></div>
             @if (tier >= 4) {
               <div class="foil"></div>
             }
-            @if (statusLabel) {
-              <span class="status-badge" [ngClass]="statusClass">{{ statusLabel }}</span>
+            @if (statusKey) {
+              <span class="status-badge" [ngClass]="statusClass">{{ statusKey | transloco }}</span>
             }
-            @if (ownerName) {
-              <span class="owner-chip">{{ ownerName }}</span>
+            @if (hasOwner) {
+              <span class="owner-chip">{{ ownerIsSelf ? ('common.you' | transloco) : ownerName }}</span>
             }
           </div>
 
           <div class="type-line">
-            <span>Quest — {{ rarityName }}</span>
+            <span>{{ 'card.typeLine' | transloco: { rarity: (rarityKey | transloco) } }}</span>
             <span class="gems">
               @for (gem of gems; track gem) {
                 <span class="gem" [class.lit]="gem < tier"></span>
@@ -51,13 +51,13 @@
           <div class="text-box">
             <p class="desc">{{ card.description }}</p>
             @if (card.itemDrop) {
-              <span class="loot">Drops: {{ card.itemDrop }}</span>
+              <span class="loot">{{ 'card.drops' | transloco: { item: card.itemDrop } }}</span>
             }
             @if (card.dueAt && !card.completedAt) {
-              <span class="due" [class.overdue]="isOverdue">Due {{ card.dueAt | date: 'MMM d, h:mm a' }}</span>
+              <span class="due" [class.overdue]="isOverdue">{{ 'card.due' | transloco: { date: (card.dueAt | localizedDate: ('formats.dueDate' | transloco)) } }}</span>
             }
             <div class="meter">
-              <span class="meter-label">Complexity</span>
+              <span class="meter-label">{{ 'card.complexity' | transloco }}</span>
               <div class="pips">
                 @for (pip of complexityPips; track pip) {
                   <span class="pip" [class.filled]="pip < card.complexity"></span>
@@ -68,11 +68,11 @@
 
           <div class="seal xp" [class.long]="card.xpReward >= 1000">
             <span class="seal-value">{{ card.xpReward }}</span>
-            <span class="seal-label">XP</span>
+            <span class="seal-label">{{ 'common.xp' | transloco }}</span>
           </div>
           <div class="seal gold" [class.long]="card.goldReward >= 1000">
             <span class="seal-value">{{ card.goldReward }}</span>
-            <span class="seal-label">GOLD</span>
+            <span class="seal-label">{{ 'common.gold' | transloco | uppercase }}</span>
           </div>
         </div>
         <span class="rivet left"></span>
@@ -84,20 +84,20 @@
       <div class="emblem"><span class="emblem-ring"></span><span class="emblem-core"></span></div>
       <span class="wordmark">CHORAGON</span>
       <dl class="log">
-        <dt>Quest</dt>
+        <dt>{{ 'card.back.quest' | transloco }}</dt>
         <dd class="mono">{{ questCode }}</dd>
-        <dt>Rarity</dt>
-        <dd>{{ rarityName }}</dd>
-        <dt>Created</dt>
-        <dd>{{ card.createdAt | date: 'MMM d' }}</dd>
-        <dt>Claimed by</dt>
-        <dd>{{ ownerName ?? '—' }}</dd>
-        <dt>Completed</dt>
-        <dd>{{ card.completedAt ? (card.completedAt | date: 'MMM d') : '—' }}</dd>
-        <dt>Loot</dt>
+        <dt>{{ 'card.back.rarity' | transloco }}</dt>
+        <dd>{{ rarityKey | transloco }}</dd>
+        <dt>{{ 'card.back.created' | transloco }}</dt>
+        <dd>{{ card.createdAt | localizedDate: ('formats.shortDate' | transloco) }}</dd>
+        <dt>{{ 'card.back.claimedBy' | transloco }}</dt>
+        <dd>{{ ownerIsSelf ? ('common.you' | transloco) : (ownerName ?? '—') }}</dd>
+        <dt>{{ 'card.back.completed' | transloco }}</dt>
+        <dd>{{ card.completedAt ? (card.completedAt | localizedDate: ('formats.shortDate' | transloco)) : '—' }}</dd>
+        <dt>{{ 'card.back.loot' | transloco }}</dt>
         <dd>{{ card.itemDrop || '—' }}</dd>
       </dl>
-      <span class="flip-hint">Click to flip back</span>
+      <span class="flip-hint">{{ 'card.flipBack' | transloco }}</span>
     </div>
   </div>
 </div>
@@ -106,37 +106,37 @@
   @switch (card.status) {
     @case ('AVAILABLE') {
       @if (!readonlyCard) {
-        <button type="button" class="btn claim" (click)="onAction()">Claim quest</button>
+        <button type="button" class="btn claim" (click)="onAction()">{{ 'card.claim' | transloco }}</button>
       }
     }
     @case ('CLAIMED') {
       @if (!readonlyCard) {
         <div class="btn-pair">
-          <button type="button" class="btn complete" (click)="onAction()">Complete</button>
-          <button type="button" class="btn unclaim" (click)="onUnclaim($event)">Unclaim</button>
+          <button type="button" class="btn complete" (click)="onAction()">{{ 'card.complete' | transloco }}</button>
+          <button type="button" class="btn unclaim" (click)="onUnclaim($event)">{{ 'card.unclaim' | transloco }}</button>
         </div>
       }
     }
     @case ('COMPLETED') {
       @if (!readonlyCard && canVerify) {
-        <button type="button" class="btn verify" (click)="onAction()">Verify</button>
+        <button type="button" class="btn verify" (click)="onAction()">{{ 'card.verify' | transloco }}</button>
       } @else {
-        <div class="pill waiting"><span class="pulse-dot"></span>Waiting on a teammate</div>
+        <div class="pill waiting"><span class="pulse-dot"></span>{{ 'card.waiting' | transloco }}</div>
       }
     }
     @case ('VERIFIED') {
-      <div class="pill verified">Verified · {{ (card.verifiedAt ?? card.completedAt) | date: 'MMM d' }}</div>
+      <div class="pill verified">{{ 'card.verifiedOn' | transloco: { date: ((card.verifiedAt ?? card.completedAt) | localizedDate: ('formats.shortDate' | transloco)) } }}</div>
     }
   }
 
   @if (canEdit || canDelete) {
     <div class="admin-row">
       @if (canEdit) {
-        <button type="button" class="btn ghost" (click)="onEdit($event)" [attr.aria-label]="'Edit ' + card.title">✎ Edit</button>
+        <button type="button" class="btn ghost" (click)="onEdit($event)" [attr.aria-label]="'card.editAria' | transloco: { title: card.title }">✎ {{ 'common.edit' | transloco }}</button>
       }
       @if (canDelete) {
-        <button type="button" class="btn ghost danger" (click)="onDelete($event)" [attr.aria-label]="'Delete ' + card.title">
-          Delete
+        <button type="button" class="btn ghost danger" (click)="onDelete($event)" [attr.aria-label]="'card.deleteAria' | transloco: { title: card.title }">
+          {{ 'common.delete' | transloco }}
         </button>
       }
     </div>

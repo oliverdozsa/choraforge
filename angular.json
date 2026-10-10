@@ -59,7 +59,16 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "@messageformat/core",
+              "@messageformat/date-skeleton",
+              "@messageformat/number-skeleton",
+              "@messageformat/parser",
+              "@messageformat/runtime",
+              "safe-identifier",
+              "make-plural"
+            ]
           },
           "configurations": {
             "production": {

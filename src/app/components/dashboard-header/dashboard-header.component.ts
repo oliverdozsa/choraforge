@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';
 import { ChoreStoreService } from '../../services/chore-store.service';
 import { AuthService } from '../../services/auth.service';
+import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
 import { AppDialogComponent } from '../app-dialog/app-dialog.component';
 import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.component';
 import { TeamSetupComponent } from '../team-setup/team-setup.component';
@@ -10,7 +12,7 @@ import { TeamSetupComponent } from '../team-setup/team-setup.component';
 @Component({
   selector: 'app-dashboard-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, AppDialogComponent, ProfileDialogComponent, TeamSetupComponent],
+  imports: [CommonModule, FormsModule, TranslocoDirective, TranslocoPipe, LanguageSwitcherComponent, AppDialogComponent, ProfileDialogComponent, TeamSetupComponent],
   templateUrl: './dashboard-header.component.html',
   styleUrl: './dashboard-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

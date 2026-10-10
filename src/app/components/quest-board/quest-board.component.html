@@ -1,8 +1,9 @@
-<p class="error-banner" *ngIf="error()">{{ error() }}</p>
+<ng-container *transloco="let t">
+<p class="error-banner" *ngIf="error() as err">{{ t(err) }}</p>
 
 <app-card-designer-modal
   *ngIf="editingCard() as card"
-  submitLabel="Save Changes"
+  submitLabel="designer.saveChanges"
   [submitting]="editingCardSubmitting()"
   [previewTeamId]="selectedTeamId() ?? ''"
   [initial]="asDraft(card)"
@@ -12,7 +13,7 @@
 
 <app-card-designer-modal
   *ngIf="creatingCard()"
-  submitLabel="Create Card"
+  submitLabel="designer.createCard"
   [templates]="templates()"
   [submitting]="creatingCardSubmitting()"
   [previewTeamId]="selectedTeamId() ?? ''"
@@ -22,8 +23,8 @@
 
 <app-confirm-dialog
   *ngIf="deletingCard() as card"
-  title="Delete Card"
-  [message]="'Delete &quot;' + card.title + '&quot;? This cannot be undone.'"
+  [title]="t('board.deleteTitle')"
+  [message]="t('board.deleteMessage', { title: card.title })"
   [confirming]="deletingCardSubmitting()"
   (confirmed)="confirmDeleteCard()"
   (cancelled)="cancelDeletingCard()"
@@ -33,11 +34,11 @@
   <section class="board-section marker-available" #availableSection aria-labelledby="available-title">
     <div class="section-heading">
       <span class="marker" aria-hidden="true"></span>
-      <h2 id="available-title" tabindex="-1">Available Quests</h2>
+      <h2 id="available-title" tabindex="-1">{{ t('board.available') }}</h2>
       <span class="count-badge">{{ availableQuests().length }}</span>
-      <span class="helper">Claim a card to start it</span>
+      <span class="helper">{{ t('board.availableHelper') }}</span>
       <button class="new-card-btn" *ngIf="isTeamAdmin() && !creatingCard()" (click)="startCreatingCard()">
-        + New Card
+        {{ t('board.newCard') }}
       </button>
     </div>
 
@@ -59,7 +60,7 @@
     <ng-template #emptyAvailable>
       <p class="empty-row" *ngIf="!creatingCard()">
         <span class="empty-marker" aria-hidden="true"></span>
-        No quests left on the board. Great work, team!
+        {{ t('board.emptyAvailable') }}
       </p>
     </ng-template>
   </section>
@@ -67,7 +68,7 @@
   <section class="board-section marker-active" aria-labelledby="active-title">
     <div class="section-heading">
       <span class="marker" aria-hidden="true"></span>
-      <h2 id="active-title">My Active Quests</h2>
+      <h2 id="active-title">{{ t('board.active') }}</h2>
       <span class="count-badge">{{ activeHand().length }}</span>
     </div>
     <div class="card-grid" *ngIf="activeHand().length; else emptyHand">
@@ -89,9 +90,9 @@
       <div class="empty-hand">
         <div class="empty-slot" aria-hidden="true"><span class="slot-diamond"></span></div>
         <div class="empty-copy">
-          <h3>Your hand is empty</h3>
-          <p>Claim a quest from Available Quests and it'll show up here until you complete it.</p>
-          <button type="button" class="browse-btn" (click)="browseQuests(availableSection)">Browse quests</button>
+          <h3>{{ t('board.emptyHandTitle') }}</h3>
+          <p>{{ t('board.emptyHandText') }}</p>
+          <button type="button" class="browse-btn" (click)="browseQuests(availableSection)">{{ t('board.browse') }}</button>
         </div>
       </div>
     </ng-template>
@@ -100,9 +101,9 @@
   <section class="board-section marker-verify" aria-labelledby="verify-title">
     <div class="section-heading">
       <span class="marker" aria-hidden="true"></span>
-      <h2 id="verify-title">Awaiting Verification</h2>
+      <h2 id="verify-title">{{ t('board.awaiting') }}</h2>
       <span class="count-badge">{{ awaitingVerification().length }}</span>
-      <span class="helper">A teammate confirms before rewards pay out</span>
+      <span class="helper">{{ t('board.awaitingHelper') }}</span>
     </div>
     <div class="card-grid" *ngIf="awaitingVerification().length; else emptyVerify">
       @for (card of awaitingVerification(); track card.id) {
@@ -124,7 +125,7 @@
     <ng-template #emptyVerify>
       <p class="empty-row">
         <span class="empty-marker" aria-hidden="true"></span>
-        Nothing waiting on review. Completed quests land here for a teammate to verify.
+        {{ t('board.emptyAwaiting') }}
       </p>
     </ng-template>
   </section>
@@ -132,7 +133,7 @@
   <section class="board-section marker-history" *ngIf="myVerifiedHistory().length" aria-labelledby="history-title">
     <div class="section-heading">
       <span class="marker" aria-hidden="true"></span>
-      <h2 id="history-title">My History</h2>
+      <h2 id="history-title">{{ t('board.history') }}</h2>
       <span class="count-badge">{{ myVerifiedHistory().length }}</span>
     </div>
     <div class="card-grid">
@@ -148,10 +149,10 @@
       }
     </div>
     <div class="pagination" *ngIf="historyTotalPages() > 1">
-      <button type="button" [disabled]="historyPage() === 0" (click)="prevHistoryPage()">‹ Prev</button>
-      <span class="page-indicator">Page {{ historyPage() + 1 }} of {{ historyTotalPages() }}</span>
+      <button type="button" [disabled]="historyPage() === 0" (click)="prevHistoryPage()">‹ {{ t('common.prev') }}</button>
+      <span class="page-indicator">{{ t('board.page', { page: historyPage() + 1, total: historyTotalPages() }) }}</span>
       <button type="button" [disabled]="historyPage() >= historyTotalPages() - 1" (click)="nextHistoryPage()">
-        Next ›
+        {{ t('common.next') }} ›
       </button>
     </div>
   </section>
@@ -159,17 +160,17 @@
   <section class="board-section marker-team" aria-labelledby="team-title">
     <div class="section-heading">
       <span class="marker" aria-hidden="true"></span>
-      <h2 id="team-title">Team Activity</h2>
+      <h2 id="team-title">{{ t('board.teamActivity') }}</h2>
       <span class="count-badge">
         <ng-container *ngIf="activityFilterActive()">{{ filteredTeamActivity().length }} / </ng-container>{{ teamActivity().length }}
       </span>
       <button type="button" class="clear-filters-btn" *ngIf="activityFilterActive()" (click)="clearActivityFilters()">
-        Clear filters
+        {{ t('board.clearFilters') }}
       </button>
     </div>
     <div class="activity-filters" *ngIf="activityAssigneeOptions().length > 1 || activityStatusOptions().length > 1">
       <div class="filter-group" *ngIf="activityAssigneeOptions().length > 1">
-        <span class="filter-label">Assignee</span>
+        <span class="filter-label">{{ t('board.assignee') }}</span>
         <button
           type="button"
           class="filter-chip"
@@ -178,11 +179,11 @@
           [attr.aria-pressed]="activityAssigneeFilter().has(option.id)"
           (click)="toggleActivityAssignee(option.id)"
         >
-          {{ option.label }}
+          {{ option.label ?? t('common.unknown') }}
         </button>
       </div>
       <div class="filter-group" *ngIf="activityStatusOptions().length > 1">
-        <span class="filter-label">Status</span>
+        <span class="filter-label">{{ t('board.status') }}</span>
         <button
           type="button"
           class="filter-chip"
@@ -191,7 +192,7 @@
           [attr.aria-pressed]="activityStatusFilter().has(option.id)"
           (click)="toggleActivityStatus(option.id)"
         >
-          {{ option.label }}
+          {{ t('enums.cardStatus.' + option.id) }}
         </button>
       </div>
     </div>
@@ -212,9 +213,9 @@
       <p class="empty-row">
         <span class="empty-marker" aria-hidden="true"></span>
         @if (teamActivity().length) {
-          No team activity matches these filters.
+          {{ t('board.noMatch') }}
         } @else {
-          Nobody else is on a quest right now. Claimed and finished quests from teammates show up here.
+          {{ t('board.emptyActivity') }}
         }
       </p>
     </ng-template>
@@ -226,3 +227,4 @@
   [batch]="batch"
   (dismiss)="dismissReward()"
 />
+</ng-container>

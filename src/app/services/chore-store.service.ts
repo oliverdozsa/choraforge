@@ -51,14 +51,15 @@ function byDateDesc(getDate: (card: ChoreCardResponse) => string | undefined) {
     new Date(getDate(b) ?? 0).getTime() - new Date(getDate(a) ?? 0).getTime();
 }
 
+/** Returns a translation key; templates translate it so it follows language changes. */
 function friendlyError(err: unknown): string {
   if (err && typeof err === 'object' && 'status' in err) {
     const status = (err as { status: number }).status;
-    if (status === 401) return 'Your session expired. Please sign in again.';
-    if (status === 403) return "You don't have permission to do that.";
-    if (status === 400) return 'That request was invalid.';
+    if (status === 401) return 'errors.sessionExpired';
+    if (status === 403) return 'errors.forbidden';
+    if (status === 400) return 'errors.badRequest';
   }
-  return 'Something went wrong talking to the server.';
+  return 'errors.generic';
 }
 
 @Injectable({ providedIn: 'root' })

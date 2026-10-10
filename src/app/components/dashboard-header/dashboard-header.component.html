@@ -1,3 +1,4 @@
+<ng-container *transloco="let t">
 <header class="dash-header">
   <div class="identity">
     <div class="avatar-menu-anchor">
@@ -5,8 +6,8 @@
         type="button"
         class="avatar-btn"
         (click)="toggleAvatarMenu()"
-        title="Account menu"
-        aria-label="Account menu"
+        [title]="t('header.accountMenu')"
+        [attr.aria-label]="t('header.accountMenu')"
         aria-haspopup="true"
         [attr.aria-expanded]="avatarMenuOpen()"
         [style.--p]="xpProgressPercent() + '%'"
@@ -19,14 +20,15 @@
 
       <div class="avatar-menu-backdrop" *ngIf="avatarMenuOpen()" (click)="closeAvatarMenu()"></div>
       <div class="avatar-menu" *ngIf="avatarMenuOpen()">
-        <button type="button" class="avatar-menu-item" (click)="openProfileDialog()">👤 My Profile</button>
-        <button type="button" class="avatar-menu-item" (click)="openNewTeamDialog()">👥 Team</button>
+        <button type="button" class="avatar-menu-item" (click)="openProfileDialog()">👤 {{ t('header.myProfile') }}</button>
+        <button type="button" class="avatar-menu-item" (click)="openNewTeamDialog()">👥 {{ t('header.team') }}</button>
+        <div class="avatar-menu-lang"><app-language-switcher /></div>
       </div>
     </div>
     <div class="name-block">
       <span class="username">{{ user()?.name }}</span>
       <label class="team-switch" *ngIf="teams().length > 1; else singleTeamName">
-        <span class="visually-hidden">Household</span>
+        <span class="visually-hidden">{{ t('header.team') }}</span>
         <select [ngModel]="membership()?.teamId" (ngModelChange)="onTeamChange($event)">
           <option *ngFor="let t of teams()" [value]="t.teamId">{{ t.teamName }}</option>
         </select>
@@ -39,19 +41,19 @@
   </div>
 
   <div class="level-block">
-    <div class="level-shield" [attr.aria-label]="'Level ' + level()">
-      <span class="lv">LV</span>
+    <div class="level-shield" [attr.aria-label]="t('header.levelAria', { level: level() })">
+      <span class="lv">{{ t('header.lv') }}</span>
       <span class="lv-num">{{ level() }}</span>
     </div>
     <div class="xp">
       <div class="xp-labels">
-        <span>{{ membership()?.currentXp ?? 0 }} <span class="muted">/ {{ membership()?.nextLevelXp ?? 0 }} XP</span></span>
-        <span class="muted">{{ xpToNext() }} XP to Lv {{ level() + 1 }}</span>
+        <span>{{ membership()?.currentXp ?? 0 }} <span class="muted">/ {{ membership()?.nextLevelXp ?? 0 }} {{ t('common.xp') }}</span></span>
+        <span class="muted">{{ t('header.xpToNext', { xp: xpToNext(), level: level() + 1 }) }}</span>
       </div>
       <div
         class="xp-track"
         role="progressbar"
-        aria-label="Experience"
+        [attr.aria-label]="t('header.experience')"
         aria-valuemin="0"
         [attr.aria-valuemax]="membership()?.nextLevelXp ?? 0"
         [attr.aria-valuenow]="membership()?.currentXp ?? 0"
@@ -63,11 +65,11 @@
   </div>
 
   <div class="header-actions">
-    <div class="gold-counter" [attr.aria-label]="(membership()?.gold ?? 0) + ' gold'">
+    <div class="gold-counter" [attr.aria-label]="t('common.goldAria', { count: membership()?.gold ?? 0 })">
       <span class="coin" aria-hidden="true"></span>
       <span class="gold-value">{{ membership()?.gold ?? 0 }}</span>
     </div>
-    <button type="button" class="logout-btn" (click)="logout()">Sign out</button>
+    <button type="button" class="logout-btn" (click)="logout()">{{ t('common.signOut') }}</button>
   </div>
 </header>
 
@@ -76,7 +78,8 @@
 }
 
 @if (newTeamDialogOpen()) {
-  <app-dialog title="Team" (closed)="closeNewTeamDialog()">
+  <app-dialog [title]="'header.team' | transloco" (closed)="closeNewTeamDialog()">
     <app-team-setup [embedded]="true" (completed)="closeNewTeamDialog()" />
   </app-dialog>
 }
+</ng-container>

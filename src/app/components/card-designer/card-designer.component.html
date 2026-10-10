@@ -1,102 +1,103 @@
+<ng-container *transloco="let t">
 <div class="designer">
   <form class="designer-form" (ngSubmit)="onSubmit()">
     <label *ngIf="templates.length && !initial">
-      Start from template <span class="optional">(optional)</span>
+      {{ t('designer.startFromTemplate') }} <span class="optional">({{ t('common.optional') }})</span>
       <select name="templateId" [(ngModel)]="selectedTemplateId" [ngModelOptions]="{standalone: true}" (ngModelChange)="onTemplateSelected()">
-        <option value="">— Blank card —</option>
+        <option value="">{{ t('designer.blankCard') }}</option>
         <option *ngFor="let template of templates" [value]="template.id">{{ template.title }}</option>
       </select>
     </label>
 
     <label>
-      Title
+      {{ t('designer.title') }}
       <input type="text" name="title" [(ngModel)]="title" required maxlength="80" />
     </label>
 
     <label>
-      Description
+      {{ t('designer.description') }}
       <textarea name="description" [(ngModel)]="description" rows="2" maxlength="200"></textarea>
     </label>
 
     <label>
-      Rarity
+      {{ t('designer.rarity') }}
       <select name="rarity" [(ngModel)]="rarity">
-        <option *ngFor="let r of rarities" [value]="r">{{ r }}</option>
+        <option *ngFor="let r of rarities" [value]="r">{{ t('enums.rarity.' + r) }}</option>
       </select>
     </label>
 
     <div class="field-row">
       <label>
-        Complexity
+        {{ t('designer.complexity') }}
         <input type="number" name="complexity" [(ngModel)]="complexity" min="1" max="10" />
       </label>
       <label>
-        Minutes
+        {{ t('designer.minutes') }}
         <input type="number" name="estimatedMinutes" [(ngModel)]="estimatedMinutes" min="1" />
       </label>
     </div>
 
     <div class="field-row">
       <label>
-        XP Reward
+        {{ t('designer.xpReward') }}
         <input type="number" name="xpReward" [(ngModel)]="xpReward" min="0" />
       </label>
       <label>
-        Gold Reward
+        {{ t('designer.goldReward') }}
         <input type="number" name="goldReward" [(ngModel)]="goldReward" min="0" />
       </label>
     </div>
 
     <label>
-      Item Drop <span class="optional">(optional)</span>
+      {{ t('designer.itemDrop') }} <span class="optional">({{ t('common.optional') }})</span>
       <input type="text" name="itemDrop" [(ngModel)]="itemDrop" maxlength="60" />
     </label>
 
     <label>
-      Image URL <span class="optional">(optional)</span>
+      {{ t('designer.imageUrl') }} <span class="optional">({{ t('designer.imageTip') }})</span>
       <input type="url" name="imageUrl" [(ngModel)]="imageUrl" maxlength="500" placeholder="https://…" />
     </label>
 
     <label class="checkbox-label">
       <input type="checkbox" name="hasDueDate" [(ngModel)]="hasDueDate" />
-      Set a due date
+      {{ t('designer.setDueDate') }}
     </label>
 
     <div class="field-row" *ngIf="hasDueDate">
       <label>
-        Due in
+        {{ t('designer.dueIn') }}
         <input type="number" name="dueDateAmount" [(ngModel)]="dueDateAmount" min="1" />
       </label>
       <label>
-        Unit
+        {{ t('designer.unit.label') }}
         <select name="dueDateUnit" [(ngModel)]="dueDateUnit">
-          <option *ngFor="let u of dueDateUnits" [value]="u.value">{{ u.label }}</option>
+          <option *ngFor="let u of dueDateUnits" [value]="u.value">{{ t(u.label) }}</option>
         </select>
       </label>
     </div>
 
     <label>
-      Recurrence
+      {{ t('designer.recurrence.label') }}
       <select name="recurrenceType" [(ngModel)]="recurrenceType">
-        <option *ngFor="let t of recurrenceTypes" [value]="t.value">{{ t.label }}</option>
+        <option *ngFor="let rt of recurrenceTypes" [value]="rt.value">{{ t(rt.label) }}</option>
       </select>
     </label>
 
     <label *ngIf="recurrenceType === 'AFTER_COMPLETION'">
-      Respawn after (minutes)
+      {{ t('designer.respawnAfter') }}
       <input type="number" name="intervalMinutes" [(ngModel)]="intervalMinutes" min="1" />
     </label>
 
     <ng-container *ngIf="recurrenceType === 'SCHEDULE'">
       <div class="field-row">
         <label>
-          Frequency
+          {{ t('designer.frequency') }}
           <select name="frequency" [(ngModel)]="frequency">
-            <option *ngFor="let f of frequencies" [value]="f">{{ f }}</option>
+            <option *ngFor="let f of frequencies" [value]="f">{{ t('enums.frequency.' + f) }}</option>
           </select>
         </label>
         <label>
-          Every N
+          {{ t('designer.everyN') }}
           <input type="number" name="scheduleInterval" [(ngModel)]="scheduleInterval" min="1" max="100" />
         </label>
       </div>
@@ -108,32 +109,32 @@
           class="day-chip"
           [class.active]="daysOfWeek.includes(day)"
           (click)="toggleDay(day)"
-        >{{ day.slice(0, 3) }}</button>
+        >{{ t('enums.weekdayShort.' + day) }}</button>
       </div>
 
       <label *ngIf="frequency === 'MONTHLY'">
-        Day of month
+        {{ t('designer.dayOfMonth') }}
         <input type="number" name="dayOfMonth" [(ngModel)]="dayOfMonth" min="1" max="31" />
       </label>
 
       <div class="field-row">
         <label>
-          Time
+          {{ t('designer.time') }}
           <input type="time" name="time" [(ngModel)]="time" />
         </label>
         <label>
-          Time zone
+          {{ t('designer.timeZone') }}
           <input type="text" name="timeZone" [(ngModel)]="timeZone" />
         </label>
       </div>
     </ng-container>
 
-    <p class="form-error" *ngIf="formError">{{ formError }}</p>
+    <p class="form-error" *ngIf="formError">{{ t(formError) }}</p>
 
     <div class="designer-actions">
-      <button type="button" class="cancel-btn" (click)="onCancel()" [disabled]="submitting">Cancel</button>
+      <button type="button" class="cancel-btn" (click)="onCancel()" [disabled]="submitting">{{ t('common.cancel') }}</button>
       <button type="submit" class="save-btn" [disabled]="submitting">
-        {{ submitting ? 'Saving…' : submitLabel }}
+        {{ submitting ? t('common.saving') : t(submitLabel) }}
       </button>
     </div>
   </form>
@@ -142,3 +143,4 @@
     <app-chore-card [card]="previewCard" [readonlyCard]="true" />
   </div>
 </div>
+</ng-container>

@@ -1,0 +1,35 @@
+:host {
+  display: inline-block;
+}
+
+.lang-switch {
+  display: inline-flex;
+  border: 1px solid var(--surface-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.lang-btn {
+  background: transparent;
+  color: var(--text-muted);
+  border: 0;
+  padding: 5px 11px;
+  font: 700 11px/1 var(--font-ui);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    color: var(--text);
+  }
+
+  &.active {
+    background: color-mix(in oklch, var(--xp) 24%, transparent);
+    color: var(--text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--xp);
+    outline-offset: -2px;
+  }
+}

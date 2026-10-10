@@ -1,7 +1,8 @@
+<ng-container *transloco="let t">
 <aside class="leaderboard" aria-labelledby="leaderboard-title">
   <div class="panel-head">
-    <h2 id="leaderboard-title" class="panel-title">Leaderboard</h2>
-    <span class="panel-scope">All time</span>
+    <h2 id="leaderboard-title" class="panel-title">{{ t('leaderboard.title') }}</h2>
+    <span class="panel-scope">{{ t('leaderboard.allTime') }}</span>
   </div>
   <ol class="rank-list">
     <li
@@ -15,21 +16,21 @@
       <div class="name-block">
         <span class="name">
           {{ member.name }}
-          <span class="you-tag" *ngIf="member.userId === currentUserId()">YOU</span>
+          <span class="you-tag" *ngIf="member.userId === currentUserId()">{{ t('leaderboard.you') }}</span>
         </span>
         <div class="level-line">
-          <span class="level">Lv {{ member.level }}</span>
+          <span class="level">{{ t('leaderboard.level', { level: member.level }) }}</span>
           <span class="level-bar" [style.--p]="levelProgress(member) + '%'"></span>
         </div>
       </div>
       <span class="gold-cell">
-        <span class="gold" [attr.aria-label]="member.gold + ' gold'">{{ member.gold }}</span>
+        <span class="gold" [attr.aria-label]="t('common.goldAria', { count: member.gold })">{{ member.gold }}</span>
         <button
           *ngIf="isTeamAdmin()"
           type="button"
           class="edit-gold"
-          title="Edit gold"
-          [attr.aria-label]="'Edit gold for ' + member.name"
+          [title]="t('leaderboard.editGold')"
+          [attr.aria-label]="t('leaderboard.editGoldFor', { name: member.name })"
           (click)="openGoldEditor(member)"
         >
           ✎
@@ -38,8 +39,8 @@
           *ngIf="canChangeRole(member)"
           type="button"
           class="edit-gold"
-          title="Change role"
-          [attr.aria-label]="'Change role for ' + member.name"
+          [title]="t('leaderboard.changeRole')"
+          [attr.aria-label]="t('leaderboard.changeRoleFor', { name: member.name })"
           (click)="openRoleEditor(member)"
         >
           ⚑
@@ -49,27 +50,28 @@
   </ol>
 </aside>
 
-<app-dialog *ngIf="editingMember() as member" [title]="'Edit gold: ' + member.name" (closed)="closeGoldEditor()">
+<app-dialog *ngIf="editingMember() as member" [title]="t('leaderboard.editGoldTitle', { name: member.name })" (closed)="closeGoldEditor()">
   <form class="gold-form" (ngSubmit)="saveGold()">
     <label>
-      Gold
+      {{ t('common.gold') }}
       <input type="number" name="gold" min="0" step="1" [(ngModel)]="goldInput" autocomplete="off" />
     </label>
-    <p class="form-error" *ngIf="formError()">{{ formError() }}</p>
-    <button type="submit" class="save-btn" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button>
+    <p class="form-error" *ngIf="formError() as err">{{ t(err) }}</p>
+    <button type="submit" class="save-btn" [disabled]="saving()">{{ saving() ? t('common.saving') : t('common.save') }}</button>
   </form>
 </app-dialog>
 
-<app-dialog *ngIf="roleMember() as member" [title]="'Change role: ' + member.name" (closed)="closeRoleEditor()">
+<app-dialog *ngIf="roleMember() as member" [title]="t('leaderboard.changeRoleTitle', { name: member.name })" (closed)="closeRoleEditor()">
   <form class="gold-form" (ngSubmit)="saveRole()">
     <label>
-      Role
+      {{ t('leaderboard.role') }}
       <select name="role" [(ngModel)]="roleInput">
-        <option value="USER">USER</option>
-        <option value="ADMIN">ADMIN</option>
+        <option value="USER">{{ t('enums.role.USER') }}</option>
+        <option value="ADMIN">{{ t('enums.role.ADMIN') }}</option>
       </select>
     </label>
-    <p class="form-error" *ngIf="formError()">{{ formError() }}</p>
-    <button type="submit" class="save-btn" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button>
+    <p class="form-error" *ngIf="formError() as err">{{ t(err) }}</p>
+    <button type="submit" class="save-btn" [disabled]="saving()">{{ saving() ? t('common.saving') : t('common.save') }}</button>
   </form>
 </app-dialog>
+</ng-container>

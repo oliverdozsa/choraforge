@@ -1,7 +1,7 @@
 @if (!isAuthenticated()) {
   <app-login />
 } @else if (loading() && !hasTeam()) {
-  <div class="loading-shell">Loading your profile…</div>
+  <div class="loading-shell">{{ 'app.loading' | transloco }}</div>
 } @else if (!hasTeam()) {
   <app-team-setup />
 } @else {

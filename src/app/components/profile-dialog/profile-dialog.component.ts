@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { AppDialogComponent } from '../app-dialog/app-dialog.component';
 import { ChoreStoreService } from '../../services/chore-store.service';
 import { AuthService } from '../../services/auth.service';
@@ -7,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-profile-dialog',
   standalone: true,
-  imports: [CommonModule, AppDialogComponent],
+  imports: [CommonModule, TranslocoPipe, AppDialogComponent],
   templateUrl: './profile-dialog.component.html',
   styleUrl: './profile-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

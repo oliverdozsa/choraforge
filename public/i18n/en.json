@@ -1,0 +1,254 @@
+{
+  "app": {
+    "loading": "Loading your profile…"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "hu": "Magyar"
+  },
+  "formats": {
+    "dueDate": "MMM d, h:mm a",
+    "shortDate": "MMM d"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "current": "Current",
+    "delete": "Delete",
+    "deleting": "Deleting…",
+    "edit": "Edit",
+    "gold": "Gold",
+    "goldAria": "{count} gold",
+    "next": "Next",
+    "optional": "optional",
+    "prev": "Prev",
+    "save": "Save",
+    "saving": "Saving…",
+    "signOut": "Sign out",
+    "switch": "Switch",
+    "unknown": "Unknown",
+    "xp": "XP",
+    "you": "You"
+  },
+  "confirm": {
+    "title": "Are you sure?"
+  },
+  "login": {
+    "tagline": "Turn chores into quests. Claim cards, earn XP, level up your team.",
+    "sdkError": "Couldn’t load Google Sign-In. Check your connection and refresh."
+  },
+  "header": {
+    "accountMenu": "Account menu",
+    "myProfile": "My Profile",
+    "team": "Team",
+    "levelAria": "Level {level}",
+    "lv": "LV",
+    "experience": "Experience",
+    "xpToNext": "{xp} XP to Lv {level}"
+  },
+  "profile": {
+    "myTeams": "My Teams",
+    "levelShort": "Lv. {level}"
+  },
+  "team": {
+    "joinTitle": "Join the Adventure",
+    "joinSubtitle": "You’re signed in, but not on a team yet. Create one or join an existing crew.",
+    "create": "Create Team",
+    "creating": "Creating…",
+    "join": "Join Team",
+    "joining": "Joining…",
+    "invite": "Invite",
+    "level": "Level {level}",
+    "switching": "Switching…",
+    "noTeams": "You’re not on any teams yet.",
+    "name": "Team Name",
+    "namePlaceholder": "The Chore Crusaders",
+    "inviteByEmail": "Invite by Email",
+    "emailPlaceholder": "friend@example.com",
+    "sendInvitation": "Send Invitation",
+    "sending": "Sending…",
+    "inviteSent": "Invitation sent to {email}.",
+    "invitations": "Invitations",
+    "noInvitations": "No invitations yet.",
+    "expires": "expires {date}",
+    "revoke": "Revoke",
+    "invitationCode": "Invitation Code",
+    "codePlaceholder": "Paste your code",
+    "pendingInvitations": "Pending invitations",
+    "useCode": "Use code",
+    "errors": {
+      "emailRequired": "Email is required.",
+      "nameRequired": "Team name is required.",
+      "codeRequired": "Invitation code is required."
+    }
+  },
+  "board": {
+    "available": "Available Quests",
+    "availableHelper": "Claim a card to start it",
+    "newCard": "+ New Card",
+    "emptyAvailable": "No quests left on the board. Great work, team!",
+    "active": "My Active Quests",
+    "emptyHandTitle": "Your hand is empty",
+    "emptyHandText": "Claim a quest from Available Quests and it’ll show up here until you complete it.",
+    "browse": "Browse quests",
+    "awaiting": "Awaiting Verification",
+    "awaitingHelper": "A teammate confirms before rewards pay out",
+    "emptyAwaiting": "Nothing waiting on review. Completed quests land here for a teammate to verify.",
+    "history": "My History",
+    "page": "Page {page} of {total}",
+    "teamActivity": "Team Activity",
+    "clearFilters": "Clear filters",
+    "assignee": "Assignee",
+    "status": "Status",
+    "noMatch": "No team activity matches these filters.",
+    "emptyActivity": "Nobody else is on a quest right now. Claimed and finished quests from teammates show up here.",
+    "deleteTitle": "Delete Card",
+    "deleteMessage": "Delete “{title}”? This cannot be undone."
+  },
+  "templates": {
+    "title": "Card Templates",
+    "new": "New Template",
+    "deleteTitle": "Delete Template",
+    "deleteMessage": "Delete “{title}”? This cannot be undone."
+  },
+  "card": {
+    "aria": "{title}, {rarity} quest, {xp} XP, {gold} gold. Flip card",
+    "time": {
+      "m": "{m}m",
+      "h": "{h}h",
+      "hm": "{h}h {m}m"
+    },
+    "questArt": "QUEST ART",
+    "typeLine": "Quest — {rarity}",
+    "drops": "Drops: {item}",
+    "due": "Due {date}",
+    "complexity": "Complexity",
+    "back": {
+      "quest": "Quest",
+      "rarity": "Rarity",
+      "created": "Created",
+      "claimedBy": "Claimed by",
+      "completed": "Completed",
+      "loot": "Loot"
+    },
+    "flipBack": "Click to flip back",
+    "claim": "Claim quest",
+    "complete": "Complete",
+    "unclaim": "Unclaim",
+    "verify": "Verify",
+    "waiting": "Waiting on a teammate",
+    "verifiedOn": "Verified · {date}",
+    "editAria": "Edit {title}",
+    "deleteAria": "Delete {title}"
+  },
+  "designer": {
+    "startFromTemplate": "Start from template",
+    "blankCard": "— Blank card —",
+    "title": "Title",
+    "description": "Description",
+    "rarity": "Rarity",
+    "complexity": "Complexity",
+    "minutes": "Minutes",
+    "xpReward": "XP Reward",
+    "goldReward": "Gold Reward",
+    "itemDrop": "Item Drop",
+    "imageUrl": "Image URL",
+    "imageTip": "(optional, use 4:3 aspect ratio for the best result)",
+    "setDueDate": "Set a due date",
+    "dueIn": "Due in",
+    "unit": {
+      "label": "Unit",
+      "HOURS": "Hours",
+      "DAYS": "Days"
+    },
+    "recurrence": {
+      "label": "Recurrence",
+      "NONE": "Does not repeat",
+      "SCHEDULE": "On a schedule",
+      "AFTER_COMPLETION": "After verification"
+    },
+    "respawnAfter": "Respawn after (minutes)",
+    "frequency": "Frequency",
+    "everyN": "Every N",
+    "dayOfMonth": "Day of month",
+    "time": "Time",
+    "timeZone": "Time zone",
+    "saveChanges": "Save Changes",
+    "createCard": "Create Card",
+    "saveTemplate": "Save Template",
+    "errors": {
+      "titleRequired": "Title is required.",
+      "dueMin": "Due in must be at least 1.",
+      "repeatMin": "Repeat delay must be at least 1 minute.",
+      "timeRequired": "Schedule time is required.",
+      "weekdayRequired": "Pick at least one weekday."
+    }
+  },
+  "completion": {
+    "questVerified": "Quest Verified!",
+    "questsVerified": "Quests Verified!",
+    "levelUp": "Level Up! You reached Level {level}",
+    "collect": "Collect Rewards"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "allTime": "All time",
+    "you": "YOU",
+    "level": "Lv {level}",
+    "editGold": "Edit gold",
+    "editGoldFor": "Edit gold for {name}",
+    "editGoldTitle": "Edit gold: {name}",
+    "changeRole": "Change role",
+    "changeRoleFor": "Change role for {name}",
+    "changeRoleTitle": "Change role: {name}",
+    "role": "Role"
+  },
+  "errors": {
+    "sessionExpired": "Your session expired. Please sign in again.",
+    "forbidden": "You don’t have permission to do that.",
+    "badRequest": "That request was invalid.",
+    "generic": "Something went wrong talking to the server.",
+    "changeRole": "Could not change role.",
+    "updateGold": "Could not update gold.",
+    "wholeNumber": "Enter a whole number, 0 or more."
+  },
+  "enums": {
+    "rarity": {
+      "COMMON": "Common",
+      "RARE": "Rare",
+      "EPIC": "Epic",
+      "LEGENDARY": "Legendary"
+    },
+    "cardStatus": {
+      "CLAIMED": "In Progress",
+      "COMPLETED": "Awaiting Verification",
+      "VERIFIED": "Verified"
+    },
+    "role": {
+      "USER": "User",
+      "ADMIN": "Admin",
+      "TEAM_ADMIN": "Team Admin"
+    },
+    "invitationStatus": {
+      "PENDING": "Pending",
+      "ACCEPTED": "Accepted",
+      "REVOKED": "Revoked",
+      "EXPIRED": "Expired"
+    },
+    "frequency": {
+      "DAILY": "Daily",
+      "WEEKLY": "Weekly",
+      "MONTHLY": "Monthly"
+    },
+    "weekdayShort": {
+      "MONDAY": "Mon",
+      "TUESDAY": "Tue",
+      "WEDNESDAY": "Wed",
+      "THURSDAY": "Thu",
+      "FRIDAY": "Fri",
+      "SATURDAY": "Sat",
+      "SUNDAY": "Sun"
+    }
+  }
+}
