@@ -46,16 +46,18 @@
       <p class="muted" *ngIf="!items().length">{{ t('shop.empty') }}</p>
       <ul class="item-list">
         <li *ngFor="let item of items()" class="item" [class.sold-out]="soldOut(item)">
-          <button *ngIf="item.imageUrl" type="button" class="thumb-btn" [attr.aria-label]="t('shop.enlargeAria', { name: item.name })" (click)="previewItem.set(item)">
-            <img class="thumb" [src]="item.imageUrl" alt="" loading="lazy" />
-          </button>
-          <span *ngIf="!item.imageUrl" class="thumb placeholder" aria-hidden="true">🛍</span>
-          <div class="info">
-            <span class="item-name">{{ item.name }}</span>
-            <span class="muted">
-              <span class="price">{{ item.price }}</span> {{ t('common.gold') }}
-              · {{ soldOut(item) ? t('shop.soldOut') : item.stock !== undefined && item.stock !== null ? t('shop.inStock', { count: item.stock }) : t('shop.unlimited') }}
+          <div class="art">
+            <button *ngIf="item.imageUrl; else noArt" type="button" class="art-btn" [attr.aria-label]="t('shop.enlargeAria', { name: item.name })" (click)="previewItem.set(item)">
+              <img [src]="item.imageUrl" alt="" loading="lazy" />
+            </button>
+            <ng-template #noArt><span class="art-placeholder" aria-hidden="true">🛍</span></ng-template>
+            <span class="stock-tag">
+              {{ soldOut(item) ? t('shop.soldOut') : item.stock !== undefined && item.stock !== null ? t('shop.inStock', { count: item.stock }) : t('shop.unlimited') }}
             </span>
+          </div>
+          <div class="banner">
+            <span class="item-name" [title]="item.name">{{ item.name }}</span>
+            <span class="price" [attr.aria-label]="t('common.goldAria', { count: item.price })"><span class="coin" aria-hidden="true"></span>{{ item.price }}</span>
           </div>
           <div class="actions">
             <ng-container *ngIf="!soldOut(item)">
@@ -69,14 +71,14 @@
                 [ngModel]="quantity(item)"
                 (ngModelChange)="setQuantity(item, $event)"
               />
-              <button type="button" class="btn" [disabled]="saving() || !canAfford(item)" [title]="canAfford(item) ? '' : t('shop.notEnough')" (click)="buy(item)">
+              <button type="button" class="btn buy" [disabled]="saving() || !canAfford(item)" [title]="canAfford(item) ? '' : t('shop.notEnough')" (click)="buy(item)">
                 {{ t('shop.buy', { total: total(item) }) }}
               </button>
             </ng-container>
-            <ng-container *ngIf="isTeamAdmin()">
-              <button type="button" class="icon-btn" [attr.aria-label]="t('shop.editAria', { name: item.name })" (click)="openForm(item)">✎</button>
-              <button type="button" class="icon-btn" [attr.aria-label]="t('shop.deleteAria', { name: item.name })" (click)="deletingItem.set(item)">🗑</button>
-            </ng-container>
+          </div>
+          <div class="admin-actions" *ngIf="isTeamAdmin()">
+            <button type="button" class="icon-btn" [attr.aria-label]="t('shop.editAria', { name: item.name })" (click)="openForm(item)">✎</button>
+            <button type="button" class="icon-btn" [attr.aria-label]="t('shop.deleteAria', { name: item.name })" (click)="deletingItem.set(item)">🗑</button>
           </div>
         </li>
       </ul>
