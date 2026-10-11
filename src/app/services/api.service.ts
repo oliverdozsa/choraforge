@@ -10,6 +10,10 @@ import {
   CreateChoreCardRequest,
   CreateChoreCardTemplateRequest,
   CreateTeamRequest,
+  ExtendSeasonRequest,
+  SeasonResponse,
+  SeasonResultResponse,
+  SetSeasonLengthRequest,
   AcceptInvitationRequest,
   CreateInvitationRequest,
   InvitationResponse,
@@ -53,6 +57,30 @@ export class ApiService {
 
   revokeInvitation(teamId: string, invitationId: string): Observable<unknown> {
     return this.http.delete<unknown>(`${this.base}/teams/${teamId}/invitations/${invitationId}`);
+  }
+
+  getSeasons(teamId: string): Observable<SeasonResponse[]> {
+    return this.http.get<SeasonResponse[]>(`${this.base}/teams/${teamId}/seasons`);
+  }
+
+  getCurrentSeason(teamId: string): Observable<SeasonResponse> {
+    return this.http.get<SeasonResponse>(`${this.base}/teams/${teamId}/seasons/current`);
+  }
+
+  getSeasonResults(teamId: string, seasonId: string): Observable<SeasonResultResponse[]> {
+    return this.http.get<SeasonResultResponse[]>(`${this.base}/teams/${teamId}/seasons/${seasonId}/results`);
+  }
+
+  setSeasonLength(teamId: string, request: SetSeasonLengthRequest): Observable<TeamResponse> {
+    return this.http.put<TeamResponse>(`${this.base}/teams/${teamId}/season-length`, request);
+  }
+
+  endSeason(teamId: string): Observable<SeasonResponse> {
+    return this.http.post<SeasonResponse>(`${this.base}/teams/${teamId}/seasons/end`, {});
+  }
+
+  extendSeason(teamId: string, request: ExtendSeasonRequest): Observable<SeasonResponse> {
+    return this.http.post<SeasonResponse>(`${this.base}/teams/${teamId}/seasons/extend`, request);
   }
 
   getMyInvitations(): Observable<InvitationResponse[]> {

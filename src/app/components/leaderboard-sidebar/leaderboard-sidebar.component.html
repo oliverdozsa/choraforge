@@ -2,7 +2,12 @@
 <aside class="leaderboard" aria-labelledby="leaderboard-title">
   <div class="panel-head">
     <h2 id="leaderboard-title" class="panel-title">{{ t('leaderboard.title') }}</h2>
-    <span class="panel-scope">{{ t('leaderboard.allTime') }}</span>
+    <button type="button" class="panel-scope" (click)="seasonsOpen.set(true)">
+      <ng-container *ngIf="currentSeason() as season; else allTime">
+        {{ t('seasons.seasonN', { number: season.number }) }} · {{ t('seasons.daysLeft', { days: daysLeft() }) }}
+      </ng-container>
+      <ng-template #allTime>{{ t('seasons.title') }}</ng-template>
+    </button>
   </div>
   <ol class="rank-list">
     <li
@@ -49,6 +54,8 @@
     </li>
   </ol>
 </aside>
+
+<app-seasons-dialog *ngIf="seasonsOpen()" (closed)="seasonsOpen.set(false)" />
 
 <app-dialog *ngIf="editingMember() as member" [title]="t('leaderboard.editGoldTitle', { name: member.name })" (closed)="closeGoldEditor()">
   <form class="gold-form" (ngSubmit)="saveGold()">

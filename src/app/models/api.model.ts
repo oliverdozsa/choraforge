@@ -117,6 +117,7 @@ export interface SetGoldRequest {
 export interface TeamResponse {
   id: string;
   name: string;
+  seasonLengthDays?: number;
   createdAt: string;
 }
 
@@ -218,4 +219,33 @@ export interface UpdateChoreCardTemplateRequest {
   imageUrl?: string;
   dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
+}
+
+export type SeasonStatus = 'ACTIVE' | 'ENDED';
+
+export interface SeasonResponse {
+  id: string;
+  teamId: string;
+  number: number;
+  status: SeasonStatus;
+  startsAt: string;
+  endsAt: string;
+}
+
+export interface SeasonResultResponse {
+  userId: string;
+  name: string;
+  rank: number;
+  level: number;
+  currentXp: number;
+  gold: number;
+  cardsVerified: number;
+}
+
+export interface SetSeasonLengthRequest {
+  days: number;
+}
+
+export interface ExtendSeasonRequest {
+  days: number;
 }

@@ -29,7 +29,8 @@
     "switch": "Switch",
     "unknown": "Unknown",
     "xp": "XP",
-    "you": "You"
+    "you": "You",
+    "loading": "Loading…"
   },
   "confirm": {
     "title": "Are you sure?"
@@ -193,7 +194,6 @@
   },
   "leaderboard": {
     "title": "Leaderboard",
-    "allTime": "All time",
     "you": "YOU",
     "level": "Lv {level}",
     "editGold": "Edit gold",
@@ -211,7 +211,10 @@
     "generic": "Something went wrong talking to the server.",
     "changeRole": "Could not change role.",
     "updateGold": "Could not update gold.",
-    "wholeNumber": "Enter a whole number, 0 or more."
+    "wholeNumber": "Enter a whole number, 0 or more.",
+    "extendSeason": "Could not extend the season.",
+    "seasonLength": "Could not save the season length.",
+    "endSeason": "Could not end the season."
   },
   "enums": {
     "rarity": {
@@ -249,6 +252,33 @@
       "FRIDAY": "Fri",
       "SATURDAY": "Sat",
       "SUNDAY": "Sun"
+    }
+  },
+  "seasons": {
+    "title": "Seasons",
+    "current": "Season {number}",
+    "seasonN": "Season {number}",
+    "range": "{start} – {end}",
+    "daysLeft": "{days, plural, one {# day left} other {# days left}}",
+    "resetNote": "When a season ends, level, XP and gold reset for everyone. Cards and templates are kept.",
+    "extendBy": "Extend by (days)",
+    "extend": "Extend",
+    "nextLength": "Length of future seasons (days)",
+    "endNow": "End season now",
+    "endTitle": "End this season?",
+    "endMessage": "Final results are archived and everyone’s level, XP and gold are reset. This can’t be undone.",
+    "past": "Past seasons",
+    "noPast": "No finished seasons yet.",
+    "noResults": "No results were recorded.",
+    "member": "Member",
+    "level": "Lv",
+    "cards": "Cards",
+    "extended": "Season extended.",
+    "lengthSaved": "Length saved for future seasons.",
+    "ended": "Season ended.",
+    "errors": {
+      "extendRange": "Enter a whole number of days from 1 to 365.",
+      "lengthRange": "Enter a whole number of days from 7 to 365."
     }
   }
 }

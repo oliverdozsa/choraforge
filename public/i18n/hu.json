@@ -29,7 +29,8 @@
     "switch": "Váltás",
     "unknown": "Ismeretlen",
     "xp": "XP",
-    "you": "Te"
+    "you": "Te",
+    "loading": "Betöltés…"
   },
   "confirm": {
     "title": "Biztos vagy benne?"
@@ -193,7 +194,6 @@
   },
   "leaderboard": {
     "title": "Ranglista",
-    "allTime": "Mindenkori",
     "you": "TE",
     "level": "{level}. sz.",
     "editGold": "Arany szerkesztése",
@@ -211,7 +211,10 @@
     "generic": "Hiba történt a szerverrel való kommunikáció során.",
     "changeRole": "Nem sikerült módosítani a szerepkört.",
     "updateGold": "Nem sikerült frissíteni az aranyat.",
-    "wholeNumber": "Adj meg egy egész számot, 0 vagy nagyobbat."
+    "wholeNumber": "Adj meg egy egész számot, 0 vagy nagyobbat.",
+    "extendSeason": "Nem sikerült meghosszabbítani a szezont.",
+    "seasonLength": "Nem sikerült menteni a szezon hosszát.",
+    "endSeason": "Nem sikerült lezárni a szezont."
   },
   "enums": {
     "rarity": {
@@ -249,6 +252,33 @@
       "FRIDAY": "P",
       "SATURDAY": "Szo",
       "SUNDAY": "V"
+    }
+  },
+  "seasons": {
+    "title": "Szezonok",
+    "current": "{number}. szezon",
+    "seasonN": "{number}. szezon",
+    "range": "{start} – {end}",
+    "daysLeft": "{days} nap van hátra",
+    "resetNote": "A szezon végén mindenki szintje, XP-je és aranya nullázódik. A kártyák és sablonok megmaradnak.",
+    "extendBy": "Meghosszabbítás (nap)",
+    "extend": "Meghosszabbítás",
+    "nextLength": "A jövőbeli szezonok hossza (nap)",
+    "endNow": "Szezon lezárása most",
+    "endTitle": "Lezárod a szezont?",
+    "endMessage": "A végeredmény archiválódik, mindenki szintje, XP-je és aranya nullázódik. Ez nem vonható vissza.",
+    "past": "Korábbi szezonok",
+    "noPast": "Még nincs lezárt szezon.",
+    "noResults": "Nincs rögzített eredmény.",
+    "member": "Tag",
+    "level": "Szint",
+    "cards": "Kártyák",
+    "extended": "A szezon meghosszabbítva.",
+    "lengthSaved": "A hossz mentve a jövőbeli szezonokra.",
+    "ended": "A szezon lezárva.",
+    "errors": {
+      "extendRange": "Adj meg egész napot 1 és 365 között.",
+      "lengthRange": "Adj meg egész napot 7 és 365 között."
     }
   }
 }

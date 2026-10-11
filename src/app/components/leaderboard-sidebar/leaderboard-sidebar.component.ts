@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { AppDialogComponent } from '../app-dialog/app-dialog.component';
 import { ChoreStoreService } from '../../services/chore-store.service';
+import { SeasonsDialogComponent, daysUntil } from '../seasons-dialog/seasons-dialog.component';
 import { TeamMemberResponse } from '../../models/api.model';
 
 @Component({
   selector: 'app-leaderboard-sidebar',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoDirective, AppDialogComponent],
+  imports: [CommonModule, FormsModule, TranslocoDirective, AppDialogComponent, SeasonsDialogComponent],
   templateUrl: './leaderboard-sidebar.component.html',
   styleUrl: './leaderboard-sidebar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,6 +20,13 @@ export class LeaderboardSidebarComponent {
 
   readonly currentUserId = this.store.currentUserId;
   readonly isTeamAdmin = this.store.isTeamAdmin;
+
+  readonly currentSeason = this.store.currentSeason;
+  readonly seasonsOpen = signal(false);
+  readonly daysLeft = computed(() => {
+    const season = this.currentSeason();
+    return season ? daysUntil(season.endsAt) : 0;
+  });
 
   readonly editingMember = signal<TeamMemberResponse | null>(null);
   readonly saving = signal(false);

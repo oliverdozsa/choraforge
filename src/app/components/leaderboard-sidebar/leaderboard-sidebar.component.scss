@@ -27,8 +27,17 @@
 }
 
 .panel-scope {
+  border: none;
+  background: transparent;
+  padding: 0;
   font: 500 11px/1 var(--font-ui);
-  color: rgba(230, 233, 242, 0.4);
+  color: rgba(230, 233, 242, 0.6);
+  cursor: pointer;
+
+  &:hover {
+    color: rgba(230, 233, 242, 0.95);
+    text-decoration: underline;
+  }
 }
 
 .rank-list {

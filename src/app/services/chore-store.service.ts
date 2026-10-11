@@ -8,6 +8,8 @@ import {
   CreateChoreCardRequest,
   CreateChoreCardTemplateRequest,
   InvitationResponse,
+  SeasonResponse,
+  SeasonResultResponse,
   TeamMemberResponse,
   TeamMembershipResponse,
   UpdateChoreCardRequest,
@@ -72,6 +74,7 @@ export class ChoreStoreService {
   private readonly _cards = signal<ChoreCardResponse[]>([]);
   private readonly _leaderboard = signal<TeamMemberResponse[]>([]);
   private readonly _templates = signal<ChoreCardTemplateResponse[]>([]);
+  private readonly _currentSeason = signal<SeasonResponse | null>(null);
   private readonly _loading = signal(false);
   private readonly _error = signal<string | null>(null);
   private readonly _activeRewards = signal<RewardBatch | null>(null);
@@ -83,6 +86,7 @@ export class ChoreStoreService {
   readonly cards = this._cards.asReadonly();
   readonly leaderboard = this._leaderboard.asReadonly();
   readonly templates = this._templates.asReadonly();
+  readonly currentSeason = this._currentSeason.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
   readonly activeRewards = this._activeRewards.asReadonly();
@@ -182,12 +186,14 @@ export class ChoreStoreService {
     this._loading.set(true);
     this._error.set(null);
     try {
-      const [cards, leaderboard, templates] = await Promise.all([
+      const [cards, leaderboard, templates, season] = await Promise.all([
         firstValueFrom(this.api.getTeamCards(teamId)),
         firstValueFrom(this.api.getLeaderboard(teamId)),
         firstValueFrom(this.api.getTeamCardTemplates(teamId)),
+        firstValueFrom(this.api.getCurrentSeason(teamId)),
       ]);
       this._cards.set(cards);
+      this._currentSeason.set(season);
       this._leaderboard.set(leaderboard);
       this._templates.set(templates);
     } catch (err) {
@@ -284,6 +290,7 @@ export class ChoreStoreService {
     this._cards.set([]);
     this._leaderboard.set([]);
     this._templates.set([]);
+    this._currentSeason.set(null);
     this._activeRewards.set(null);
   }
 
@@ -391,6 +398,70 @@ export class ChoreStoreService {
     }
   }
 
+  async loadSeasons(): Promise<SeasonResponse[]> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return [];
+    try {
+      return await firstValueFrom(this.api.getSeasons(teamId));
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return [];
+    }
+  }
+
+  async loadSeasonResults(seasonId: string): Promise<SeasonResultResponse[] | null> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return null;
+    try {
+      return await firstValueFrom(this.api.getSeasonResults(teamId, seasonId));
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return null;
+    }
+  }
+
+  // Season management is admin-only (server-enforced). Each returns true on success.
+  async setSeasonLength(days: number): Promise<boolean> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return false;
+    this._error.set(null);
+    try {
+      await firstValueFrom(this.api.setSeasonLength(teamId, { days }));
+      return true;
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return false;
+    }
+  }
+
+  async extendSeason(days: number): Promise<boolean> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return false;
+    this._error.set(null);
+    try {
+      this._currentSeason.set(await firstValueFrom(this.api.extendSeason(teamId, { days })));
+      return true;
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return false;
+    }
+  }
+
+  // Ending a season resets everyone's level, XP and gold, so member data is reloaded too.
+  async endSeason(): Promise<boolean> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return false;
+    this._error.set(null);
+    try {
+      await firstValueFrom(this.api.endSeason(teamId));
+      await Promise.all([this.refreshMe(), this.refreshTeamData()]);
+      return true;
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return false;
+    }
+  }
+
   // Only admins may call this (server-enforced). Returns true on success.
   async setMemberGold(userId: string, gold: number): Promise<boolean> {
     const teamId = this._selectedTeamId();
@@ -494,7 +565,18 @@ export class ChoreStoreService {
   private async checkPendingRewards(): Promise<void> {
     const teamId = this._selectedTeamId();
     const userId = this.currentUserId();
-    if (!teamId || !userId || this._activeRewards()) return;
+    if (!teamId || !userId) return;
+    try {
+      const season = await firstValueFrom(this.api.getCurrentSeason(teamId));
+      const previous = this._currentSeason();
+      this._currentSeason.set(season);
+      if (previous && previous.id !== season.id) {
+        await Promise.all([this.refreshMe(), this.refreshTeamData()]);
+      }
+    } catch {
+      // silent: background check
+    }
+    if (this._activeRewards()) return;
     try {
       const cards = await firstValueFrom(this.api.getTeamCards(teamId));
       this._cards.set(cards);
