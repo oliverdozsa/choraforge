@@ -214,7 +214,10 @@
     "wholeNumber": "Enter a whole number, 0 or more.",
     "extendSeason": "Could not extend the season.",
     "seasonLength": "Could not save the season length.",
-    "endSeason": "Could not end the season."
+    "endSeason": "Could not end the season.",
+    "purchase": "Could not complete the purchase.",
+    "saveItem": "Could not save the item.",
+    "deleteItem": "Could not remove the item."
   },
   "enums": {
     "rarity": {
@@ -280,5 +283,45 @@
       "extendRange": "Enter a whole number of days from 1 to 365.",
       "lengthRange": "Enter a whole number of days from 7 to 365."
     }
+  },
+  "shop": {
+    "title": "Shop",
+    "open": "Shop",
+    "tabItems": "Shop",
+    "tabMine": "My purchases",
+    "tabOrders": "Orders",
+    "addItem": "+ Add item",
+    "name": "Name",
+    "price": "Price (gold)",
+    "stock": "Stock",
+    "unlimited": "Unlimited",
+    "imageUrl": "Image URL",
+    "empty": "The shop is empty.",
+    "soldOut": "Sold out",
+    "inStock": "{count} in stock",
+    "quantity": "Quantity",
+    "buy": "Buy · {total}",
+    "notEnough": "Not enough gold",
+    "editAria": "Edit {name}",
+    "deleteAria": "Delete {name}",
+    "deleteTitle": "Delete item",
+    "deleteMessage": "Remove “{name}” from the shop? Past purchases are kept.",
+    "noPurchases": "You haven’t bought anything yet.",
+    "noOrders": "Nobody has bought anything yet.",
+    "pending": "Waiting for delivery",
+    "fulfilled": "Handed over",
+    "markFulfilled": "Mark handed over",
+    "markPending": "Undo",
+    "purchased": "Purchase complete. There are no refunds.",
+    "itemSaved": "Item saved.",
+    "itemDeleted": "Item removed.",
+    "errors": {
+      "nameRequired": "Name is required.",
+      "priceInvalid": "Enter a whole price, 0 or more.",
+      "stockInvalid": "Stock must be a whole number, 0 or more, or empty for unlimited.",
+      "imageInvalid": "Image URL must start with http:// or https://.",
+      "overStock": "Not enough stock for that quantity."
+    },
+    "enlargeAria": "Enlarge image of {name}"
   }
 }

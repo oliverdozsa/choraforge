@@ -8,6 +8,9 @@ import {
   CreateChoreCardRequest,
   CreateChoreCardTemplateRequest,
   InvitationResponse,
+  ShopItemRequest,
+  ShopItemResponse,
+  ShopPurchaseResponse,
   SeasonResponse,
   SeasonResultResponse,
   TeamMemberResponse,
@@ -459,6 +462,87 @@ export class ChoreStoreService {
     } catch (err) {
       this._error.set(friendlyError(err));
       return false;
+    }
+  }
+
+  // Shop. Admin-only calls are server-enforced. Mutations return the result, or null/false on failure.
+  async loadShopItems(): Promise<ShopItemResponse[] | null> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return null;
+    this._error.set(null);
+    try {
+      return await firstValueFrom(this.api.getShopItems(teamId));
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return null;
+    }
+  }
+
+  async saveShopItem(itemId: string | null, request: ShopItemRequest): Promise<boolean> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return false;
+    this._error.set(null);
+    try {
+      await firstValueFrom(
+        itemId ? this.api.updateShopItem(teamId, itemId, request) : this.api.createShopItem(teamId, request),
+      );
+      return true;
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return false;
+    }
+  }
+
+  async deleteShopItem(itemId: string): Promise<boolean> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return false;
+    this._error.set(null);
+    try {
+      await firstValueFrom(this.api.deleteShopItem(teamId, itemId));
+      return true;
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return false;
+    }
+  }
+
+  // Spending gold changes the membership's balance, so user and leaderboard are reloaded.
+  async purchaseShopItem(itemId: string, quantity: number): Promise<boolean> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return false;
+    this._error.set(null);
+    try {
+      await firstValueFrom(this.api.purchaseShopItem(teamId, itemId, { quantity }));
+      const [, leaderboard] = await Promise.all([this.refreshMe(), firstValueFrom(this.api.getLeaderboard(teamId))]);
+      this._leaderboard.set(leaderboard);
+      return true;
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return false;
+    }
+  }
+
+  async loadShopPurchases(all: boolean): Promise<ShopPurchaseResponse[] | null> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return null;
+    this._error.set(null);
+    try {
+      return await firstValueFrom(this.api.getShopPurchases(teamId, all));
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return null;
+    }
+  }
+
+  async setPurchaseFulfilled(purchaseId: string, fulfilled: boolean): Promise<ShopPurchaseResponse | null> {
+    const teamId = this._selectedTeamId();
+    if (!teamId) return null;
+    this._error.set(null);
+    try {
+      return await firstValueFrom(this.api.setPurchaseFulfilled(teamId, purchaseId, { fulfilled }));
+    } catch (err) {
+      this._error.set(friendlyError(err));
+      return null;
     }
   }
 

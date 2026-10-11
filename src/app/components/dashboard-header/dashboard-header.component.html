@@ -72,9 +72,14 @@
       <span class="coin" aria-hidden="true"></span>
       <span class="gold-value">{{ membership()?.gold ?? 0 }}</span>
     </div>
+    <button type="button" class="logout-btn" (click)="shopOpen.set(true)">🛍 {{ t('shop.open') }}</button>
     <button type="button" class="logout-btn" (click)="logout()">{{ t('common.signOut') }}</button>
   </div>
 </header>
+
+@if (shopOpen()) {
+  <app-shop-dialog (closed)="shopOpen.set(false)" />
+}
 
 @if (profileDialogOpen()) {
   <app-profile-dialog (closed)="closeProfileDialog()" />

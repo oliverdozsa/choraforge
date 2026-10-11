@@ -1,0 +1,131 @@
+<ng-container *transloco="let t">
+<app-dialog [title]="t('shop.title')" (closed)="onShopClosed()">
+  <div class="shop">
+    <div class="balance" [attr.aria-label]="t('common.goldAria', { count: gold() })">
+      <span class="coin" aria-hidden="true"></span>
+      <span class="balance-value">{{ gold() }}</span>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" [attr.aria-selected]="tab() === 'items'" [class.active]="tab() === 'items'" (click)="setTab('items')">{{ t('shop.tabItems') }}</button>
+      <button type="button" role="tab" [attr.aria-selected]="tab() === 'mine'" [class.active]="tab() === 'mine'" (click)="setTab('mine')">{{ t('shop.tabMine') }}</button>
+      <button *ngIf="isTeamAdmin()" type="button" role="tab" [attr.aria-selected]="tab() === 'orders'" [class.active]="tab() === 'orders'" (click)="setTab('orders')">
+        {{ t('shop.tabOrders') }}<span class="badge" *ngIf="openOrders().length">{{ openOrders().length }}</span>
+      </button>
+    </div>
+
+    <p class="muted" *ngIf="loading()">{{ t('common.loading') }}</p>
+    <p class="form-error" *ngIf="formError() as err">{{ t(err) }}</p>
+    <p class="notice" *ngIf="notice() as msg">{{ t(msg) }}</p>
+
+    <!-- Items -->
+    <section *ngIf="tab() === 'items' && !loading()">
+      <button *ngIf="isTeamAdmin() && !formOpen()" type="button" class="btn add" (click)="openForm()">{{ t('shop.addItem') }}</button>
+
+      <form *ngIf="formOpen()" class="item-form" (ngSubmit)="saveItem()">
+        <label>{{ t('shop.name') }}
+          <input type="text" name="name" [(ngModel)]="name" autocomplete="off" />
+        </label>
+        <div class="two">
+          <label>{{ t('shop.price') }}
+            <input type="number" name="price" min="0" step="1" [(ngModel)]="price" />
+          </label>
+          <label>{{ t('shop.stock') }}
+            <input type="number" name="stock" min="0" step="1" [placeholder]="t('shop.unlimited')" [(ngModel)]="stock" />
+          </label>
+        </div>
+        <label>{{ t('shop.imageUrl') }} <span class="muted">({{ t('common.optional') }})</span>
+          <input type="url" name="imageUrl" placeholder="https://" [(ngModel)]="imageUrl" autocomplete="off" />
+        </label>
+        <div class="two">
+          <button type="submit" class="btn" [disabled]="saving()">{{ saving() ? t('common.saving') : t('common.save') }}</button>
+          <button type="button" class="btn ghost" (click)="closeForm()">{{ t('common.cancel') }}</button>
+        </div>
+      </form>
+
+      <p class="muted" *ngIf="!items().length">{{ t('shop.empty') }}</p>
+      <ul class="item-list">
+        <li *ngFor="let item of items()" class="item" [class.sold-out]="soldOut(item)">
+          <button *ngIf="item.imageUrl" type="button" class="thumb-btn" [attr.aria-label]="t('shop.enlargeAria', { name: item.name })" (click)="previewItem.set(item)">
+            <img class="thumb" [src]="item.imageUrl" alt="" loading="lazy" />
+          </button>
+          <span *ngIf="!item.imageUrl" class="thumb placeholder" aria-hidden="true">🛍</span>
+          <div class="info">
+            <span class="item-name">{{ item.name }}</span>
+            <span class="muted">
+              <span class="price">{{ item.price }}</span> {{ t('common.gold') }}
+              · {{ soldOut(item) ? t('shop.soldOut') : item.stock !== undefined && item.stock !== null ? t('shop.inStock', { count: item.stock }) : t('shop.unlimited') }}
+            </span>
+          </div>
+          <div class="actions">
+            <ng-container *ngIf="!soldOut(item)">
+              <input
+                type="number"
+                class="qty"
+                min="1"
+                step="1"
+                [attr.max]="maxQuantity(item)"
+                [attr.aria-label]="t('shop.quantity')"
+                [ngModel]="quantity(item)"
+                (ngModelChange)="setQuantity(item, $event)"
+              />
+              <button type="button" class="btn" [disabled]="saving() || !canAfford(item)" [title]="canAfford(item) ? '' : t('shop.notEnough')" (click)="buy(item)">
+                {{ t('shop.buy', { total: total(item) }) }}
+              </button>
+            </ng-container>
+            <ng-container *ngIf="isTeamAdmin()">
+              <button type="button" class="icon-btn" [attr.aria-label]="t('shop.editAria', { name: item.name })" (click)="openForm(item)">✎</button>
+              <button type="button" class="icon-btn" [attr.aria-label]="t('shop.deleteAria', { name: item.name })" (click)="deletingItem.set(item)">🗑</button>
+            </ng-container>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- My purchases -->
+    <section *ngIf="tab() === 'mine' && !loading()">
+      <p class="muted" *ngIf="!myPurchases().length">{{ t('shop.noPurchases') }}</p>
+      <ul class="order-list">
+        <li *ngFor="let p of myPurchases()">
+          <div class="info">
+            <span class="item-name">{{ p.quantity }}× {{ p.itemName }}</span>
+            <span class="muted">{{ p.totalPrice }} {{ t('common.gold') }} · {{ p.createdAt | localizedDate: t('formats.dueDate') }}</span>
+          </div>
+          <span class="status" [class.done]="p.fulfilled">{{ p.fulfilled ? t('shop.fulfilled') : t('shop.pending') }}</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Orders (admins) -->
+    <section *ngIf="tab() === 'orders' && isTeamAdmin() && !loading()">
+      <p class="muted" *ngIf="!orders().length">{{ t('shop.noOrders') }}</p>
+      <ul class="order-list">
+        <li *ngFor="let p of openOrders().concat(doneOrders())">
+          <div class="info">
+            <span class="item-name">{{ p.quantity }}× {{ p.itemName }}</span>
+            <span class="muted">
+              {{ memberNames().get(p.userId) ?? t('common.unknown') }} · {{ p.totalPrice }} {{ t('common.gold') }} · {{ p.createdAt | localizedDate: t('formats.dueDate') }}
+            </span>
+          </div>
+          <button type="button" class="btn" [class.ghost]="p.fulfilled" [disabled]="saving()" (click)="toggleFulfilled(p)">
+            {{ p.fulfilled ? t('shop.markPending') : t('shop.markFulfilled') }}
+          </button>
+        </li>
+      </ul>
+    </section>
+  </div>
+</app-dialog>
+
+<app-dialog *ngIf="previewItem() as item" [title]="item.name" (closed)="previewItem.set(null)">
+  <img class="preview" [src]="item.imageUrl" [alt]="item.name" />
+</app-dialog>
+
+<app-confirm-dialog
+  *ngIf="deletingItem() as item"
+  [title]="t('shop.deleteTitle')"
+  [message]="t('shop.deleteMessage', { name: item.name })"
+  [confirming]="saving()"
+  (confirmed)="confirmDelete()"
+  (cancelled)="deletingItem.set(null)"
+/>
+</ng-container>

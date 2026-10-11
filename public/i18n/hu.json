@@ -214,7 +214,10 @@
     "wholeNumber": "Adj meg egy egész számot, 0 vagy nagyobbat.",
     "extendSeason": "Nem sikerült meghosszabbítani a szezont.",
     "seasonLength": "Nem sikerült menteni a szezon hosszát.",
-    "endSeason": "Nem sikerült lezárni a szezont."
+    "endSeason": "Nem sikerült lezárni a szezont.",
+    "purchase": "A vásárlás nem sikerült.",
+    "saveItem": "A termék mentése nem sikerült.",
+    "deleteItem": "A termék eltávolítása nem sikerült."
   },
   "enums": {
     "rarity": {
@@ -280,5 +283,45 @@
       "extendRange": "Adj meg egész napot 1 és 365 között.",
       "lengthRange": "Adj meg egész napot 7 és 365 között."
     }
+  },
+  "shop": {
+    "title": "Bolt",
+    "open": "Bolt",
+    "tabItems": "Bolt",
+    "tabMine": "Vásárlásaim",
+    "tabOrders": "Rendelések",
+    "addItem": "+ Termék hozzáadása",
+    "name": "Név",
+    "price": "Ár (arany)",
+    "stock": "Készlet",
+    "unlimited": "Korlátlan",
+    "imageUrl": "Kép URL-je",
+    "empty": "A bolt üres.",
+    "soldOut": "Elfogyott",
+    "inStock": "{count} db készleten",
+    "quantity": "Mennyiség",
+    "buy": "Vásárlás · {total}",
+    "notEnough": "Nincs elég aranyad",
+    "editAria": "{name} szerkesztése",
+    "deleteAria": "{name} törlése",
+    "deleteTitle": "Termék törlése",
+    "deleteMessage": "Eltávolítod a(z) „{name}” terméket a boltból? A korábbi vásárlások megmaradnak.",
+    "noPurchases": "Még nem vásároltál semmit.",
+    "noOrders": "Még senki nem vásárolt semmit.",
+    "pending": "Átadásra vár",
+    "fulfilled": "Átadva",
+    "markFulfilled": "Megjelölés átadottként",
+    "markPending": "Visszavonás",
+    "purchased": "Sikeres vásárlás. Visszatérítés nincs.",
+    "itemSaved": "Termék mentve.",
+    "itemDeleted": "Termék eltávolítva.",
+    "errors": {
+      "nameRequired": "A név kötelező.",
+      "priceInvalid": "Adj meg egész árat, 0 vagy több.",
+      "stockInvalid": "A készlet egész szám legyen, 0 vagy több, vagy hagyd üresen a korlátlanhoz.",
+      "imageInvalid": "A kép URL-je http:// vagy https:// kezdetű legyen.",
+      "overStock": "Nincs elég készlet ennyihez."
+    },
+    "enlargeAria": "{name} képének nagyítása"
   }
 }

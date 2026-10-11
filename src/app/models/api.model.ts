@@ -249,3 +249,43 @@ export interface SetSeasonLengthRequest {
 export interface ExtendSeasonRequest {
   days: number;
 }
+
+export interface ShopItemResponse {
+  id: string;
+  teamId: string;
+  name: string;
+  price: number;
+  /** Absent when the stock is unlimited. */
+  stock?: number;
+  imageUrl?: string;
+  createdAt: string;
+}
+
+export interface ShopItemRequest {
+  name: string;
+  price: number;
+  stock?: number;
+  imageUrl?: string;
+}
+
+export interface PurchaseRequest {
+  quantity: number;
+}
+
+export interface ShopPurchaseResponse {
+  id: string;
+  teamId: string;
+  userId: string;
+  itemId: string;
+  itemName: string;
+  unitPrice: number;
+  quantity: number;
+  totalPrice: number;
+  fulfilled: boolean;
+  fulfilledAt?: string;
+  createdAt: string;
+}
+
+export interface SetFulfilledRequest {
+  fulfilled: boolean;
+}

@@ -19,6 +19,11 @@ import {
   InvitationResponse,
   AssignRoleRequest,
   PagedResponse,
+  PurchaseRequest,
+  SetFulfilledRequest,
+  ShopItemRequest,
+  ShopItemResponse,
+  ShopPurchaseResponse,
   SetGoldRequest,
   TeamMemberResponse,
   TeamResponse,
@@ -181,5 +186,43 @@ export class ApiService {
 
   deleteCardTemplate(templateId: string): Observable<void> {
     return this.http.delete<void>(`${this.base}/card-templates/${templateId}`);
+  }
+
+  getShopItems(teamId: string): Observable<ShopItemResponse[]> {
+    return this.http.get<ShopItemResponse[]>(`${this.base}/teams/${teamId}/shop/items`);
+  }
+
+  createShopItem(teamId: string, request: ShopItemRequest): Observable<ShopItemResponse> {
+    return this.http.post<ShopItemResponse>(`${this.base}/teams/${teamId}/shop/items`, request);
+  }
+
+  updateShopItem(teamId: string, itemId: string, request: ShopItemRequest): Observable<ShopItemResponse> {
+    return this.http.put<ShopItemResponse>(`${this.base}/teams/${teamId}/shop/items/${itemId}`, request);
+  }
+
+  deleteShopItem(teamId: string, itemId: string): Observable<unknown> {
+    return this.http.delete<unknown>(`${this.base}/teams/${teamId}/shop/items/${itemId}`);
+  }
+
+  purchaseShopItem(teamId: string, itemId: string, request: PurchaseRequest): Observable<ShopPurchaseResponse> {
+    return this.http.post<ShopPurchaseResponse>(`${this.base}/teams/${teamId}/shop/items/${itemId}/purchase`, request);
+  }
+
+  /** With `all`, admins get every member's purchases instead of just their own. */
+  getShopPurchases(teamId: string, all = false): Observable<ShopPurchaseResponse[]> {
+    return this.http.get<ShopPurchaseResponse[]>(`${this.base}/teams/${teamId}/shop/purchases`, {
+      params: { all },
+    });
+  }
+
+  setPurchaseFulfilled(
+    teamId: string,
+    purchaseId: string,
+    request: SetFulfilledRequest,
+  ): Observable<ShopPurchaseResponse> {
+    return this.http.put<ShopPurchaseResponse>(
+      `${this.base}/teams/${teamId}/shop/purchases/${purchaseId}/fulfilled`,
+      request,
+    );
   }
 }
