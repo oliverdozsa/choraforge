@@ -1,7 +1,10 @@
 @if (!isAuthenticated()) {
   <app-login />
 } @else if (loading() && !hasTeam()) {
-  <div class="loading-shell">{{ 'app.loading' | transloco }}</div>
+  <div class="loading-shell">
+    <app-logo class="pulse" variant="mark" [size]="72" aria-hidden="true" />
+    <span>{{ 'app.loading' | transloco }}</span>
+  </div>
 } @else if (!hasTeam()) {
   <app-team-setup />
 } @else {

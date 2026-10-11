@@ -3,6 +3,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
 import { LeaderboardSidebarComponent } from './components/leaderboard-sidebar/leaderboard-sidebar.component';
 import { QuestBoardComponent } from './components/quest-board/quest-board.component';
+import { LogoComponent } from './components/logo/logo.component';
 import { LoginComponent } from './components/login/login.component';
 import { TeamSetupComponent } from './components/team-setup/team-setup.component';
 import { CardTemplatesComponent } from './components/card-templates/card-templates.component';
@@ -20,6 +21,7 @@ import { ChoreStoreService } from './services/chore-store.service';
     LoginComponent,
     TeamSetupComponent,
     CardTemplatesComponent,
+    LogoComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

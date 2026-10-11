@@ -21,6 +21,31 @@
   min-width: 0;
 }
 
+.brand-logo {
+  flex: none;
+}
+
+.brand-mark {
+  display: none;
+}
+
+.brand-divider {
+  flex: none;
+  align-self: stretch;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 719.98px) {
+  .brand-lockup {
+    display: none;
+  }
+
+  .brand-mark {
+    display: inline-block;
+  }
+}
+
 .avatar-menu-anchor {
   position: relative;
   flex-shrink: 0;

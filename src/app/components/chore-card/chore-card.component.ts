@@ -15,6 +15,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { CardStatus, ChoreCardResponse, Rarity } from '../../models/api.model';
+import { LogoComponent } from '../logo/logo.component';
 import { LocalizedDatePipe } from '../../pipes/localized-date.pipe';
 import { ChoreStoreService } from '../../services/chore-store.service';
 
@@ -31,7 +32,7 @@ const BADGE_STATUSES: readonly CardStatus[] = ['CLAIMED', 'COMPLETED', 'VERIFIED
 @Component({
   selector: 'app-chore-card',
   standalone: true,
-  imports: [CommonModule, TranslocoPipe, LocalizedDatePipe],
+  imports: [CommonModule, TranslocoPipe, LocalizedDatePipe, LogoComponent],
   templateUrl: './chore-card.component.html',
   styleUrl: './chore-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

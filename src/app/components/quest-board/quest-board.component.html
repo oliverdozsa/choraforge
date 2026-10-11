@@ -88,7 +88,7 @@
     </div>
     <ng-template #emptyHand>
       <div class="empty-hand">
-        <div class="empty-slot" aria-hidden="true"><span class="slot-diamond"></span></div>
+        <div class="empty-slot" aria-hidden="true"><app-logo tone="mono" [size]="48" /></div>
         <div class="empty-copy">
           <h3>{{ t('board.emptyHandTitle') }}</h3>
           <p>{{ t('board.emptyHandText') }}</p>

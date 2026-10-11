@@ -7,12 +7,13 @@ import { AuthService } from '../../services/auth.service';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
 import { AppDialogComponent } from '../app-dialog/app-dialog.component';
 import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.component';
+import { LogoComponent } from '../logo/logo.component';
 import { TeamSetupComponent } from '../team-setup/team-setup.component';
 
 @Component({
   selector: 'app-dashboard-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoDirective, TranslocoPipe, LanguageSwitcherComponent, AppDialogComponent, ProfileDialogComponent, TeamSetupComponent],
+  imports: [CommonModule, FormsModule, TranslocoDirective, TranslocoPipe, LanguageSwitcherComponent, AppDialogComponent, ProfileDialogComponent, TeamSetupComponent, LogoComponent],
   templateUrl: './dashboard-header.component.html',
   styleUrl: './dashboard-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

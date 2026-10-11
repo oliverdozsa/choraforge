@@ -424,25 +424,7 @@
 }
 
 .emblem {
-  position: relative;
-  width: 54px;
-  height: 54px;
-
-  span {
-    position: absolute;
-    transform: rotate(45deg);
-  }
-
-  .emblem-ring {
-    inset: 6px;
-    border: 1.5px solid var(--r);
-  }
-
-  .emblem-core {
-    inset: 15px;
-    background: var(--r);
-    box-shadow: 0 0 16px var(--r);
-  }
+  flex: none;
 }
 
 .wordmark {

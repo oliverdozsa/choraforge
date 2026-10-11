@@ -1,0 +1,71 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="Choragon"
+  [attr.viewBox]="viewBox()"
+  [attr.width]="width()"
+  [attr.height]="size()"
+>
+  @if (!isMono()) {
+    <defs>
+      <linearGradient [attr.id]="'gGold-' + uid" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#fff1c4" />
+        <stop offset=".25" stop-color="#b9852a" />
+        <stop offset=".5" stop-color="#f2c75c" />
+        <stop offset=".78" stop-color="#6e4a14" />
+        <stop offset="1" stop-color="#ffe9a8" />
+      </linearGradient>
+      <linearGradient [attr.id]="'gGoldV-' + uid" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fff3cc" />
+        <stop offset=".48" stop-color="#f2c75c" />
+        <stop offset=".52" stop-color="#a8752a" />
+        <stop offset="1" stop-color="#ffe08a" />
+      </linearGradient>
+      <radialGradient [attr.id]="'gInk-' + uid" cx=".5" cy=".3" r=".8">
+        <stop offset="0" stop-color="#2a2434" />
+        <stop offset="1" stop-color="#100e15" />
+      </radialGradient>
+    </defs>
+  }
+
+  <g [attr.transform]="isLockup() ? 'scale(.5)' : null">
+    <!-- Frame: hexagonal ring (outer minus inner) so a transparent panel shows through in mono. -->
+    <path
+      fill-rule="evenodd"
+      d="M60 4 108.5 32 108.5 88 60 116 11.5 88 11.5 32ZM60 13 100.7 36.5 100.7 83.5 60 107 19.3 83.5 19.3 36.5Z"
+      [attr.fill]="isMono() ? 'currentColor' : gold"
+    />
+    <polygon
+      points="60,13 100.7,36.5 100.7,83.5 60,107 19.3,83.5 19.3,36.5"
+      [attr.fill]="isMono() ? 'transparent' : ink"
+    />
+    <polygon
+      points="60,18 96.4,39 96.4,81 60,102 23.6,81 23.6,39"
+      fill="none"
+      [attr.stroke]="isMono() ? 'currentColor' : '#f2c75c'"
+      stroke-width="1"
+      opacity=".55"
+    />
+    <g class="gem" stroke-width=".8" stroke-linejoin="round" [attr.stroke]="isMono() ? 'none' : 'rgba(255,255,255,.2)'">
+      <polygon points="36,50 46,38 53,50" [attr.fill]="isMono() ? 'currentColor' : '#8fb8ff'" [attr.fill-opacity]="isMono() ? .7 : null" />
+      <polygon points="46,38 74,38 67,50 53,50" [attr.fill]="isMono() ? 'currentColor' : '#d6e6ff'" [attr.fill-opacity]="isMono() ? .95 : null" />
+      <polygon points="74,38 84,50 67,50" [attr.fill]="isMono() ? 'currentColor' : '#5b8cf0'" [attr.fill-opacity]="isMono() ? .6 : null" />
+      <polygon points="36,50 53,50 60,84" [attr.fill]="isMono() ? 'currentColor' : '#2d4fa8'" [attr.fill-opacity]="isMono() ? .8 : null" />
+      <polygon points="53,50 67,50 60,84" [attr.fill]="isMono() ? 'currentColor' : '#4a74d6'" [attr.fill-opacity]="isMono() ? .55 : null" />
+      <polygon points="67,50 84,50 60,84" [attr.fill]="isMono() ? 'currentColor' : '#1d356f'" [attr.fill-opacity]="isMono() ? .9 : null" />
+    </g>
+    <path
+      class="sparkle"
+      d="M82 27 L83.4 31.6 L88 33 L83.4 34.4 L82 39 L80.6 34.4 L76 33 L80.6 31.6Z"
+      [attr.fill]="isMono() ? 'currentColor' : '#ffffff'"
+    />
+    <polygon points="11.5,54 16,60 11.5,66 7,60" [attr.fill]="isMono() ? 'currentColor' : '#fff1c4'" />
+    <polygon points="108.5,54 113,60 108.5,66 104,60" [attr.fill]="isMono() ? 'currentColor' : '#fff1c4'" />
+  </g>
+
+  @if (isLockup()) {
+    <g transform="translate(72 10) scale(.8)">
+      <path [attr.d]="wordmarkPath" [attr.fill]="isMono() ? 'currentColor' : goldV" />
+    </g>
+  }
+</svg>

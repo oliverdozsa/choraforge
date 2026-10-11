@@ -1,0 +1,53 @@
+:host {
+  display: inline-block;
+  line-height: 0;
+}
+
+svg {
+  display: block;
+  overflow: visible;
+}
+
+.sparkle {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Parent opts in with class="twinkle" (top bar lockup). */
+:host(.twinkle:hover) .sparkle {
+  animation: twinkle 600ms ease-out;
+}
+
+/* Parent opts in with class="pulse" (loading screen). */
+:host(.pulse) .gem {
+  animation: gem-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  45% {
+    transform: scale(1.9);
+    opacity: 0.6;
+  }
+}
+
+@keyframes gem-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host(.twinkle:hover) .sparkle,
+  :host(.pulse) .gem {
+    animation: none;
+  }
+}

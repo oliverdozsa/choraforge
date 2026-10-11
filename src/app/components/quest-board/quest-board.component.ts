@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
+import { LogoComponent } from '../logo/logo.component';
 import { ChoreCardComponent } from '../chore-card/chore-card.component';
 import { CompletionModalComponent } from '../completion-modal/completion-modal.component';
 import { CardDraft } from '../card-designer/card-designer.component';
@@ -21,6 +22,7 @@ const ACTIVITY_STATUSES: readonly CardStatus[] = ['CLAIMED', 'COMPLETED', 'VERIF
     CardDesignerModalComponent,
     ConfirmDialogComponent,
     TranslocoDirective,
+    LogoComponent,
   ],
   templateUrl: './quest-board.component.html',
   styleUrl: './quest-board.component.scss',
