@@ -8,6 +8,10 @@
 
     <div class="login-lang"><app-language-switcher /></div>
 
+    @if (notice(); as n) {
+      <p class="sdk-error" role="alert">{{ (n === 'expired' ? 'login.sessionExpired' : 'login.signInFailed') | transloco }}</p>
+    }
+
     @if (sdkError()) {
       <p class="sdk-error">{{ 'login.sdkError' | transloco }}</p>
     }

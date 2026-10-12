@@ -286,8 +286,13 @@ export class ChoreStoreService {
   }
 
   logout(): void {
-    this.stopRewardPolling();
     this.auth.logout();
+    this.reset();
+  }
+
+  /** Drops all loaded data and stops polling, without touching the auth state. */
+  reset(): void {
+    this.stopRewardPolling();
     this._currentUser.set(null);
     this._selectedTeamId.set(null);
     this._cards.set([]);

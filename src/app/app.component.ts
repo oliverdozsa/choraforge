@@ -53,6 +53,9 @@ export class AppComponent {
     effect(() => {
       if (this.auth.isAuthenticated()) {
         untracked(() => this.store.bootstrap());
+      } else {
+        // Also covers a session the backend rejected mid-use: stop polling and drop team data.
+        untracked(() => this.store.reset());
       }
     });
   }

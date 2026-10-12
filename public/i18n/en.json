@@ -39,7 +39,9 @@
   },
   "login": {
     "tagline": "Turn chores into quests. Claim cards, earn XP, level up your team.",
-    "sdkError": "Couldn’t load Google Sign-In. Check your connection and refresh."
+    "sdkError": "Couldn’t load Google Sign-In. Check your connection and refresh.",
+    "sessionExpired": "Your session has ended. Please sign in again.",
+    "signInFailed": "Couldn’t sign you in. Check your connection and try again."
   },
   "header": {
     "accountMenu": "Account menu",

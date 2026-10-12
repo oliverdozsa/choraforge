@@ -27,6 +27,7 @@ export class LoginComponent implements AfterViewInit {
   readonly buttonHost = viewChild.required<ElementRef<HTMLDivElement>>('buttonHost');
 
   readonly sdkError = signal(false);
+  readonly notice = this.auth.notice;
   readonly isDevMode = isDevMode();
   devEmail = '';
 

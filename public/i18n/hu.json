@@ -39,7 +39,9 @@
   },
   "login": {
     "tagline": "Alakítsd át a munkát küldetésekké. Vállalj kártyákat, szerezz XP-t, fejleszd a csapatod!",
-    "sdkError": "Nem sikerült betölteni a Google-bejelentkezést. Ellenőrizd a kapcsolatot, és frissítsd az oldalt."
+    "sdkError": "Nem sikerült betölteni a Google-bejelentkezést. Ellenőrizd a kapcsolatot, és frissítsd az oldalt.",
+    "sessionExpired": "A munkamenet lejárt. Jelentkezz be újra!",
+    "signInFailed": "Nem sikerült a bejelentkezés. Ellenőrizd a kapcsolatot, és próbáld újra."
   },
   "header": {
     "accountMenu": "Fiókmenü",
