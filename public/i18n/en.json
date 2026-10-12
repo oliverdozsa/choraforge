@@ -1,6 +1,8 @@
 {
   "app": {
-    "loading": "Loading your profile…"
+    "loading": "Loading your profile…",
+    "updateReady": "A new version is ready.",
+    "reload": "Reload"
   },
   "language": {
     "label": "Language",

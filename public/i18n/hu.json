@@ -1,6 +1,8 @@
 {
   "app": {
-    "loading": "A profilod betöltése…"
+    "loading": "A profilod betöltése…",
+    "updateReady": "Elérhető egy új verzió.",
+    "reload": "Újratöltés"
   },
   "language": {
     "label": "Nyelv",

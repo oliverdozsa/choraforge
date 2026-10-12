@@ -20,3 +20,10 @@
     </div>
   </div>
 }
+
+@if (updateReady()) {
+  <div class="update-banner" role="status">
+    <span>{{ 'app.updateReady' | transloco }}</span>
+    <button type="button" (click)="reload()">{{ 'app.reload' | transloco }}</button>
+  </div>
+}

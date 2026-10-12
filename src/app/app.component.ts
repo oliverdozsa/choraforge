@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component, effect, inject, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal, untracked } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
+import { filter } from 'rxjs';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
 import { LeaderboardSidebarComponent } from './components/leaderboard-sidebar/leaderboard-sidebar.component';
@@ -34,12 +37,27 @@ export class AppComponent {
   readonly isAuthenticated = this.auth.isAuthenticated;
   readonly hasTeam = this.store.hasTeam;
   readonly loading = this.store.loading;
+  readonly updateReady = signal(false);
 
   constructor() {
+    const swUpdate = inject(SwUpdate);
+    if (swUpdate.isEnabled) {
+      swUpdate.versionUpdates
+        .pipe(
+          filter((e): e is VersionReadyEvent => e.type === 'VERSION_READY'),
+          takeUntilDestroyed(),
+        )
+        .subscribe(() => this.updateReady.set(true));
+    }
+
     effect(() => {
       if (this.auth.isAuthenticated()) {
         untracked(() => this.store.bootstrap());
       }
     });
+  }
+
+  reload(): void {
+    document.location.reload();
   }
 }
