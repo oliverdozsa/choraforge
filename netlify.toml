@@ -1,0 +1,23 @@
+[build]
+  command = "npm run build"
+  publish = "dist/choragon/browser"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA fallback so deep links work on reload.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# The service worker and its manifest must never be served stale.
+[[headers]]
+  for = "/ngsw.json"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/ngsw-worker.js"
+  [headers.values]
+    Cache-Control = "no-cache"
