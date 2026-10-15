@@ -1,7 +1,7 @@
 <svg
   xmlns="http://www.w3.org/2000/svg"
   role="img"
-  aria-label="Choragon"
+  aria-label="ChoraForge"
   [attr.viewBox]="viewBox()"
   [attr.width]="width()"
   [attr.height]="size()"
@@ -64,8 +64,9 @@
   </g>
 
   @if (isLockup()) {
-    <g transform="translate(72 10) scale(.8)">
-      <path [attr.d]="wordmarkPath" [attr.fill]="isMono() ? 'currentColor' : goldV" />
+    <g transform="translate(72 10) scale(.75)">
+      <path [attr.d]="wordmarkChoraPath" [attr.fill]="isMono() ? 'currentColor' : '#f4ecd8'" />
+      <path [attr.d]="wordmarkForgePath" [attr.fill]="isMono() ? 'currentColor' : goldV" />
     </g>
   }
 </svg>

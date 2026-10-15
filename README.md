@@ -1,4 +1,4 @@
-# Choragon
+# ChoraForge
 
 Web frontend for a gamified household chore tracker. Teams (a household, a flat
 share) post chores as collectible **cards** with a rarity, XP and gold rewards.
