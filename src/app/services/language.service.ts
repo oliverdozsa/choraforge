@@ -7,7 +7,7 @@ export type Lang = 'en' | 'hu';
 
 export const SUPPORTED_LANGS: readonly Lang[] = ['en', 'hu'];
 
-const LANG_KEY = 'choragon.lang';
+const LANG_KEY = 'choraforge.lang';
 
 registerLocaleData(localeHu, 'hu');
 

@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "choragon": {
+    "choraforge": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -42,7 +42,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/choragon",
+            "outputPath": "dist/choraforge",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -105,10 +105,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "choragon:build:production"
+              "buildTarget": "choraforge:build:production"
             },
             "development": {
-              "buildTarget": "choragon:build:development"
+              "buildTarget": "choraforge:build:development"
             }
           },
           "defaultConfiguration": "development"

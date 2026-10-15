@@ -33,7 +33,7 @@ export interface RewardBatch {
 }
 
 const REWARD_POLL_INTERVAL_MS = 15000;
-const SELECTED_TEAM_KEY_PREFIX = 'choragon_selected_team_';
+const SELECTED_TEAM_KEY_PREFIX = 'choraforge_selected_team_';
 
 function loadSelectedTeamId(userId: string): string | null {
   try {

@@ -4,8 +4,8 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { GoogleCredentialResponse } from '../models/google-identity';
 
-const SESSION_KEY = 'choragon_session';
-const DEV_USER_KEY = 'choragon_dev_user';
+const SESSION_KEY = 'choraforge_session';
+const DEV_USER_KEY = 'choraforge_dev_user';
 const SESSION_URL = `${environment.apiBaseUrl}/api/v1/auth/session`;
 
 export interface AuthProfile {
