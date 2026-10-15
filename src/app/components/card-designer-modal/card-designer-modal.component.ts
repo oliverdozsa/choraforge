@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardDesignerComponent, CardDraft } from '../card-designer/card-designer.component';
 import { ChoreCardTemplateResponse } from '../../models/api.model';
@@ -19,13 +19,4 @@ export class CardDesignerModalComponent {
   @Input() initial?: CardDraft;
   @Output() save = new EventEmitter<CardDraft>();
   @Output() cancelled = new EventEmitter<void>();
-
-  @HostListener('document:keydown.escape')
-  onEscape(): void {
-    this.cancelled.emit();
-  }
-
-  onBackdropClick(): void {
-    this.cancelled.emit();
-  }
 }
