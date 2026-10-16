@@ -8,6 +8,7 @@
   flex-direction: column;
   gap: 16px;
   width: 230px;
+  zoom: 1.25;
   font-family: var(--font-ui);
 }
 
@@ -44,6 +45,10 @@
   &:focus-visible {
     outline-offset: 4px;
   }
+
+  &:hover {
+    --zoom: 1.1;
+  }
 }
 
 .flipper {
@@ -53,7 +58,7 @@
   height: 380px;
   transform-style: preserve-3d;
   transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
-  transform: rotateX(var(--rx)) rotateY(calc(var(--ry) + var(--flip)));
+  transform: scale(var(--zoom, 1)) rotateX(var(--rx)) rotateY(calc(var(--ry) + var(--flip)));
 
   &.flipped {
     --flip: 180deg;
@@ -600,5 +605,9 @@
 
   .flipper {
     transition: none;
+  }
+
+  .stage:hover {
+    --zoom: 1;
   }
 }
