@@ -114,7 +114,7 @@
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 230px);
+  grid-template-columns: repeat(auto-fill, 275px);
   gap: 24px 22px;
 }
 
@@ -196,8 +196,8 @@
 
 .empty-slot {
   flex: none;
-  width: 230px;
-  height: 380px;
+  width: 253px;
+  height: 418px;
   display: grid;
   place-items: center;
   border-radius: 14px;
