@@ -46,8 +46,10 @@
     outline-offset: 4px;
   }
 
-  &:hover {
-    --zoom: 1.2;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      --zoom: 1.2;
+    }
   }
 }
 
