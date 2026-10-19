@@ -28,6 +28,7 @@
     submitLabel="designer.saveTemplate"
     [submitting]="submitting()"
     [previewTeamId]="selectedTeamId() ?? ''"
+    [members]="members()"
     (save)="save($event)"
     (cancelled)="cancel()"
   />
@@ -37,6 +38,7 @@
     submitLabel="designer.saveChanges"
     [submitting]="editingSubmitting()"
     [previewTeamId]="selectedTeamId() ?? ''"
+    [members]="members()"
     [initial]="asDraft(template)"
     (save)="saveEdited($event)"
     (cancelled)="cancelEditing()"

@@ -139,8 +139,14 @@ export class ChoreCardComponent implements AfterViewInit, OnDestroy {
     return RARITY_TIER[this.card.rarity] ?? 1;
   }
 
+  /** The user-specific image when the backend resolved one, otherwise the default image. */
+  get artUrl(): string | undefined {
+    return this.card.resolvedImageUrl || this.card.imageUrl;
+  }
+
   get showArt(): boolean {
-    return !!this.card.imageUrl && this.failedArtUrl() !== this.card.imageUrl;
+    const url = this.artUrl;
+    return !!url && this.failedArtUrl() !== url;
   }
 
   /** Translation key for the status badge, or '' when the status has no badge. */
