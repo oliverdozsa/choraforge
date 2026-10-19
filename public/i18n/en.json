@@ -160,6 +160,7 @@
     "itemDrop": "Item Drop",
     "imageUrl": "Image URL",
     "imageTip": "(optional, use 4:3 aspect ratio for the best result)",
+    "memberImageUrl": "Image URL for {name}",
     "setDueDate": "Set a due date",
     "dueIn": "Due in",
     "unit": {

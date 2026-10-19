@@ -6,6 +6,7 @@
   submitLabel="designer.saveChanges"
   [submitting]="editingCardSubmitting()"
   [previewTeamId]="selectedTeamId() ?? ''"
+    [members]="members()"
   [initial]="asDraft(card)"
   (save)="saveEditedCard($event)"
   (cancelled)="cancelEditingCard()"
@@ -17,6 +18,7 @@
   [templates]="templates()"
   [submitting]="creatingCardSubmitting()"
   [previewTeamId]="selectedTeamId() ?? ''"
+    [members]="members()"
   (save)="createCard($event)"
   (cancelled)="cancelCreatingCard()"
 />

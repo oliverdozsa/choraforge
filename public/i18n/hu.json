@@ -160,6 +160,7 @@
     "itemDrop": "Zsákmány",
     "imageUrl": "Kép URL-je",
     "imageTip": "opcionális, használj 4:3 arányú képet a legjobb eredményhez",
+    "memberImageUrl": "Kép URL-je – {name}",
     "setDueDate": "Határidő megadása",
     "dueIn": "Határidő",
     "unit": {

@@ -42,6 +42,7 @@ export class QuestBoardComponent {
   readonly selectedTeamId = this.store.selectedTeamId;
   readonly activeRewards = this.store.activeRewards;
   readonly assignedUserNames = this.store.assignedUserNames;
+  readonly members = this.store.leaderboard;
 
   readonly creatingCard = signal(false);
   readonly creatingCardSubmitting = signal(false);
@@ -159,6 +160,7 @@ export class QuestBoardComponent {
       goldReward: card.goldReward,
       itemDrop: card.itemDrop,
       imageUrl: card.imageUrl,
+      userImageUrls: card.userImageUrls,
       dueDateIntervalHours: card.dueDateIntervalHours,
       recurrence: card.recurrence,
     };

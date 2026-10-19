@@ -58,6 +58,11 @@
       <input type="url" name="imageUrl" [(ngModel)]="imageUrl" maxlength="500" placeholder="https://…" />
     </label>
 
+    <label *ngFor="let member of members">
+      {{ t('designer.memberImageUrl', { name: member.name }) }} <span class="optional">({{ t('common.optional') }})</span>
+      <input type="url" [name]="'userImageUrl-' + member.userId" [(ngModel)]="userImageUrls[member.userId]" maxlength="500" placeholder="https://…" />
+    </label>
+
     <label class="checkbox-label">
       <input type="checkbox" name="hasDueDate" [(ngModel)]="hasDueDate" />
       {{ t('designer.setDueDate') }}

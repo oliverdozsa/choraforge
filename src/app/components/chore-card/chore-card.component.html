@@ -23,7 +23,7 @@
 
           <div class="art">
             @if (showArt) {
-              <img [src]="card.imageUrl" alt="" loading="lazy" (error)="failedArtUrl.set(card.imageUrl ?? null)" />
+              <img [src]="artUrl" alt="" loading="lazy" (error)="failedArtUrl.set(artUrl ?? null)" />
             } @else {
               <div class="art-placeholder">{{ 'card.questArt' | transloco }}</div>
             }

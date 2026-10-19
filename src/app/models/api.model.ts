@@ -43,6 +43,10 @@ export interface ChoreCardResponse {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  /** Per-user image URLs, keyed by user id. */
+  userImageUrls?: Record<string, string>;
+  /** Image to display for the requesting user: their user-specific image if set, else the default. */
+  resolvedImageUrl?: string;
   status: CardStatus;
   assignedUserId?: string;
   teamId: string;
@@ -157,6 +161,7 @@ export interface CreateChoreCardRequest {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  userImageUrls?: Record<string, string>;
   dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
 }
@@ -173,6 +178,7 @@ export interface ChoreCardTemplateResponse {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  userImageUrls?: Record<string, string>;
   createdAt: string;
   dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
@@ -189,6 +195,7 @@ export interface CreateChoreCardTemplateRequest {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  userImageUrls?: Record<string, string>;
   dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
 }
@@ -203,6 +210,7 @@ export interface UpdateChoreCardRequest {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  userImageUrls?: Record<string, string>;
   dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
 }
@@ -217,6 +225,7 @@ export interface UpdateChoreCardTemplateRequest {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  userImageUrls?: Record<string, string>;
   dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
 }

@@ -11,6 +11,7 @@ import {
   RecurrenceType,
   Rarity,
   ScheduleFrequency,
+  TeamMemberResponse,
 } from '../../models/api.model';
 
 export type DueDateUnit = 'HOURS' | 'DAYS';
@@ -25,6 +26,7 @@ export interface CardDraft {
   goldReward: number;
   itemDrop?: string;
   imageUrl?: string;
+  userImageUrls?: Record<string, string>;
   dueDateIntervalHours?: number;
   recurrence?: RecurrenceDto;
 }
@@ -43,6 +45,8 @@ export class CardDesignerComponent implements OnInit {
   /** Translation key of the submit button label. */
   @Input() submitLabel = 'common.save';
   @Input() previewTeamId = '';
+  /** Team members; each gets an optional user-specific image URL field. */
+  @Input() members: TeamMemberResponse[] = [];
   /** When set, the designer opens pre-filled for editing rather than creating a new card/template. */
   @Input() initial?: CardDraft;
   @Output() save = new EventEmitter<CardDraft>();
@@ -80,6 +84,7 @@ export class CardDesignerComponent implements OnInit {
   goldReward = 10;
   itemDrop = '';
   imageUrl = '';
+  userImageUrls: Record<string, string> = {};
 
   hasDueDate = false;
   dueDateAmount = 1;
@@ -119,6 +124,16 @@ export class CardDesignerComponent implements OnInit {
       dueDateIntervalHours: this.hasDueDate ? this.dueDateIntervalHours : undefined,
       recurrence: this.buildRecurrence(),
     };
+  }
+
+  /** Non-empty user image URLs, trimmed; always an object so clearing a field removes it on update. */
+  private buildUserImageUrls(): Record<string, string> {
+    const result: Record<string, string> = {};
+    for (const [userId, url] of Object.entries(this.userImageUrls)) {
+      const trimmed = url?.trim();
+      if (trimmed) result[userId] = trimmed;
+    }
+    return result;
   }
 
   toggleDay(day: DayOfWeek): void {
@@ -169,6 +184,7 @@ export class CardDesignerComponent implements OnInit {
     this.goldReward = draft.goldReward;
     this.itemDrop = draft.itemDrop ?? '';
     this.imageUrl = draft.imageUrl ?? '';
+    this.userImageUrls = { ...(draft.userImageUrls ?? {}) };
     this.applyDueDate(draft.dueDateIntervalHours);
     this.applyRecurrence(draft.recurrence);
   }
@@ -234,6 +250,7 @@ export class CardDesignerComponent implements OnInit {
       goldReward: this.goldReward,
       itemDrop: this.itemDrop || undefined,
       imageUrl: this.imageUrl || undefined,
+      userImageUrls: this.buildUserImageUrls(),
       dueDateIntervalHours: this.hasDueDate ? this.dueDateIntervalHours : undefined,
       recurrence: this.buildRecurrence(),
     });

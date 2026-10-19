@@ -22,6 +22,7 @@ export class CardTemplatesComponent {
   readonly templates = this.store.templates;
   readonly isTeamAdmin = this.store.isTeamAdmin;
   readonly selectedTeamId = this.store.selectedTeamId;
+  readonly members = this.store.leaderboard;
 
   readonly creating = signal(false);
   readonly submitting = signal(false);
@@ -54,6 +55,7 @@ export class CardTemplatesComponent {
       goldReward: template.goldReward,
       itemDrop: template.itemDrop,
       imageUrl: template.imageUrl,
+      userImageUrls: template.userImageUrls,
       dueDateIntervalHours: template.dueDateIntervalHours,
       recurrence: template.recurrence,
     };
