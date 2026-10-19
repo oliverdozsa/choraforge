@@ -60,7 +60,7 @@
 
     <label *ngFor="let member of members">
       {{ t('designer.memberImageUrl', { name: member.name }) }} <span class="optional">({{ t('common.optional') }})</span>
-      <input type="url" [name]="'userImageUrl-' + member.userId" [(ngModel)]="userImageUrls[member.userId]" maxlength="500" placeholder="https://…" />
+      <input type="url" [name]="'userImageUrl-' + member.userId" [(ngModel)]="userImageUrls[member.userId]" (focus)="focusedUserId = member.userId" (blur)="focusedUserId = null" maxlength="500" placeholder="https://…" />
     </label>
 
     <label class="checkbox-label">

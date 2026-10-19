@@ -85,6 +85,8 @@ export class CardDesignerComponent implements OnInit {
   itemDrop = '';
   imageUrl = '';
   userImageUrls: Record<string, string> = {};
+  /** Member whose image URL field has focus; the preview shows that member's image. */
+  focusedUserId: string | null = null;
 
   hasDueDate = false;
   dueDateAmount = 1;
@@ -119,6 +121,7 @@ export class CardDesignerComponent implements OnInit {
       goldReward: this.goldReward,
       itemDrop: this.itemDrop || undefined,
       imageUrl: this.imageUrl || undefined,
+      resolvedImageUrl: (this.focusedUserId && this.userImageUrls[this.focusedUserId]?.trim()) || undefined,
       status: 'AVAILABLE',
       createdAt: new Date().toISOString(),
       dueDateIntervalHours: this.hasDueDate ? this.dueDateIntervalHours : undefined,
