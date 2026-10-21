@@ -72,8 +72,24 @@
       <span class="coin" aria-hidden="true"></span>
       <span class="gold-value">{{ membership()?.gold ?? 0 }}</span>
     </div>
-    <button type="button" class="logout-btn" (click)="shopOpen.set(true)">🛍 {{ t('shop.open') }}</button>
-    <button type="button" class="logout-btn" (click)="logout()">{{ t('common.signOut') }}</button>
+    <button
+      type="button"
+      class="logout-btn"
+      (click)="shopOpen.set(true)"
+      [title]="t('shop.open')"
+      [attr.aria-label]="t('shop.open')"
+    >
+      <span aria-hidden="true">🛍</span><span class="btn-label"> {{ t('shop.open') }}</span>
+    </button>
+    <button
+      type="button"
+      class="logout-btn"
+      (click)="logout()"
+      [title]="t('common.signOut')"
+      [attr.aria-label]="t('common.signOut')"
+    >
+      <span class="btn-icon" aria-hidden="true">⎋</span><span class="btn-label">{{ t('common.signOut') }}</span>
+    </button>
   </div>
 </header>
 

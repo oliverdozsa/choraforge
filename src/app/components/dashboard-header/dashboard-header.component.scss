@@ -315,7 +315,7 @@
 
 @media (max-width: 900px) {
   .dash-header {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     row-gap: 14px;
     padding: 14px 16px;
   }
@@ -324,6 +324,41 @@
     grid-column: 1 / -1;
     grid-row: 2;
     width: 100%;
+  }
+}
+
+.btn-icon {
+  display: none;
+}
+
+/* Phones: actions go icon-only so they can't crowd the identity block. */
+@media (max-width: 600px) {
+  .dash-header {
+    gap: 12px;
+  }
+
+  .header-actions {
+    gap: 6px;
+  }
+
+  .btn-label {
+    display: none;
+  }
+
+  .btn-icon {
+    display: inline;
+  }
+
+  .logout-btn {
+    min-width: 34px;
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-mark,
+  .brand-divider {
+    display: none;
   }
 }
 
