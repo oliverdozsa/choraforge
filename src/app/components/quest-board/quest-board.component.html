@@ -138,11 +138,10 @@
       <h2 id="history-title">{{ t('board.history') }}</h2>
       <span class="count-badge">{{ myVerifiedHistory().length }}</span>
     </div>
-    <div class="card-grid">
+    <div class="compact-grid">
       @for (card of pagedVerifiedHistory(); track card.id) {
-        <app-chore-card
+        <app-chore-card-compact
           [card]="card"
-          [readonlyCard]="true"
           [canEdit]="isTeamAdmin()"
           [canDelete]="isTeamAdmin()"
           (edit)="startEditingCard($event)"
@@ -198,11 +197,10 @@
         </button>
       </div>
     </div>
-    <div class="card-grid" *ngIf="filteredTeamActivity().length; else emptyActivity">
+    <div class="compact-grid" *ngIf="filteredTeamActivity().length; else emptyActivity">
       @for (card of filteredTeamActivity(); track card.id) {
-        <app-chore-card
+        <app-chore-card-compact
           [card]="card"
-          [readonlyCard]="true"
           [canEdit]="isTeamAdmin()"
           [canDelete]="isTeamAdmin()"
           [assignedUserName]="assignedUserName(card)"

@@ -1,0 +1,54 @@
+<div class="row">
+  <button
+    type="button"
+    class="main"
+    [attr.aria-expanded]="expanded()"
+    [attr.aria-label]="'card.aria' | transloco: { title: card.title, rarity: (rarityKey | transloco), xp: card.xpReward, gold: card.goldReward }"
+    (click)="toggle()"
+  >
+    <span class="thumb" aria-hidden="true">
+      @if (showArt) {
+        <img [src]="artUrl" alt="" loading="lazy" (error)="failedArtUrl.set(artUrl ?? null)" />
+      }
+    </span>
+    <span class="info">
+      <span class="title" [title]="card.title">{{ card.title }}</span>
+      <span class="meta">
+        <span class="status" [ngClass]="statusClass">{{ 'enums.cardStatus.' + card.status | transloco }}</span>
+        @if (ownerIsSelf || ownerName) {
+          <span class="owner">{{ ownerIsSelf ? ('common.you' | transloco) : ownerName }}</span>
+        }
+        <span>{{ timeKey | transloco: timeParams }}</span>
+      </span>
+    </span>
+    <span class="rewards" aria-hidden="true">
+      <span class="xp">{{ card.xpReward }} {{ 'common.xp' | transloco }}</span>
+      <span class="gold">{{ card.goldReward }} {{ 'common.gold' | transloco }}</span>
+    </span>
+  </button>
+
+  @if (canEdit || canDelete) {
+    <div class="admin">
+      @if (canEdit) {
+        <button type="button" class="icon-btn" (click)="edit.emit(card.id)" [attr.aria-label]="'card.editAria' | transloco: { title: card.title }">✎</button>
+      }
+      @if (canDelete) {
+        <button type="button" class="icon-btn danger" (click)="delete.emit(card.id)" [attr.aria-label]="'card.deleteAria' | transloco: { title: card.title }">✕</button>
+      }
+    </div>
+  }
+</div>
+
+@if (expanded()) {
+  <div class="details">
+    <p class="desc">{{ card.description }}</p>
+    <div class="facts">
+      @if (card.itemDrop) {
+        <span>{{ 'card.drops' | transloco: { item: card.itemDrop } }}</span>
+      }
+      @if (card.verifiedAt ?? card.completedAt; as date) {
+        <span>{{ 'card.verifiedOn' | transloco: { date: (date | localizedDate: ('formats.shortDate' | transloco)) } }}</span>
+      }
+    </div>
+  </div>
+}

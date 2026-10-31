@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LogoComponent } from '../logo/logo.component';
 import { ChoreCardComponent } from '../chore-card/chore-card.component';
+import { ChoreCardCompactComponent } from '../chore-card-compact/chore-card-compact.component';
 import { CompletionModalComponent } from '../completion-modal/completion-modal.component';
 import { CardDraft } from '../card-designer/card-designer.component';
 import { CardDesignerModalComponent } from '../card-designer-modal/card-designer-modal.component';
@@ -18,6 +19,7 @@ const ACTIVITY_STATUSES: readonly CardStatus[] = ['CLAIMED', 'COMPLETED', 'VERIF
   imports: [
     CommonModule,
     ChoreCardComponent,
+    ChoreCardCompactComponent,
     CompletionModalComponent,
     CardDesignerModalComponent,
     ConfirmDialogComponent,
