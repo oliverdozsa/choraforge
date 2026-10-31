@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, effect, inject, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
+import { RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
 import { LeaderboardSidebarComponent } from './components/leaderboard-sidebar/leaderboard-sidebar.component';
-import { QuestBoardComponent } from './components/quest-board/quest-board.component';
 import { LogoComponent } from './components/logo/logo.component';
 import { LoginComponent } from './components/login/login.component';
 import { TeamSetupComponent } from './components/team-setup/team-setup.component';
-import { CardTemplatesComponent } from './components/card-templates/card-templates.component';
 import { AuthService } from './services/auth.service';
 import { ChoreStoreService } from './services/chore-store.service';
 
@@ -20,10 +19,9 @@ import { ChoreStoreService } from './services/chore-store.service';
     TranslocoPipe,
     DashboardHeaderComponent,
     LeaderboardSidebarComponent,
-    QuestBoardComponent,
+    RouterOutlet,
     LoginComponent,
     TeamSetupComponent,
-    CardTemplatesComponent,
     LogoComponent,
   ],
   templateUrl: './app.component.html',

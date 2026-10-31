@@ -5,7 +5,6 @@
 .templates-panel {
   border-radius: 16px;
   padding: 1.25rem;
-  margin-top: 2rem;
   background:
     radial-gradient(circle at 20% 0%, rgba(74, 222, 128, 0.07), transparent 55%),
     #12141c;
@@ -66,5 +65,17 @@
   &:hover {
     border-color: #86efac;
     color: #86efac;
+  }
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: #86efac;
+  font-size: 0.85rem;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
 }

@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { ChoreCardComponent } from '../chore-card/chore-card.component';
 import { CardDraft } from '../card-designer/card-designer.component';
@@ -11,13 +12,14 @@ import { ChoreCardResponse, ChoreCardTemplateResponse } from '../../models/api.m
 @Component({
   selector: 'app-card-templates',
   standalone: true,
-  imports: [CommonModule, ChoreCardComponent, CardDesignerModalComponent, ConfirmDialogComponent, TranslocoDirective],
+  imports: [CommonModule, ChoreCardComponent, CardDesignerModalComponent, ConfirmDialogComponent, TranslocoDirective, RouterLink],
   templateUrl: './card-templates.component.html',
   styleUrl: './card-templates.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardTemplatesComponent {
   private readonly store = inject(ChoreStoreService);
+  private readonly router = inject(Router);
 
   readonly templates = this.store.templates;
   readonly isTeamAdmin = this.store.isTeamAdmin;
@@ -30,6 +32,15 @@ export class CardTemplatesComponent {
   readonly editingSubmitting = signal(false);
   readonly deletingTemplate = signal<ChoreCardTemplateResponse | null>(null);
   readonly deletingSubmitting = signal(false);
+
+  constructor() {
+    // Non-admins have no business here. Wait until the membership is known before judging.
+    effect(() => {
+      if (this.store.currentMembership() && !this.isTeamAdmin()) {
+        void this.router.navigateByUrl('/', { replaceUrl: true });
+      }
+    });
+  }
 
   startCreating(): void {
     this.editingTemplate.set(null);

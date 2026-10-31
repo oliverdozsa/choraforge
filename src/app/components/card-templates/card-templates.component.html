@@ -1,5 +1,6 @@
 <ng-container *transloco="let t">
 <section class="templates-panel" *ngIf="isTeamAdmin()">
+  <a class="back-link" routerLink="/">← {{ t('templates.back') }}</a>
   <div class="section-heading">
     <h2>{{ t('templates.title') }}</h2>
     <span class="count-badge">{{ templates().length }}</span>

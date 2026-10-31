@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoPipe } from '@jsverse/transloco';
 import { ChoreStoreService } from '../../services/chore-store.service';
 import { AuthService } from '../../services/auth.service';
@@ -14,7 +15,7 @@ import { TeamSetupComponent } from '../team-setup/team-setup.component';
 @Component({
   selector: 'app-dashboard-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoDirective, TranslocoPipe, LanguageSwitcherComponent, AppDialogComponent, ProfileDialogComponent, TeamSetupComponent, ShopDialogComponent, LogoComponent],
+  imports: [CommonModule, FormsModule, RouterLink, TranslocoDirective, TranslocoPipe, LanguageSwitcherComponent, AppDialogComponent, ProfileDialogComponent, TeamSetupComponent, ShopDialogComponent, LogoComponent],
   templateUrl: './dashboard-header.component.html',
   styleUrl: './dashboard-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +24,7 @@ export class DashboardHeaderComponent {
   private readonly store = inject(ChoreStoreService);
   private readonly auth = inject(AuthService);
 
+  readonly isTeamAdmin = this.store.isTeamAdmin;
   readonly user = this.store.currentUser;
   readonly teams = this.store.teams;
   readonly membership = this.store.currentMembership;

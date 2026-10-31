@@ -1,9 +1,11 @@
 import { APP_INITIALIZER, ApplicationConfig, inject, isDevMode, provideZoneChangeDetection } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideTransloco, TranslocoService } from '@jsverse/transloco';
 import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
 import { firstValueFrom } from 'rxjs';
+import { routes } from './app.routes';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { TranslocoHttpLoader } from './i18n/transloco-loader';
 import { LanguageService, SUPPORTED_LANGS } from './services/language.service';
@@ -11,6 +13,7 @@ import { LanguageService, SUPPORTED_LANGS } from './services/language.service';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideTransloco({
       config: {

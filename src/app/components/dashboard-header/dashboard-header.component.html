@@ -72,6 +72,16 @@
       <span class="coin" aria-hidden="true"></span>
       <span class="gold-value">{{ membership()?.gold ?? 0 }}</span>
     </div>
+    @if (isTeamAdmin()) {
+      <a
+        class="logout-btn"
+        routerLink="/templates"
+        [title]="t('templates.nav')"
+        [attr.aria-label]="t('templates.nav')"
+      >
+        <span aria-hidden="true">🃏</span><span class="btn-label"> {{ t('templates.nav') }}</span>
+      </a>
+    }
     <button
       type="button"
       class="logout-btn"

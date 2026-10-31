@@ -113,6 +113,8 @@
   },
   "templates": {
     "title": "Kártyasablonok",
+    "nav": "Sablonok",
+    "back": "Vissza a táblához",
     "new": "Új sablon",
     "deleteTitle": "Sablon törlése",
     "deleteMessage": "Biztosan törlöd ezt a sablont: „{title}”? Ez nem vonható vissza."

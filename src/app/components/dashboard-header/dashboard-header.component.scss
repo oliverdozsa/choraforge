@@ -305,6 +305,13 @@
   font: 600 12px/1 var(--font-ui);
   transition: background 0.15s ease;
 
+  &:is(a) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
   &:hover {
     background: rgba(255, 255, 255, 0.06);
     color: var(--text);

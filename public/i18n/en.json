@@ -113,6 +113,8 @@
   },
   "templates": {
     "title": "Card Templates",
+    "nav": "Templates",
+    "back": "Back to board",
     "new": "New Template",
     "deleteTitle": "Delete Template",
     "deleteMessage": "Delete “{title}”? This cannot be undone."
