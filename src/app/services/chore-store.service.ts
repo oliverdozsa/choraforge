@@ -3,6 +3,7 @@ import { firstValueFrom } from 'rxjs';
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
 import {
+  CardStatus,
   ChoreCardResponse,
   ChoreCardTemplateResponse,
   CreateChoreCardRequest,
@@ -33,6 +34,9 @@ export interface RewardBatch {
 }
 
 const REWARD_POLL_INTERVAL_MS = 15000;
+const HISTORY_LIMIT = 30;
+const TEAM_ACTIVITY_LIMIT = 30;
+const ACTIVITY_STATUSES: CardStatus[] = ['CLAIMED', 'COMPLETED', 'VERIFIED'];
 const SELECTED_TEAM_KEY_PREFIX = 'choraforge_selected_team_';
 
 function loadSelectedTeamId(userId: string): string | null {
@@ -146,7 +150,8 @@ export class ChoreStoreService {
   readonly myVerifiedHistory = computed(() =>
     this._cards()
       .filter((c) => c.status === 'VERIFIED' && c.assignedUserId === this.currentUserId())
-      .sort(byDateDesc((c) => c.verifiedAt)),
+      .sort(byDateDesc((c) => c.verifiedAt))
+      .slice(0, HISTORY_LIMIT),
   );
 
   readonly teamActivity = computed(() => {
@@ -189,9 +194,10 @@ export class ChoreStoreService {
     this._loading.set(true);
     this._error.set(null);
     try {
+      const leaderboardRequest = firstValueFrom(this.api.getLeaderboard(teamId));
       const [cards, leaderboard, templates, season] = await Promise.all([
-        firstValueFrom(this.api.getTeamCards(teamId)),
-        firstValueFrom(this.api.getLeaderboard(teamId)),
+        leaderboardRequest.then((members) => this.fetchBoardCards(teamId, members)),
+        leaderboardRequest,
         firstValueFrom(this.api.getTeamCardTemplates(teamId)),
         firstValueFrom(this.api.getCurrentSeason(teamId)),
       ]);
@@ -204,6 +210,31 @@ export class ChoreStoreService {
     } finally {
       this._loading.set(false);
     }
+  }
+
+  /**
+   * Loads only what the board sections show, so `_cards` stays bounded as the team's history grows:
+   * every available/active/awaiting card, plus the latest verified and other-member cards.
+   */
+  private async fetchBoardCards(teamId: string, members: TeamMemberResponse[]): Promise<ChoreCardResponse[]> {
+    const userId = this.currentUserId();
+    if (!userId) return [];
+    const otherIds = members.map((m) => m.userId).filter((id) => id !== userId);
+    // Admins can verify anyone's completed cards, so theirs aren't narrowed to the current user.
+    const awaitingAssignees = this.isTeamAdmin() ? undefined : [userId];
+    const requests = [
+      firstValueFrom(this.api.getTeamCards(teamId, ['AVAILABLE'])),
+      firstValueFrom(this.api.getTeamCards(teamId, ['CLAIMED'], [userId])),
+      firstValueFrom(this.api.getTeamCards(teamId, ['COMPLETED'], awaitingAssignees)),
+      firstValueFrom(this.api.getRecentTeamCards(teamId, HISTORY_LIMIT, ['VERIFIED'], [userId])),
+    ];
+    // An empty assigneeIds would mean "no filter", so skip the query when there is nobody else.
+    if (otherIds.length) {
+      requests.push(firstValueFrom(this.api.getRecentTeamCards(teamId, TEAM_ACTIVITY_LIMIT, ACTIVITY_STATUSES, otherIds)));
+    }
+    const byId = new Map<string, ChoreCardResponse>();
+    for (const card of (await Promise.all(requests)).flat()) byId.set(card.id, card);
+    return [...byId.values()];
   }
 
   private async refreshMe(): Promise<void> {
@@ -667,7 +698,7 @@ export class ChoreStoreService {
     }
     if (this._activeRewards()) return;
     try {
-      const cards = await firstValueFrom(this.api.getTeamCards(teamId));
+      const cards = await this.fetchBoardCards(teamId, this._leaderboard());
       this._cards.set(cards);
       const pending = cards.filter(
         (c) => c.status === 'VERIFIED' && c.assignedUserId === userId && !c.rewardAcknowledgedAt,

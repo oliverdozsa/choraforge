@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, firstValueFrom, from } from 'rxjs';
+import { Observable, firstValueFrom, from, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   CardStatus,
@@ -101,23 +101,44 @@ export class ApiService {
     page: number,
     size: number = TEAM_CARDS_PAGE_SIZE,
     statuses: CardStatus[] = ALL_CARD_STATUSES,
+    assigneeIds?: string[],
   ): Observable<PagedResponse<ChoreCardResponse>> {
-    return this.http.get<PagedResponse<ChoreCardResponse>>(`${this.base}/teams/${teamId}/cards`, {
-      params: { page, size, status: statuses.join(',') },
-    });
+    const params: Record<string, string | number> = { page, size, status: statuses.join(',') };
+    if (assigneeIds) params['assigneeIds'] = assigneeIds.join(',');
+    return this.http.get<PagedResponse<ChoreCardResponse>>(`${this.base}/teams/${teamId}/cards`, { params });
   }
 
-  /** Fetches every page of the team's cards and flattens them into a single list. */
-  getTeamCards(teamId: string, statuses: CardStatus[] = ALL_CARD_STATUSES): Observable<ChoreCardResponse[]> {
-    return from(this.fetchAllTeamCards(teamId, statuses));
+  /** Fetches every page of the team's cards matching the filters and flattens them into a single list. */
+  getTeamCards(
+    teamId: string,
+    statuses: CardStatus[] = ALL_CARD_STATUSES,
+    assigneeIds?: string[],
+  ): Observable<ChoreCardResponse[]> {
+    return from(this.fetchAllTeamCards(teamId, statuses, assigneeIds));
   }
 
-  private async fetchAllTeamCards(teamId: string, statuses: CardStatus[]): Promise<ChoreCardResponse[]> {
+  /** Fetches only the first `limit` cards matching the filters. */
+  getRecentTeamCards(
+    teamId: string,
+    limit: number,
+    statuses: CardStatus[],
+    assigneeIds?: string[],
+  ): Observable<ChoreCardResponse[]> {
+    return this.getTeamCardsPage(teamId, 0, limit, statuses, assigneeIds).pipe(map((response) => response.items));
+  }
+
+  private async fetchAllTeamCards(
+    teamId: string,
+    statuses: CardStatus[],
+    assigneeIds?: string[],
+  ): Promise<ChoreCardResponse[]> {
     const cards: ChoreCardResponse[] = [];
     let page = 0;
     let totalPages = 1;
     do {
-      const response = await firstValueFrom(this.getTeamCardsPage(teamId, page, TEAM_CARDS_PAGE_SIZE, statuses));
+      const response = await firstValueFrom(
+        this.getTeamCardsPage(teamId, page, TEAM_CARDS_PAGE_SIZE, statuses, assigneeIds),
+      );
       cards.push(...response.items);
       totalPages = response.totalPages;
       page++;
